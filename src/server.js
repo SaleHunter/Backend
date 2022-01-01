@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 
 //Setup Enviroment Variables
-dotenv.config({ path: "/config/.env" });
+dotenv.config({ path: ".env" });
 
 const port = process.env.PORT || 8000;
 const app = require("./app.js");
