@@ -1,0 +1,26 @@
+{
+  "name": "salehunter-backend",
+  "version": "1.0.0",
+  "description": "Tha backend and API for SaleHunter",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SaleHunter/Backend.git"
+  },
+  "author": "Ahmed Samir && Youssef Mahmoud",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SaleHunter/Backend/issues"
+  },
+  "homepage": "https://github.com/SaleHunter/Backend#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

@@ -1,5 +1,5 @@
 # Backend
 
-## Database Design (In-Progress)
+## Database Design (In-Progress).
 
-![DB Design](readme.utls/DBConceptual_LogicalDesgin.png)
+![DB Design](readme.utls/DBConceptual_LogicalDesgin_two.png)
