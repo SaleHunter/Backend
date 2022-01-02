@@ -2,11 +2,11 @@ const express = require('express');
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
-  'sale_hunter',
-  'salehunter_admin@salehunter-db',
-  '01154866274Ay',
+  process.env.DB_DATABASE,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: 'salehunter-db.mysql.database.azure.com',
+    host: process.env.DB_HOST,
     dialect: 'mysql',
   }
 );
