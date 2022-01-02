@@ -19,9 +19,7 @@
   },
   "homepage": "https://github.com/SaleHunter/Backend#readme",
   "dependencies": {
-    "babel-eslint": "^10.1.0",
     "dotenv": "^10.0.0",
-    "eslint": "^8.6.0",
     "express": "^4.17.2",
     "mysql2": "^2.3.3",
     "prettier": "^2.5.1",
