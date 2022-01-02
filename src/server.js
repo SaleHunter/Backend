@@ -2,8 +2,9 @@ const dotenv = require('dotenv');
 
 //Setup Enviroment Variables
 dotenv.config({ path: '.env' });
+const mysql = require('./config/db.js')();
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 const app = require('./app.js');
 
 //Start The server
