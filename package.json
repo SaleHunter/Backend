@@ -19,11 +19,14 @@
   },
   "homepage": "https://github.com/SaleHunter/Backend#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "prettier": "^2.5.1",
-    "sequelize": "^7.0.0-alpha.4"
+    "sequelize": "^7.0.0-alpha.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "husky": "^7.0.0",
