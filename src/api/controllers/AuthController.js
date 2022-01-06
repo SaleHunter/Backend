@@ -5,14 +5,14 @@ class Controller {
     try {
       console.log(req.body);
 
-      const createdUser = await AuthService.signup(req.body);
-
-      console.log('createdUser: ', createdUser);
+      const { createdUser, token } = await AuthService.signup(req.body);
+      console.log({ createdUser, token });
 
       res.status(201).json({
         status: 'success',
         message: 'Signed Up successfully',
-        user: createdUser,
+        user: createdUser[0],
+        token,
       });
     } catch (error) {
       console.log(error);
@@ -25,12 +25,25 @@ class Controller {
   }
 
   async signin(req, res, next) {
-    console.log(req.body);
+    try {
+      console.log(req.body);
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Signed In successfully',
-    });
+      const { user, token } = await AuthService.signin(req.body);
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Signed In successfully',
+        user: user[0],
+        token: token,
+      });
+    } catch (error) {
+      // console.log(error);
+      res.status(400).json({
+        status: 'Fail',
+        message: 'Sign In Failed',
+        error,
+      });
+    }
   }
 }
 

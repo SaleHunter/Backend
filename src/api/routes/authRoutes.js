@@ -18,7 +18,7 @@ router.post('/signup', AuthController.signup);
 /*
  * 2- Normal sign in route
  * Requires:
- * 1- user_name || email
+ * 1- email
  * 2- password
  */
 router.post('/signin', AuthController.signin);
