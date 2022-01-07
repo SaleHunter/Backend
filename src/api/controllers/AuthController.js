@@ -15,12 +15,7 @@ class Controller {
         token,
       });
     } catch (error) {
-      console.log(error);
-
-      res.status(400).json({
-        status: 'Fail',
-        message: 'Sign Up Failed',
-      });
+      next(error);
     }
   }
 
@@ -37,12 +32,7 @@ class Controller {
         token: token,
       });
     } catch (error) {
-      // console.log(error);
-      res.status(400).json({
-        status: 'Fail',
-        message: 'Sign In Failed',
-        error,
-      });
+      next(error);
     }
   }
 }

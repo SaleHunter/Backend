@@ -11,7 +11,7 @@ class Util {
     const isPasswordMatched = await bcrypt.compare(password, hashedPassword);
 
     return isPasswordMatched;
-  } 
+  }
 
   async signJWT(id) {
     const token = await jwt.sign({ id }, process.env.JWT_SECRET, {

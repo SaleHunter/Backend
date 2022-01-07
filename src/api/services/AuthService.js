@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const { sequelize } = require('../../config/db');
 const AuthUtil = require('../utils/authUtils');
+const DBError = require('../error/DBError');
 
 class Service {
   async signup(userInfo) {
@@ -38,8 +39,7 @@ class Service {
 
       return { createdUser, token };
     } catch (error) {
-      //TODO: Handle Duplicate user error form db
-      console.log(error);
+      throw new DBError('Email already exists', 400);
     }
   }
 
@@ -55,6 +55,11 @@ class Service {
         type: sequelize.QueryTypes.SELECT,
       });
 
+      // if user is not exist in db, throw throw error
+      if (user.length == 0) {
+        throw new DBError('There is no user with this email', 404);
+      }
+
       //Compare password with hashed password in db
       const isPasswordMatched = await AuthUtil.comparePassword(
         password,
@@ -62,10 +67,9 @@ class Service {
       );
 
       //Check if password does not match, then throw error
-      // if (!isPasswordMatched) {
-      //   const error = new Error('Password does not match');
-      //   return error;
-      // }
+      if (!isPasswordMatched) {
+        throw new DBError('Incorrect Password', 400);
+      }
 
       //sign jwt-token for the user, so can access protected routes
       const token = await AuthUtil.signJWT(user[0].id);
@@ -76,6 +80,7 @@ class Service {
       return { user, token };
     } catch (error) {
       console.log(error);
+      throw error;
     }
   }
 }
