@@ -1,6 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
 const { sequelize } = require('../../config/db');
 const AuthUtil = require('../utils/authUtils');
+const { OAuth2Client } = require('google-auth-library');
+const { compareSync } = require('bcrypt');
 
 class Service {
   async signup(userInfo) {
@@ -74,6 +76,46 @@ class Service {
       user[0].password = undefined;
 
       return { user, token };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async socialAuth(userInfo) {
+    try {
+      // Verify the token
+      const CLIENT_ID = userInfo.CLIENT_ID;
+      const client = new OAuth2Client(CLIENT_ID);
+      const payload = await AuthUtil.verifyThirdPartyAuth(
+        client,
+        CLIENT_ID,
+        userInfo.token
+      );
+
+      // Test if user exist already in db
+      const selectUserQuery = `SELECT id, full_name as fullname, email, password, profile_img, last_seen FROM users where email = ?;`;
+      let user = await sequelize.query(selectUserQuery, {
+        replacements: [payload.email],
+        type: sequelize.QueryTypes.SELECT,
+      });
+
+      // If user doesn't exist so sign him up
+      if (user.length === 0) {
+        const id = uuidv4();
+        const insertUserQuery = `INSERT INTO users (id, full_name, email, profile_img) VALUES(?, ?, ?, ?);`;
+        const affectedRows = await sequelize.query(insertUserQuery, {
+          replacements: [id, payload.name, payload.email, payload.picture],
+          type: sequelize.QueryTypes.INSERT,
+        });
+
+        //get the info of the inserted user
+        const selectUserQuery = `SELECT id, full_name as fullname, email, profile_img, last_seen FROM users where id = ?;`;
+        const user = await sequelize.query(selectUserQuery, {
+          replacements: [id],
+          type: sequelize.QueryTypes.SELECT,
+        });
+      }
+      return user;
     } catch (error) {
       console.log(error);
     }

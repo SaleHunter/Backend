@@ -11,7 +11,7 @@ class Util {
     const isPasswordMatched = await bcrypt.compare(password, hashedPassword);
 
     return isPasswordMatched;
-  } 
+  }
 
   async signJWT(id) {
     const token = await jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -19,6 +19,17 @@ class Util {
     });
 
     return token;
+  }
+  async verifyThirdPartyAuth(client, CLIENT_ID, token) {
+    try {
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: CLIENT_ID,
+      });
+      return ticket.payload;
+    } catch (err) {
+      console.log('Error from Verify third party auth ');
+    }
   }
 }
 
