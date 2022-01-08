@@ -24,7 +24,7 @@ class Util {
     try {
       const ticket = await client.verifyIdToken({
         idToken: token,
-        audience: CLIENT_ID,
+        audience: [process.env.GOOGLE_FRONT_USER_ID, GOOGLE_FLUTTER_USER_ID],
       });
       return ticket.payload;
     } catch (err) {

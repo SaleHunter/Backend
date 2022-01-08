@@ -1,9 +1,9 @@
 const { v4: uuidv4 } = require('uuid');
 const { sequelize } = require('../../config/db');
-const AuthUtil = require('../utils/authUtils');
 const { OAuth2Client } = require('google-auth-library');
 const { compareSync } = require('bcrypt');
-
+const AuthUtil = require('../utils/authUtils');
+const fetch = require('node-fetch');
 class Service {
   async signup(userInfo) {
     try {
@@ -81,19 +81,45 @@ class Service {
     }
   }
 
+  async verifyGoogleUser(userInfo) {
+    // Verify the token
+    const CLIENT_ID = userInfo.CLIENT_ID;
+    const client = new OAuth2Client(CLIENT_ID);
+    const payload = await AuthUtil.verifyThirdPartyAuth(
+      client,
+      CLIENT_ID,
+      userInfo.token
+    );
+    return payload;
+  }
+
+  async verifyFacebookUser(userInfo) {
+    try {
+      const { access_token, user_id } = userInfo;
+      const confirmUser = fetch(
+        `https://graph.facebook.com/me?access_token=${access_token}`
+      );
+      if (confirmUser.id === user_id) {
+        return confirmUser;
+      } else {
+        return 'Invalid User';
+      }
+    } catch (error) {
+      console.log("Don't F With me");
+    }
+  }
+
   async socialAuth(userInfo) {
     try {
-      // Verify the token
-      const CLIENT_ID = userInfo.CLIENT_ID;
-      const client = new OAuth2Client(CLIENT_ID);
-      const payload = await AuthUtil.verifyThirdPartyAuth(
-        client,
-        CLIENT_ID,
-        userInfo.token
-      );
+      if (userInfo.authFrom === 'google') {
+        const payload = await this.verifyGoogleUser(userInfo);
+      } else if (userInfo.authFrom === 'facebook') {
+        const payload = await this.verifyFacebookUser(userInfo);
+      }
 
       // Test if user exist already in db
       const selectUserQuery = `SELECT id, full_name as fullname, email, password, profile_img, last_seen FROM users where email = ?;`;
+
       let user = await sequelize.query(selectUserQuery, {
         replacements: [payload.email],
         type: sequelize.QueryTypes.SELECT,
@@ -101,17 +127,26 @@ class Service {
 
       // If user doesn't exist so sign him up
       if (user.length === 0) {
-        const id = uuidv4();
+        //assign uuid to the new user
+        payload.uuid = uuidv4();
+
+        //sign up him
         const insertUserQuery = `INSERT INTO users (id, full_name, email, profile_img) VALUES(?, ?, ?, ?);`;
         const affectedRows = await sequelize.query(insertUserQuery, {
-          replacements: [id, payload.name, payload.email, payload.picture],
+          replacements: [
+            payload.uuid,
+            payload.name,
+            payload.email,
+            payload.picture,
+          ],
           type: sequelize.QueryTypes.INSERT,
         });
 
         //get the info of the inserted user
+
         const selectUserQuery = `SELECT id, full_name as fullname, email, profile_img, last_seen FROM users where id = ?;`;
         const user = await sequelize.query(selectUserQuery, {
-          replacements: [id],
+          replacements: [payload.uuid],
           type: sequelize.QueryTypes.SELECT,
         });
       }
