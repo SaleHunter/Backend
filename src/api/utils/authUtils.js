@@ -20,6 +20,17 @@ class Util {
 
     return token;
   }
+  async verifyThirdPartyAuth(client, CLIENT_ID, token) {
+    try {
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: [process.env.GOOGLE_FRONT_USER_ID, GOOGLE_FLUTTER_USER_ID],
+      });
+      return ticket.payload;
+    } catch (err) {
+      console.log('Error from Verify third party auth ');
+    }
+  }
 }
 
 module.exports = new Util();

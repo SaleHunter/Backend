@@ -1,3 +1,4 @@
+const { compareSync } = require('bcrypt');
 const AuthService = require('../services/AuthService');
 
 class Controller {
@@ -23,16 +24,34 @@ class Controller {
     try {
       console.log(req.body);
 
-      const { user, token } = await AuthService.signin(req.body);
+      const user = await AuthService.signin(req.body);
 
       res.status(200).json({
         status: 'success',
         message: 'Signed In successfully',
         user: user[0],
-        token: token,
+        token: req.body.token,
       });
     } catch (error) {
       next(error);
+    }
+  }
+
+  async thirdPartyAuth(req, res, next) {
+    try {
+      const user = await AuthService.socialAuth(req.body);
+      console.log(user[0]);
+      res.status(200).json({
+        status: 'sucess',
+        message: 'Signed in Successfully',
+        user: user[0],
+        token: req.body.token,
+      });
+    } catch (error) {
+      res.status(400).json({
+        status: 'Fail',
+        message: 'Third-Party auth failed',
+      });
     }
   }
 }

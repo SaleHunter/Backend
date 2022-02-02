@@ -23,4 +23,6 @@ router.post('/signup', AuthController.signup);
  */
 router.post('/signin', AuthController.signin);
 
+router.post('/signinAuth', AuthController.thirdPartyAuth);
+
 module.exports = router;
