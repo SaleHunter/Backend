@@ -4,6 +4,8 @@ const { OAuth2Client } = require('google-auth-library');
 const { compareSync } = require('bcrypt');
 const AuthUtil = require('../utils/authUtils');
 const fetch = require('node-fetch');
+const DBError = require('../error/DBError');
+
 class Service {
   async signup(userInfo) {
     try {
