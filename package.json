@@ -25,6 +25,7 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.2",
     "prettier": "^2.5.1",
     "sequelize": "^7.0.0-alpha.4",
     "uuid": "^8.3.2"

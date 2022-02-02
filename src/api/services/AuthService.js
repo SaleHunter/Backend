@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const { sequelize } = require('../../config/db');
 const AuthUtil = require('../utils/authUtils');
+const EmailUtil = require('../utils/emailUtils');
 const DBError = require('../error/DBError');
 
 class Service {
@@ -55,7 +56,9 @@ class Service {
         type: sequelize.QueryTypes.SELECT,
       });
 
-      // if user is not exist in db, throw throw error
+      console.log(user);
+
+      // if user is not exist in db, throw error
       if (user.length == 0) {
         throw new DBError('There is no user with this email', 404);
       }
@@ -78,6 +81,32 @@ class Service {
       user[0].password = undefined;
 
       return { user, token };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async forgetPassword(userInfo) {
+    try {
+      const { email } = userInfo;
+
+      const selectUserQuery = `SELECT email, full_name as fullname FROM users where email = ?;`;
+      const user = await sequelize.query(selectUserQuery, {
+        replacements: [email],
+        type: sequelize.QueryTypes.SELECT,
+      });
+
+      // if user is not exist in db, throw error
+      if (user.length == 0) {
+        throw new DBError('There is no user with this email', 404);
+      }
+
+      const emailResponse = await new EmailUtil().sendResetPasswordEmail(
+        user,
+        '123456abc'
+      );
+      console.log(emailResponse);
     } catch (error) {
       console.log(error);
       throw error;

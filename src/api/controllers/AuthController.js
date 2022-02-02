@@ -54,6 +54,14 @@ class Controller {
       });
     }
   }
+
+  async forgetPassword(req, res, next) {
+    try {
+      const isUserExists = await AuthService.forgetPassword(req.body);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = new Controller();

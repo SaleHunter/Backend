@@ -25,4 +25,11 @@ router.post('/signin', AuthController.signin);
 
 router.post('/signinAuth', AuthController.thirdPartyAuth);
 
+/*
+ * Forget password route
+ * Requires:
+ *   1- email
+ */
+router.post('/forgetPassword', AuthController.forgetPassword);
+
 module.exports = router;
