@@ -1,9 +1,10 @@
 const { v4: uuidv4 } = require('uuid');
 const { sequelize } = require('../../config/db');
+const { OAuth2Client } = require('google-auth-library');
+const { compareSync } = require('bcrypt');
 const AuthUtil = require('../utils/authUtils');
 const EmailUtil = require('../utils/emailUtils');
 const DBError = require('../error/DBError');
-
 class Service {
   async signup(userInfo) {
     try {
@@ -40,7 +41,8 @@ class Service {
 
       return { createdUser, token };
     } catch (error) {
-      throw new DBError('Email already exists', 400);
+      //TODO: Handle Duplicate user error form db
+      console.log(error);
     }
   }
 
@@ -70,9 +72,10 @@ class Service {
       );
 
       //Check if password does not match, then throw error
-      if (!isPasswordMatched) {
-        throw new DBError('Incorrect Password', 400);
-      }
+      // if (!isPasswordMatched) {
+      //   const error = new Error('Password does not match');
+      //   return error;
+      // }
 
       //sign jwt-token for the user, so can access protected routes
       const token = await AuthUtil.signJWT(user[0].id);
@@ -83,7 +86,81 @@ class Service {
       return { user, token };
     } catch (error) {
       console.log(error);
-      throw error;
+    }
+  }
+
+  async verifyGoogleUser(userInfo) {
+    // Verify the token
+    const CLIENT_ID = userInfo.CLIENT_ID;
+    const client = new OAuth2Client(CLIENT_ID);
+    const payload = await AuthUtil.verifyThirdPartyAuth(
+      client,
+      CLIENT_ID,
+      userInfo.token
+    );
+    return payload;
+  }
+
+  async verifyFacebookUser(userInfo) {
+    try {
+      const { access_token, user_id } = userInfo;
+      const confirmUser = fetch(
+        `https://graph.facebook.com/me?access_token=${access_token}`
+      );
+      if (confirmUser.id === user_id) {
+        return confirmUser;
+      } else {
+        return 'Invalid User';
+      }
+    } catch (error) {
+      console.log("Don't F With me");
+    }
+  }
+
+  async socialAuth(userInfo) {
+    try {
+      if (userInfo.authFrom === 'google') {
+        const payload = await this.verifyGoogleUser(userInfo);
+      } else if (userInfo.authFrom === 'facebook') {
+        const payload = await this.verifyFacebookUser(userInfo);
+      }
+
+      // Test if user exist already in db
+      const selectUserQuery = `SELECT id, full_name as fullname, email, password, profile_img, last_seen FROM users where email = ?;`;
+
+      let user = await sequelize.query(selectUserQuery, {
+        replacements: [payload.email],
+        type: sequelize.QueryTypes.SELECT,
+      });
+
+      // If user doesn't exist so sign him up
+      if (user.length === 0) {
+        //assign uuid to the new user
+        payload.uuid = uuidv4();
+
+        //sign up him
+        const insertUserQuery = `INSERT INTO users (id, full_name, email, profile_img) VALUES(?, ?, ?, ?);`;
+        const affectedRows = await sequelize.query(insertUserQuery, {
+          replacements: [
+            payload.uuid,
+            payload.name,
+            payload.email,
+            payload.picture,
+          ],
+          type: sequelize.QueryTypes.INSERT,
+        });
+
+        //get the info of the inserted user
+
+        const selectUserQuery = `SELECT id, full_name as fullname, email, profile_img, last_seen FROM users where id = ?;`;
+        const user = await sequelize.query(selectUserQuery, {
+          replacements: [payload.uuid],
+          type: sequelize.QueryTypes.SELECT,
+        });
+      }
+      return user;
+    } catch (error) {
+      console.log(error);
     }
   }
 
