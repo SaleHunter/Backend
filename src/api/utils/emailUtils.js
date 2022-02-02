@@ -22,8 +22,8 @@ module.exports = class Email {
 
     const resetLink = `http://localhost:4000/api/v1/auth/resetPassword/${token}`;
     this.emailOptions.subject = 'Forget Password';
-    this.emailOptions.to = user.email;
-    this.emailOptions.text = `Hello ${user.fullname},
+    this.emailOptions.to = user[0].email;
+    this.emailOptions.text = `Hello ${user[0].fullname},
 
     We heared you need a password reset. Click the link below and
     you'll be redirected to a secure site from which you can set
@@ -33,7 +33,6 @@ module.exports = class Email {
 
     try {
       const emailResponse = await transporter.sendMail(this.emailOptions);
-      console.log('email sent \n', emailRespose);
     } catch (error) {
       console.log(error);
     }

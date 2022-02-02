@@ -1,10 +1,10 @@
-class DBError extends Error {
+class AppError extends Error {
   constructor(message, statusCode) {
     super();
     this.message = message;
     this.statusCode = statusCode;
-    this.type = 'db';
+    this.type = 'express';
   }
 }
 
-module.exports = DBError;
+module.exports = AppError;

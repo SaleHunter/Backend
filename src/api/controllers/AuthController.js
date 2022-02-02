@@ -57,7 +57,27 @@ class Controller {
 
   async forgetPassword(req, res, next) {
     try {
-      const isUserExists = await AuthService.forgetPassword(req.body);
+      await AuthService.forgetPassword(req.body);
+
+      res.status(200).json({
+        status: 'success',
+        message:
+          'Password reset token has successfully sent to your email address.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async resetPassword(req, res, next) {
+    try {
+      await AuthService.resetPassword(req.params.resetToken, req.body);
+
+      res.status(200).json({
+        status: 'success',
+        message:
+          'Your password reset has successfully reseted. You can now login with your new password',
+      });
     } catch (error) {
       next(error);
     }

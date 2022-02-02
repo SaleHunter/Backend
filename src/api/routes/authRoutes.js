@@ -31,5 +31,6 @@ router.post('/signinAuth', AuthController.thirdPartyAuth);
  *   1- email
  */
 router.post('/forgetPassword', AuthController.forgetPassword);
+router.patch('/resetPassword/:resetToken', AuthController.resetPassword);
 
 module.exports = router;

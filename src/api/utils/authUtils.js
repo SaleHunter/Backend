@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 class Util {
   async hashPassword(password) {
@@ -29,6 +30,15 @@ class Util {
       return ticket.payload;
     } catch (err) {
       console.log('Error from Verify third party auth ');
+    }
+  }
+
+  async generateResetToken() {
+    try {
+      const token = await crypto.randomBytes(16).toString('hex');
+      return token;
+    } catch (error) {
+      throw error;
     }
   }
 }

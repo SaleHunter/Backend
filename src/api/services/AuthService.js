@@ -5,6 +5,9 @@ const { compareSync } = require('bcrypt');
 const AuthUtil = require('../utils/authUtils');
 const EmailUtil = require('../utils/emailUtils');
 const DBError = require('../error/DBError');
+const AppError = require('../error/AppError');
+const e = require('express');
+
 class Service {
   async signup(userInfo) {
     try {
@@ -179,11 +182,66 @@ class Service {
         throw new DBError('There is no user with this email', 404);
       }
 
+      const resetToken = await AuthUtil.generateResetToken();
+
+      var now = new Date();
+      now.setMinutes(now.getMinutes() + 30); // timestamp
+      now = new Date(now); // Date object
+
+      const updateUserTokenQuery = `UPDATE users SET token = ? , token_expire = ? WHERE email = ?`;
+      const [results, metadata] = await sequelize.query(updateUserTokenQuery, {
+        replacements: [resetToken, now, email],
+        type: sequelize.QueryTypes.UPDATE,
+      });
+
       const emailResponse = await new EmailUtil().sendResetPasswordEmail(
         user,
-        '123456abc'
+        resetToken
       );
-      console.log(emailResponse);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async resetPassword(resetToken, passwords) {
+    try {
+      const { password, passwordConfirm } = passwords;
+      console.log(passwords);
+      // check if the 2 passwords are the same
+      if (password !== passwordConfirm)
+        throw new AppError('Password are not the same', 400);
+
+      //get user info based on reset token
+      const selectUserQuery = `SELECT token, token_expire FROM users WHERE token= ?;`;
+      const user = await sequelize.query(selectUserQuery, {
+        replacements: [resetToken],
+        type: sequelize.QueryTypes.SELECT,
+      });
+      console.log(user);
+
+      //check if reset token is valid
+      if (user.length === 0) throw new DBError('reset token is invalid', 400);
+
+      //check if reset token is expired
+      if (user[0].token_expire < new Date())
+        throw new DBError('reset token is expired', 400);
+
+      //update the password with the new password
+      // 1- Hash the given password
+      const hashPassword = await AuthUtil.hashPassword(password);
+
+      const updateUserPasswordQuery = `UPDATE users SET password = ? WHERE token = ?`;
+      const [results, metadata] = await sequelize.query(
+        updateUserPasswordQuery,
+        {
+          replacements: [hashPassword, resetToken],
+          type: sequelize.QueryTypes.UPDATE,
+        }
+      );
+
+      console.log(selectUserQuery);
+      console.log(results, metadata);
     } catch (error) {
       console.log(error);
       throw error;
