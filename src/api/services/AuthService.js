@@ -8,11 +8,13 @@ const DBError = require('../error/DBError');
 const AppError = require('../error/AppError');
 const e = require('express');
 
+const cloudinary = require('./CloudinaryService');
+const DBError = require('../error/DBError');
 class Service {
   async signup(userInfo) {
     try {
       //destruct user information sent into request
-      const { fullname, password, email } = userInfo;
+      const { fullname, password, email, profile_img } = userInfo;
 
       //generate a unique uuid for the user
       const id = uuidv4();
@@ -20,15 +22,18 @@ class Service {
       //Hash user's password
       const hashedPassword = await AuthUtil.hashPassword(password);
 
-      /*TODO:
-       * accept profile_img for user and upload it cloud,
-       * then put image url with user info in db
-       */
+      const uploaded_img = cloudinary.uploadProfilePhoto(profile_img);
 
       //insert user to the database
-      const insertUserQuery = `INSERT INTO users (id, full_name, email, password) VALUES(?, ?, ?, ?);`;
+      const insertUserQuery = `INSERT INTO users (id, full_name, email, password, profile_img) VALUES(?, ?, ?, ?, ?);`;
       const affectedRows = await sequelize.query(insertUserQuery, {
-        replacements: [id, fullname, email, hashedPassword],
+        replacements: [
+          id,
+          fullname,
+          email,
+          hashedPassword,
+          uploaded_img.public_id,
+        ],
         type: sequelize.QueryTypes.INSERT,
       });
 
