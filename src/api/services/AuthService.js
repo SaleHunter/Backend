@@ -7,13 +7,13 @@ const EmailUtil = require('../utils/emailUtils');
 const DBError = require('../error/DBError');
 const AppError = require('../error/AppError');
 const e = require('express');
-
 const cloudinary = require('./CloudinaryService');
-const DBError = require('../error/DBError');
+//const DBError = require('../error/DBError');
+
 class Service {
   async signup(userInfo) {
     try {
-      //destruct user information sent into request
+
       const { fullname, password, email, profile_img } = userInfo;
 
       //generate a unique uuid for the user

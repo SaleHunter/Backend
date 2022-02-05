@@ -1,10 +1,12 @@
 const { Router } = require('express');
 const AuthController = require('../controllers/AuthController.js');
-
+const authSchemas = require('../validations/authSchemas.js');
 const router = Router();
 
-//Normal Authentication Routes
+//Middlwares
+const validate = require('../middlewares/validation.js');
 
+//Normal Authentication Routes
 /*
  * 1- Normal sign up route
  * Requires:
@@ -13,8 +15,11 @@ const router = Router();
  * 3- password
  * 4- profile_img (optional)
  */
-router.post('/signup', AuthController.signup);
-
+router.post(
+  '/signup',
+  validate(authSchemas.signup, 'body'),
+  AuthController.signup
+);
 /*
  * 2- Normal sign in route
  * Requires:

@@ -20,9 +20,11 @@
   "homepage": "https://github.com/SaleHunter/Backend#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cloudinary": "^1.28.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "google-auth-library": "^7.11.0",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
