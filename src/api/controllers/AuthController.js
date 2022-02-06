@@ -4,10 +4,7 @@ const AuthService = require('../services/AuthService');
 class Controller {
   async signup(req, res, next) {
     try {
-      console.log(req.body);
-
       const { createdUser, token } = await AuthService.signup(req.body);
-      console.log({ createdUser, token });
 
       res.status(201).json({
         status: 'success',

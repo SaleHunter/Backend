@@ -4,16 +4,13 @@ const { OAuth2Client } = require('google-auth-library');
 const { compareSync } = require('bcrypt');
 const AuthUtil = require('../utils/authUtils');
 const EmailUtil = require('../utils/emailUtils');
-const DBError = require('../error/DBError');
-const AppError = require('../error/AppError');
-const e = require('express');
 const cloudinary = require('./CloudinaryService');
-//const DBError = require('../error/DBError');
+const SQLError = require('../error/SQLError');
+const BaseError = require('../error/BaseError');
 
 class Service {
   async signup(userInfo) {
     try {
-
       const { fullname, password, email, profile_img } = userInfo;
 
       //generate a unique uuid for the user
@@ -49,8 +46,18 @@ class Service {
 
       return { createdUser, token };
     } catch (error) {
-      //TODO: Handle Duplicate user error form db
-      console.log(error);
+      if (error.name === 'SequelizeUniqueConstraintError') {
+        const attributeName = error.errors[0].path.split('_')[0];
+        const attributeValue = error.errors[0].value;
+        // console.log(error.name, attributeName, attributeValue);
+        throw new SQLError().duplicateEntry(
+          'User',
+          attributeName,
+          attributeValue
+        );
+
+        throw new SQLError().duplicateEntry('User');
+      }
     }
   }
 
@@ -70,7 +77,7 @@ class Service {
 
       // if user is not exist in db, throw error
       if (user.length == 0) {
-        throw new DBError('There is no user with this email', 404);
+        throw new SQLError().noEntityFound('User', 'Email', email);
       }
 
       //Compare password with hashed password in db
@@ -79,11 +86,10 @@ class Service {
         user[0].password
       );
 
-      //Check if password does not match, then throw error
-      // if (!isPasswordMatched) {
-      //   const error = new Error('Password does not match');
-      //   return error;
-      // }
+      // Check if password does not match, then throw error
+      if (!isPasswordMatched) {
+        throw new SQLError().incorrectPassword();
+      }
 
       //sign jwt-token for the user, so can access protected routes
       const token = await AuthUtil.signJWT(user[0].id);
@@ -93,7 +99,7 @@ class Service {
 
       return { user, token };
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 
@@ -168,7 +174,7 @@ class Service {
       }
       return user;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   }
 
@@ -184,7 +190,7 @@ class Service {
 
       // if user is not exist in db, throw error
       if (user.length == 0) {
-        throw new DBError('There is no user with this email', 404);
+        throw new SQLError().noEntityFound('User', 'Email', email);
       }
 
       const resetToken = await AuthUtil.generateResetToken();
@@ -212,10 +218,6 @@ class Service {
   async resetPassword(resetToken, passwords) {
     try {
       const { password, passwordConfirm } = passwords;
-      console.log(passwords);
-      // check if the 2 passwords are the same
-      if (password !== passwordConfirm)
-        throw new AppError('Password are not the same', 400);
 
       //get user info based on reset token
       const selectUserQuery = `SELECT token, token_expire FROM users WHERE token= ?;`;
@@ -226,11 +228,14 @@ class Service {
       console.log(user);
 
       //check if reset token is valid
-      if (user.length === 0) throw new DBError('reset token is invalid', 400);
+      if (user.length === 0) {
+        throw new SQLError().invalidResetToken();
+      }
 
       //check if reset token is expired
-      if (user[0].token_expire < new Date())
-        throw new DBError('reset token is expired', 400);
+      if (user[0].token_expire < new Date()) {
+        throw new SQLError().resetTokenExpired();
+      }
 
       //update the password with the new password
       // 1- Hash the given password
@@ -248,7 +253,6 @@ class Service {
       console.log(selectUserQuery);
       console.log(results, metadata);
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
