@@ -7,7 +7,7 @@ const schemas = {
 
       password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
 
-      repeat_password: Joi.ref('password'),
+      passwordConfirm: Joi.ref('password'),
 
       access_token: [Joi.string(), Joi.number()],
 
@@ -17,6 +17,6 @@ const schemas = {
       }),
     })
     .xor('password', 'access_token')
-    .with('password', 'repeat_password'),
+    .with('password', 'passwordConfirm'),
 };
 module.exports = schemas;

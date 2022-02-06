@@ -42,6 +42,13 @@ class SQLError extends Error {
     return this;
   }
 
+  unmatchedPasswords() {
+    this.statusCode = 400;
+    this.message = `Passwords don't match`;
+
+    return this;
+  }
+
   invalidResetToken() {
     this.statusCode = 404;
     this.message = `Invalid Reset Token, please try again with the correct token`;

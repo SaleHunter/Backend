@@ -41,6 +41,10 @@ const validate = require('../middlewares/validation.js');
  *           type: string
  *           description: The password of the user
  *           format: password
+ *         passwordConfirm:
+ *           type: string
+ *           description: The password confirm of the user
+ *           format: password
  *         profile_img:
  *           type: string
  *           description: The profile image base64 results from cloudinary
