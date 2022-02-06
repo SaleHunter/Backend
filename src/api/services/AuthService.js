@@ -109,23 +109,23 @@ class Service {
 
   async verifyGoogleUser(userInfo) {
     // Verify the token
-    const CLIENT_ID = userInfo.CLIENT_ID;
-    const client = new OAuth2Client(CLIENT_ID);
+    const { access_token, client_id } = userInfo;
+    const client = new OAuth2Client(client_id);
     const payload = await AuthUtil.verifyThirdPartyAuth(
       client,
-      CLIENT_ID,
-      userInfo.token
+      client_id,
+      access_token
     );
     return payload;
   }
 
   async verifyFacebookUser(userInfo) {
     try {
-      const { access_token, user_id } = userInfo;
+      const { access_token, client_id } = userInfo;
       const confirmUser = fetch(
         `https://graph.facebook.com/me?access_token=${access_token}`
       );
-      if (confirmUser.id === user_id) {
+      if (confirmUser.id === client_id) {
         return confirmUser;
       } else {
         return 'Invalid User';
