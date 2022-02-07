@@ -213,19 +213,19 @@ router.post('/forgetPassword', AuthController.forgetPassword);
  *              type: object
  *              required:
  *                - email
- *                - passwordConfirmation
+ *                - passwordConfirm
  *              properties:
  *                password:
  *                  type: string
  *                  description: The new password of the user
  *                  format: password
- *                passwordConfirmation:
+ *                passwordConfirm:
  *                  type: string
  *                  description: The new password confirm of the user
  *                  format: password
  *              example:
  *                password: pass12345678
- *                passwordConfirmation: pass12345678
+ *                passwordConfirm: pass12345678
  *     responses:
  *       '200':
  *         description: Reset Token sent successfully to given email address
