@@ -24,6 +24,8 @@ const validate = require('../middlewares/validation.js');
  *       required:
  *         - fullname
  *         - email
+ *         - password
+ *         - passwordConfirm
  *       properties:
  *         fullname:
  *           type: string
@@ -32,22 +34,37 @@ const validate = require('../middlewares/validation.js');
  *           type: string
  *           description: The email address of the user
  *           format: email
-
+ *
  *     NormalAuth:
  *       type: object
  *       required:
  *         - password
- *         - passwordConfirmation
+ *         - passwordConfirm
  *       properties:
  *         password:
  *           type: string
  *           description: The password of the user
  *           format: password
- *         passwordConfirmation:
+ *         passwordConfirm:
  *           type: string
  *           description: The confirmation of password
  *           format: password
- * 
+ *
+ *     Login:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: The email address of the user
+ *           format: email
+ *         password:
+ *           type: string
+ *           description: The password of the user
+ *           format: password
+ *
  *     ThirdPartyAuth:
  *       type: object
  *       required:
@@ -62,7 +79,7 @@ const validate = require('../middlewares/validation.js');
  *           type: string
  *           description: user's access token which verify that's a real user
  *           format: string
- * 
+ *
  */
 
 /**
@@ -109,8 +126,7 @@ router.post(
  *         application/json:
  *           schema:
  *             allOf:
- *                - $ref: '#/components/schemas/BasicAuth'
- *                - $ref: '#/components/schemas/NormalAuth'
+ *                - $ref: '#/components/schemas/Login'
  *     responses:
  *       '200':
  *         description: Signed in successfully
@@ -146,6 +162,35 @@ router.post('/signin', AuthController.signin);
  *         description: Failed to sign in
  */
 router.post('/thirdparty', AuthController.thirdPartyAuth);
+
+/**
+ * @swagger
+ * /api/v1/auth/forgetPassword:
+ *   post:
+ *     summary: Forget Password
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - email
+ *              properties:
+ *                email:
+ *                  type: string
+ *                  description: The email address of the user
+ *                  format: email
+ *              example:
+ *                email: john_smith@gmail.com
+ *     responses:
+ *       '200':
+ *         description: Reset Token sent successfully to given email address
+ *       '404':
+ *         description: There is no user with that email
+ */
+router.post('/forgetPassword', AuthController.forgetPassword);
 
 /**
  * @swagger

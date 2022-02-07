@@ -1,5 +1,4 @@
 const swaggerJsDoc = require('swagger-jsdoc');
-const t = require('../api/routes/authRoutes');
 
 const options = {
   definition: {
