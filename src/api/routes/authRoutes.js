@@ -19,17 +19,12 @@ const validate = require('../middlewares/validation.js');
  * @swagger
  * components:
  *   schemas:
- *     Auth:
+ *     BasicAuth:
  *       type: object
  *       required:
  *         - fullname
  *         - email
- *         - password
  *       properties:
- *         id:
- *           type: string
- *           description: The auto-generated UUID id of the user
- *           format: uuid
  *         fullname:
  *           type: string
  *           description: The full name of the user
@@ -37,30 +32,37 @@ const validate = require('../middlewares/validation.js');
  *           type: string
  *           description: The email address of the user
  *           format: email
+
+ *     NormalAuth:
+ *       type: object
+ *       required:
+ *         - password
+ *         - passwordConfirmation
+ *       properties:
  *         password:
  *           type: string
  *           description: The password of the user
  *           format: password
- *         passwordConfirm:
+ *         passwordConfirmation:
  *           type: string
- *           description: The password confirm of the user
+ *           description: The confirmation of password
  *           format: password
- *         profile_img:
+ * 
+ *     ThirdPartyAuth:
+ *       type: object
+ *       required:
+ *         - client_id
+ *         - access_token
+ *       properties:
+ *         client_id:
  *           type: string
- *           description: The profile image base64 results from cloudinary
- *           format: base64
- *         token:
+ *           description: user's id which verify that's a real user
+ *           format: string
+ *         access_token:
  *           type: string
- *           description: The password reset token for the user
- *         token_expire:
- *           type: string
- *           description: The password reset token expiration time for the user
- *           format: date-time
- *       example:
- *         id: 9081a368-fa3d-4463-ae8d-69c16130d166
- *         fullname: John Smith
- *         email: john_smith@gmail.com
- *         password: pass123456
+ *           description: user's access token which verify that's a real user
+ *           format: string
+ * 
  */
 
 /**
@@ -74,7 +76,15 @@ const validate = require('../middlewares/validation.js');
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Auth'
+ *             allOf:
+ *                - $ref: '#/components/schemas/BasicAuth'
+ *                - $ref: '#/components/schemas/NormalAuth'
+ *                - type: object
+ *                  properties:
+ *                    profile_img:
+ *                      type: string
+ *                      description: The profile image base64 results from cloudinary
+ *                      format: base64
  *     responses:
  *       '201':
  *         description: Signed Up successfully
@@ -98,7 +108,9 @@ router.post(
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Auth'
+ *             allOf:
+ *                - $ref: '#/components/schemas/BasicAuth'
+ *                - $ref: '#/components/schemas/NormalAuth'
  *     responses:
  *       '200':
  *         description: Signed in successfully
@@ -109,84 +121,31 @@ router.post(
  */
 router.post('/signin', AuthController.signin);
 
-router.post('/signinAuth', AuthController.thirdPartyAuth);
-
 /**
  * @swagger
- * /api/v1/auth/forgetPassword:
+ * /api/v1/auth/thirdparty:
  *   post:
- *     summary: Forget Password
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - email
- *              properties:
- *                email:
- *                  type: string
- *                  description: The email address of the user
- *                  format: email
- *              example:
- *                email: john_smith@gmail.com
- *     responses:
- *       '200':
- *         description: Reset Token sent successfully to given email address
- *       '404':
- *         description: There is no user with that email
- */
-router.post('/forgetPassword', AuthController.forgetPassword);
-
-/**
- * @swagger
- * /api/v1/auth/signup:
- *   post:
- *     summary: Sign up a new user
+ *     summary: Sign in/up a user from third-party platform
  *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Auth'
+ *             allOf:
+ *                - $ref: '#/components/schemas/BasicAuth'
+ *                - $ref: '#/components/schemas/ThirdPartyAuth'
  *     responses:
+ *       '200':
+ *         description: Signed in successfully
  *       '201':
  *         description: Signed Up successfully
  *       '400':
  *         description: Failed to sign up
+ *       '401':
+ *         description: Failed to sign in
  */
-router.post(
-  '/signup',
-  validate(authSchemas.signup, 'body'),
-  AuthController.signup
-);
-
-/**
- * @swagger
- * /api/v1/auth/signin:
- *   post:
- *     summary: Sign in a user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Auth'
- *     responses:
- *       '200':
- *         description: Signed in successfully
- *       '404':
- *         description: Failed to sign in, there is no user with that email
- *       '400':
- *         description: Incorrect password
- */
-router.post('/signin', AuthController.signin);
-
-router.post('/signinAuth', AuthController.thirdPartyAuth);
+router.post('/thirdparty', AuthController.thirdPartyAuth);
 
 /**
  * @swagger
@@ -208,20 +167,20 @@ router.post('/signinAuth', AuthController.thirdPartyAuth);
  *            schema:
  *              type: object
  *              required:
- *                - password
- *                - passwordConfirm
+ *                - email
+ *                - passwordConfirmation
  *              properties:
  *                password:
  *                  type: string
  *                  description: The new password of the user
  *                  format: password
- *                passwordConfirm:
+ *                passwordConfirmation:
  *                  type: string
  *                  description: The new password confirm of the user
  *                  format: password
  *              example:
  *                password: pass12345678
- *                passwordConfirm: pass12345678
+ *                passwordConfirmation: pass12345678
  *     responses:
  *       '200':
  *         description: Reset Token sent successfully to given email address
