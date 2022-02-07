@@ -12,6 +12,9 @@ const options = {
       {
         url: 'http://localhost:4000',
       },
+      {
+        url: 'https://sale-hunter.herokuapp.com/',
+      },
     ],
   },
   apis: [`${__dirname}/../api/routes/*.js`],
