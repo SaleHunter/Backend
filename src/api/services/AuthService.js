@@ -11,10 +11,10 @@ const BaseError = require('../error/BaseError');
 class Service {
   async signup(userInfo) {
     try {
-      const { fullname, password, passwordConfirm, email, profile_img } =
+      const { fullname, password, passwordConfirmation, email, profile_img } =
         userInfo;
 
-      if (password !== passwordConfirm)
+      if (password !== passwordConfirmation)
         throw new SQLError().unmatchedPasswords();
 
       //generate a unique uuid for the user
@@ -221,7 +221,7 @@ class Service {
 
   async resetPassword(resetToken, passwords) {
     try {
-      const { password, passwordConfirm } = passwords;
+      const { password, passwordConfirmation } = passwords;
 
       //get user info based on reset token
       const selectUserQuery = `SELECT token, token_expire FROM users WHERE token= ?;`;
