@@ -19,8 +19,7 @@ app.use(cors());
 
 //Request Logger
 app.use(logger('dev'));
-
-app.use(app.get('env'));
+console.log(app.get('env'));
 //Allowing app to recieve and parse json in request body
 app.use(express.json());
 

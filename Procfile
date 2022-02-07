@@ -1,1 +1,1 @@
-web: node -r dotenv/config src/server.js 
+web: SET NODE_ENV=production && node -r dotenv/config src/server.js 
