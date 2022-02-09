@@ -21,13 +21,13 @@ class Controller {
     try {
       console.log(req.body);
 
-      const user = await AuthService.signin(req.body);
+      const { user, token } = await AuthService.signin(req.body);
 
       res.status(200).json({
         status: 'success',
         message: 'Signed In successfully',
         user: user[0],
-        token: req.body.token,
+        token,
       });
     } catch (error) {
       next(error);
@@ -42,7 +42,7 @@ class Controller {
         status: 'sucess',
         message: 'Signed in Successfully',
         user: user[0],
-        token: req.body.token,
+        acess_token: req.body.access_token,
       });
     } catch (error) {
       res.status(400).json({
