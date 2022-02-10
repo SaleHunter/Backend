@@ -182,7 +182,7 @@ class Service {
     }
   }
 
-  async forgetPassword(userInfo) {
+  async forgetPassword(userInfo, client) {
     try {
       const { email } = userInfo;
 
@@ -197,7 +197,7 @@ class Service {
         throw new SQLError().noEntityFound('User', 'Email', email);
       }
 
-      const resetToken = await AuthUtil.generateResetToken();
+      const resetToken = await AuthUtil.generateResetToken(client);
 
       var now = new Date();
       now.setMinutes(now.getMinutes() + 30); // timestamp
@@ -211,7 +211,8 @@ class Service {
 
       const emailResponse = await new EmailUtil().sendResetPasswordEmail(
         user,
-        resetToken
+        resetToken,
+        client
       );
     } catch (error) {
       console.log(error);

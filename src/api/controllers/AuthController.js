@@ -54,12 +54,15 @@ class Controller {
 
   async forgetPassword(req, res, next) {
     try {
-      await AuthService.forgetPassword(req.body);
+      //Check if the request come from mobile phone
+      const client = req.header('client') || 'web';
+      await AuthService.forgetPassword(req.body, client);
 
       res.status(200).json({
         status: 'success',
-        message:
-          'Password reset token has successfully sent to your email address.',
+        message: `Password reset ${
+          client === 'mobile' ? 'pin' : 'token'
+        } has successfully sent to your email address.`,
       });
     } catch (error) {
       next(error);
