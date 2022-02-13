@@ -108,11 +108,7 @@ const validate = require('../middlewares/validation.js');
  *       '400':
  *         description: Failed to sign up
  */
-router.post(
-  '/signup',
-  validate(authSchemas.signup, 'body'),
-  AuthController.signup
-);
+router.post('/signup', AuthController.signup);
 
 /**
  * @swagger
