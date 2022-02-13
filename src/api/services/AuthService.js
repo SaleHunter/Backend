@@ -131,6 +131,8 @@ class Service {
         return 'Invalid User';
       }
     } catch (error) {
+      console.log(error);
+
       console.log("Don't F With me");
     }
   }
@@ -176,8 +178,10 @@ class Service {
           type: sequelize.QueryTypes.SELECT,
         });
       }
+      console.log('social user \n', user);
       return user;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   }

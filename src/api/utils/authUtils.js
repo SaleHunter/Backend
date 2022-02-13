@@ -29,6 +29,8 @@ class Util {
       });
       return ticket.payload;
     } catch (err) {
+      console.log(err);
+
       console.log('Error from Verify third party auth ');
     }
   }
