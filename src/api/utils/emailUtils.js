@@ -34,10 +34,11 @@ module.exports = class Email {
 
     this.emailOptions.subject = 'Forget Password';
     this.emailOptions.to = user[0].email;
-    this.emailOptions.html = pug.renderFile(
-      `${__dirname}/../../../templates/reset-password.pug`,
-      replacements
-    );
+    this.emailOptions.text = `Your reset code is ${token}`;
+    // pug.renderFile(
+    //   `${__dirname}/../../../templates/reset-password.pug`,
+    //   replacements
+    // );
 
     try {
       const emailResponse = await transporter.sendMail(this.emailOptions);
