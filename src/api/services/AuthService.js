@@ -11,10 +11,10 @@ const BaseError = require('../error/BaseError');
 class Service {
   async signup(userInfo) {
     try {
-      const { fullname, password, passwordConfirmation, email, profile_img } =
+      const { fullname, password, passwordConfirm, email, profile_img } =
         userInfo;
 
-      if (password !== passwordConfirmation)
+      if (password !== passwordConfirm)
         throw new SQLError().unmatchedPasswords();
 
       //generate a unique uuid for the user
