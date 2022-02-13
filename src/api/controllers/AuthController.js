@@ -37,6 +37,7 @@ class Controller {
   async thirdPartyAuth(req, res, next) {
     try {
       const user = await AuthService.socialAuth(req.body);
+      console.log(req.body);
       console.log(user[0]);
       res.status(200).json({
         status: 'sucess',
