@@ -1,7 +1,3 @@
-const nodemailer = require('nodemailer');
-const mailjetTransport = require('nodemailer-mailjet-transport');
-const pug = require('pug');
-const fs = require('fs').promises;
 const mailjet = require('node-mailjet').connect(
   process.env.MAILJET_API_KEY,
   process.env.MAILJET_API_SECRET
