@@ -213,7 +213,7 @@ class Service {
         type: sequelize.QueryTypes.UPDATE,
       });
 
-      const emailResponse = await new EmailUtil().sendResetPasswordEmail(
+      const emailResponse = new EmailUtil().sendResetPasswordEmail(
         user,
         resetToken,
         client
