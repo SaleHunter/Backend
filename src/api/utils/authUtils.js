@@ -21,14 +21,11 @@ class Util {
 
     return token;
   }
-  async verifyThirdPartyAuth(client, CLIENT_ID, token) {
+  async verifyThirdPartyAuth(token, CLIENT_ID) {
     try {
       const ticket = await client.verifyIdToken({
         idToken: token,
-        audience: [
-          process.env.GOOGLE_FRONT_USER_ID,
-          process.env.GOOGLE_FLUTTER_USER_ID,
-        ],
+        audience: CLIENT_ID,
       });
       return ticket.payload;
     } catch (err) {
