@@ -27,7 +27,7 @@ class Util {
         idToken: token,
         audience: [CLIENT_ID, process.env.F_G_CLIENT_ID],
       });
-      return ticket.payload;
+      return ticket.getPayload();
     } catch (err) {
       console.log(err);
 
