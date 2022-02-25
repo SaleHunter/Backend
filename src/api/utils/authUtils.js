@@ -25,7 +25,7 @@ class Util {
     try {
       const ticket = await client.verifyIdToken({
         idToken: token,
-        audience: CLIENT_ID,
+        audience: [CLIENT_ID, process.env.F_G_CLIENT_ID],
       });
       return ticket.payload;
     } catch (err) {
