@@ -190,8 +190,32 @@ router.post('/forgetPassword', AuthController.forgetPassword);
 
 /**
  * @swagger
+ * /api/v1/auth/verifyResetToken/{resetToken}:
+ *   get:
+ *     summary: Verify Reset Token
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: resetToken
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Password's reset token
+ *     responses:
+ *       '200':
+ *         description: Reset Token is valid
+ *       '404':
+ *         description: Invalid Reset Token
+ *       '400':
+ *         description: Reset Token Expired
+ */
+
+router.get('/verifyResetToken/:resetToken', AuthController.verifyResetToken);
+
+/**
+ * @swagger
  * /api/v1/auth/resetPassword/{resetToken}:
- *   post:
+ *   patch:
  *     summary: Reset Password
  *     tags: [Auth]
  *     parameters:
@@ -230,6 +254,7 @@ router.post('/forgetPassword', AuthController.forgetPassword);
  *       '400':
  *         description: Reset Token Expired
  */
+
 router.patch('/resetPassword/:resetToken', AuthController.resetPassword);
 
 module.exports = router;

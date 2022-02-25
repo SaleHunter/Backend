@@ -212,7 +212,7 @@ class Service {
         type: sequelize.QueryTypes.UPDATE,
       });
 
-      const emailResponse = await new EmailUtil().sendResetPasswordEmail(
+      const emailResponse = new EmailUtil().sendResetPasswordEmail(
         user,
         resetToken,
         client
@@ -223,9 +223,36 @@ class Service {
     }
   }
 
+  async verifyResetToken(email, resetToken) {
+    try {
+      const selectUserQuery = `SELECT token, token_expire FROM users WHERE token= ?;`;
+      const user = await sequelize.query(selectUserQuery, {
+        replacements: [email, resetToken],
+        type: sequelize.QueryTypes.SELECT,
+      });
+
+      console.log(user);
+
+      //check if reset token is valid
+      if (user.length === 0) {
+        throw new SQLError().invalidResetToken();
+      }
+
+      //check if reset token is expired
+      if (user[0].token_expire < new Date()) {
+        throw new SQLError().resetTokenExpired();
+      }
+
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async resetPassword(resetToken, passwords) {
     try {
-      const { password, passwordConfirmation } = passwords;
+      const { password, passwordConfirm } = passwords;
 
       //get user info based on reset token
       const selectUserQuery = `SELECT token, token_expire FROM users WHERE token= ?;`;

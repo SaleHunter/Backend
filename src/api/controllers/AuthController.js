@@ -70,6 +70,20 @@ class Controller {
     }
   }
 
+  async verifyResetToken(req, res, next) {
+    try {
+      const { email, resetToken } = req.params;
+
+      await AuthService.verifyResetToken(resetToken);
+      res.status(200).json({
+        status: 'success',
+        message: 'Reset token is valid, please go and reset your password',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async resetPassword(req, res, next) {
     try {
       await AuthService.resetPassword(req.params.resetToken, req.body);
