@@ -110,7 +110,7 @@ class Service {
   async verifyGoogleUser(userInfo) {
     // Verify the token
     const client = new OAuth2Client(process.env.G_CLIENT_ID);
-    const { access_token, client_id } = userInfo;
+    const { access_token } = userInfo;
     const payload = await AuthUtil.verifyThirdPartyAuth(
       access_token,
       process.env.G_CLIENT_ID
