@@ -21,7 +21,7 @@ class Util {
 
     return token;
   }
-  async verifyThirdPartyAuth(token, CLIENT_ID) {
+  async verifyThirdPartyAuth(token, CLIENT_ID, client) {
     try {
       const ticket = await client.verifyIdToken({
         idToken: token,

@@ -113,7 +113,8 @@ class Service {
     const { access_token } = userInfo;
     const payload = await AuthUtil.verifyThirdPartyAuth(
       access_token,
-      process.env.G_CLIENT_ID
+      process.env.G_CLIENT_ID,
+      client
     );
     return payload;
   }
