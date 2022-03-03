@@ -47,13 +47,18 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 
 // ALl Routes
 //Authentication Router
-app.use('/api/v1/auth/', require('./api/routes/authRoutes.js'));
+app.use('/api/v1/auth/', require('./domains/auth/routes'));
 
 //Error Handlers
 // 1- Error Logger
 app.use(errorLogger);
 
 // 2- Globale Error Handler
-app.use(globalErrorHandler);
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).json({
+    status: err.status || 'Error',
+    message: err.message,
+  });
+});
 
 module.exports = app;

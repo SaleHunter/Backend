@@ -21,10 +21,12 @@
   "homepage": "https://github.com/SaleHunter/Backend#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "celebrate": "^15.0.1",
     "cloudinary": "^1.28.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "express-async-handler": "^1.2.0",
     "google-auth-library": "^7.11.0",
     "handlebars": "^4.7.7",
     "joi": "^17.6.0",

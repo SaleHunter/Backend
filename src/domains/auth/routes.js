@@ -7,3 +7,22 @@
  * 5. verify-resetToken route
  * 6. reset password route
  */
+
+const { Router } = require('express');
+const asyncHandler = require('express-async-handler');
+const { celebrate, errors, Segments } = require('celebrate');
+
+const controller = require('./controllers');
+const validation = require('./validations');
+
+const router = Router();
+
+
+router.post(
+  '/signin',
+  celebrate({ [Segments.BODY]: validation.signin() }),
+  asyncHandler(controller.signin)
+);
+
+router.use(errors());
+module.exports = router;
