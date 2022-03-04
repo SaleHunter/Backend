@@ -17,11 +17,16 @@ const validation = require('./validations');
 
 const router = Router();
 
-
 router.post(
   '/signin',
   celebrate({ [Segments.BODY]: validation.signin() }),
   asyncHandler(controller.signin)
+);
+
+router.post(
+  '/signin',
+  asyncHandler(validation.signup),
+  asyncHandler(controller.signup)
 );
 
 router.use(errors());
