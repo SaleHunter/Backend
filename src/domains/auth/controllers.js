@@ -33,6 +33,22 @@ class Controller {
       token: jwToken,
     });
   }
+  async signup(req, res, next) {
+    const signupPayload = {
+      fullname: req.body.fullname,
+      email: req.body.email,
+      password: req.body.password,
+      profile_img: req.body.profile_img,
+    };
+
+    const { user, jwToken } = await service.signup(signupPayload);
+    res.status(201).json({
+      status: 'success',
+      message: 'Signed up successfully',
+      user,
+      token: jwToken,
+    });
+  }
 }
 
 module.exports = new Controller();
