@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 /**
  * @class
@@ -32,6 +33,30 @@ class Helper {
     });
 
     return token;
+  }
+
+  /**
+   * Generate a new Reset Token for the user
+   * @access public
+   * @param {Number} size - The size of the reset token
+   * @async
+   * @returns {Promise<string>} the new Reset Token for the user
+   */
+  async generateResetToken(size = 8) {
+    const resetToken = await crypto.randomBytes(size).toString('hex');
+
+    return resetToken;
+  }
+
+  /**
+   * Generate a new Reset Pin for the user if request comming from mobile app
+   * @access public
+   * @returns {number} the new Reset pin for the user
+   */
+  generateResetPin() {
+    const resetPin = Math.floor(100000 + Math.random() * 900000);
+
+    return resetPin;
   }
 }
 

@@ -1,17 +1,3 @@
-/**
- * TODO: build
- */
-// class validation{
-//   async signup(){
-//     // obj extraction
-//     // this.validate(obj);
-//   }
-//   async signin(){
-
-//   }
-//   async validate(obj)
-// }
-
 const Joi = require('joi');
 
 /**
@@ -20,11 +6,10 @@ const Joi = require('joi');
  */
 class Validation {
   /**
-   * @method Create sign in validation schema
+   * @method Sign In Validation Schema
    * @access public
-   * @returns {ObjectSchema} sign in validation schema
    */
-  signin() {
+  async signin(req, res, next) {
     const schema = Joi.object({
       email: Joi.string().email().required().messages({
         'string.base': 'Email is must be string',
@@ -44,7 +29,27 @@ class Validation {
         }),
     });
 
-    return schema;
+    await schema.validateAsync(req.body);
+
+    next();
+  }
+
+  /**
+   * @method  Forget Password Validation Schema
+   * @access public
+   */
+  async forgetPassword(req, res, next) {
+    const schema = Joi.object({
+      email: Joi.string().email().required().messages({
+        'string.base': 'Email is must be string',
+        'any.required': 'Email is required',
+        'string.email': 'Please provide a valid email address',
+      }),
+    });
+
+    await schema.validateAsync(req.body);
+
+    next();
   }
 }
 

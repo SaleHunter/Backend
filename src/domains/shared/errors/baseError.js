@@ -10,6 +10,7 @@
 class BaseError extends Error {
   constructor(message) {
     super(message);
+    this.operational = true;
   }
 }
 

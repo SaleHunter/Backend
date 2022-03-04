@@ -53,7 +53,21 @@ app.use('/api/v1/auth/', require('./domains/auth/routes'));
 // 1- Error Logger
 app.use(errorLogger);
 
-// 2- Globale Error Handler
+//Handle Validation Errors
+app.use((err, req, res, next) => {
+  if (err.name === 'ValidationError') {
+    console.log('HERE: ', err.name);
+    res.status(400).json({
+      status: 'Fail',
+      message: 'Validation Error',
+      detail: err.message,
+    });
+  }
+
+  next(err);
+});
+
+// 3- Globale Error Handler
 app.use((err, req, res, next) => {
   res.status(err.statusCode).json({
     status: err.status || 'Error',

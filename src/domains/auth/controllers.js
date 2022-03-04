@@ -1,7 +1,3 @@
-/**
- * TODO: implement class (Controller methods) for all corresponding routes
- */
-
 const service = require('./services');
 
 /**
@@ -17,7 +13,7 @@ class Controller {
    * @param {callback} middleware - Express middleware.
    */
   async signin(req, res, next) {
-    //Constructing the sign in payload needed for completing sing in process
+    //Constructing the sign in payload needed for completing sign in process
     const signinPayload = {
       email: req.body.email,
       password: req.body.password,
@@ -31,6 +27,33 @@ class Controller {
       message: 'Signed In successfully',
       user,
       token: jwToken,
+    });
+  }
+
+  /**
+   * @name post/forgetPassword
+   * @method Service for handling user's forget password request
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async forgetPassword(req, res, next) {
+    //Constructing the Forget Password payload needed for completing Forget Password process
+    const forgetPasswordPayload = {
+      email: req.body.email,
+    };
+
+    //Check if the request is comming from web or mobile app
+    const client = req.header('client') || 'web';
+
+    //Calling the forget password Service
+    await service.forgetPassword(forgetPasswordPayload, client);
+
+    res.status(200).json({
+      status: 'success',
+      message: `Password reset ${
+        client === 'mobile' ? 'pin' : 'token'
+      } has successfully sent to your email address.`,
     });
   }
 }
