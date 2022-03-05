@@ -36,4 +36,13 @@ class IncorrectPasswordError extends BaseError {
     this.status = 'Fail';
   }
 }
-module.exports = { NoUserFoundError, IncorrectPasswordError };
+
+class FailedToSignUp extends BaseError {
+  constructor(email) {
+    super(`sign up failed: ${email}`);
+    this.statusCode = 501;
+    this.status = 'Fail';
+  }
+}
+
+module.exports = { NoUserFoundError, IncorrectPasswordError, FailedToSignUp };
