@@ -24,7 +24,7 @@ router.post(
 );
 
 router.post(
-  '/signin',
+  '/signup',
   asyncHandler(validation.signup),
   asyncHandler(controller.signup)
 );

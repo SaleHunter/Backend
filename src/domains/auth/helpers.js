@@ -33,8 +33,8 @@ class Helper {
 
     return token;
   }
-  hash(password) {
-    const salt = await bcrypt.genSalt();
+  async hash(password) {
+    const salt = 10;
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
   }

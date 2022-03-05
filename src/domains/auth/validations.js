@@ -79,7 +79,16 @@ class Validation {
       })
       .xor('password', 'access_token')
       .with('password', 'passwordConfirmation');
-    schema.validateAsync(req.body);
+    try {
+      await schema.validateAsync(req.body);
+    } catch (err) {
+      res.json({
+        status: 'failed',
+        message: 'validation failed',
+        error: err.details,
+      });
+    }
+
     next();
   }
 }

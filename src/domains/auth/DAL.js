@@ -1,4 +1,3 @@
-const { UUID } = require('sequelize/dist');
 const { sequelize } = require('../../config/db');
 const { NoUserFoundError, FailedToSignUp } = require('./errors');
 const { v4: uuidv4 } = require('uuid');
