@@ -5,10 +5,10 @@ const swaggerUI = require('swagger-ui-express');
 // const swaggerJsDoc = require('swagger-jsdoc');
 
 const swaggerSpecs = require('./config/swagger');
-const {
-  errorLogger,
-  globalErrorHandler,
-} = require('./api/error/errorHandlers');
+// const {
+//   errorLogger,
+//   globalErrorHandler,
+// } = require('./api/error/errorHandlers');
 
 const app = express();
 
@@ -51,14 +51,14 @@ app.use('/api/v1/auth/', require('./domains/auth/routes'));
 
 //Error Handlers
 // 1- Error Logger
-app.use(errorLogger);
+// app.use(errorLogger);
 
-// 2- Globale Error Handler
-app.use((err, req, res, next) => {
-  res.status(err.statusCode).json({
-    status: err.status || 'Error',
-    message: err.message,
-  });
-});
+// // 2- Globale Error Handler
+// app.use((err, req, res, next) => {
+//   res.status(err.statusCode).json({
+//     status: err.status || 'Error',
+//     message: err.message,
+//   });
+// });
 
 module.exports = app;
