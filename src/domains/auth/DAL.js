@@ -1,6 +1,7 @@
+const { UUID } = require('sequelize/dist');
 const { sequelize } = require('../../config/db');
-const { NoUserFoundError } = require('./errors');
-
+const { NoUserFoundError, FailedToSignUp } = require('./errors');
+const { v4: uuidv4 } = require('uuid');
 /**
  * @class
  * @classdesc Represents The Data Access Layer of Authentication Domain
@@ -28,6 +29,31 @@ class DataAccessLayer {
       });
 
       if (!results[0]) throw new NoUserFoundError(email);
+
+      return results[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+  async createUser(user) {
+    try {
+      user.id = uuidv4();
+      const queryString = `
+        INSERT INTO users (id, email, user_name, password, profile_img) VALUES (?, ?, ?, ?, ?);
+      `;
+
+      const results = await sequelize.query(queryString, {
+        type: sequelize.QueryTypes.SELECT,
+        replacements: [
+          user.id,
+          user.email,
+          user.fullname,
+          user.password,
+          user.profile_img,
+        ],
+      });
+
+      if (!results[0]) throw new FailedToSignUp(user);
 
       return results[0];
     } catch (error) {
