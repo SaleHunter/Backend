@@ -39,6 +39,22 @@ class Service {
       throw error;
     }
   }
+
+  async signup(payload) {
+    try {
+      const { password } = payload;
+      const hashedPassword = await Helper.hash(password);
+      payload.password = hashedPassword;
+      const user = DataAccessLayer.createUser(payload);
+      const jwToken = Helper.signJWT(user.id);
+
+      delete user.password;
+      delete user.passwordConfirmation;
+      return { user, jwToken };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = new Service();
