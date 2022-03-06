@@ -57,10 +57,10 @@ app.use(errorLogger);
 app.use((err, req, res, next) => {
   if (err.name === 'ValidationError') {
     console.log('HERE: ', err.name);
-    res.status(400).json({
+    return res.status(400).json({
       status: 'Fail',
       message: 'Validation Error',
-      detail: err.message,
+      details: err.message,
     });
   }
 

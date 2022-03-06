@@ -1,5 +1,5 @@
 const { sequelize } = require('../../config/db');
-const { NoUserFoundError } = require('./errors');
+const { NoUserFoundError, InvalidResetTokenError } = require('./errors');
 
 /**
  * @class
@@ -36,10 +36,10 @@ class DataAccessLayer {
   }
 
   /**
-   * @method
+   * @method Add Password Reset Token to the user
    * @async
    * @param {String} email - User's email address
-   * @param {String | number} token - Password Reset Token\Pin
+   * @param {String} token - Password Reset Token\Pin
    * @returns {Promise<object>} Query metadata
    */
   async addResetToken(email, token) {
@@ -51,11 +51,58 @@ class DataAccessLayer {
       //Set the token expiration time to 30 minutes
       let now = new Date();
       now.setMinutes(now.getMinutes() + 30);
-      now = new Date(now);
+      now = new Date(now).toISOString();
 
       const results = await sequelize.query(queryString, {
         type: sequelize.QueryTypes.UPDATE,
         replacements: [token, now, email],
+      });
+
+      return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * @method Find the Reset Token of the user
+   * @async
+   * @param {String} token - Password Reset Token\Pin
+   * @throws {InvalidResetTokenError}
+   * @returns {Promise<object>} object contains reset token and token_expire
+   */
+  async findResetToken(token) {
+    try {
+      const queryString = `SELECT token, token_expire FROM users WHERE token = ?`;
+      console.log('token is: ', token);
+      const results = await sequelize.query(queryString, {
+        type: sequelize.QueryTypes.SELECT,
+        replacements: [token],
+      });
+
+      if (!results[0]) {
+        throw new InvalidResetTokenError();
+      }
+
+      return results[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * @method Update the password for the user
+   * @async
+   * @access public
+   * @param {string} token - Current reset token
+   * @param {string} password - New hashed password
+   */
+  async updatePassword(token, password) {
+    try {
+      const queryString = `UPDATE users SET password = ? WHERE token = ?`;
+      const results = await sequelize.query(queryString, {
+        type: sequelize.QueryTypes.UPDATE,
+        replacements: [password, token],
       });
 
       return results;

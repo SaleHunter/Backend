@@ -28,4 +28,15 @@ router.post(
   asyncHandler(controller.forgetPassword)
 );
 
+router.get(
+  '/verifyResetToken/:resetToken',
+  asyncHandler(validation.verifyResetToken),
+  asyncHandler(controller.verifyResetToken)
+);
+
+router.patch(
+  '/resetPassword/:resetToken',
+  asyncHandler(validation.resetPassword),
+  asyncHandler(controller.resetPassword)
+);
 module.exports = router;

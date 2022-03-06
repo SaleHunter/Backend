@@ -32,7 +32,7 @@ class Controller {
 
   /**
    * @name post/forgetPassword
-   * @method Service for handling user's forget password request
+   * @method Controller for handling user's forget password request
    * @access public
    * @async
    * @param {callback} middleware - Express middleware.
@@ -54,6 +54,53 @@ class Controller {
       message: `Password reset ${
         client === 'mobile' ? 'pin' : 'token'
       } has successfully sent to your email address.`,
+    });
+  }
+
+  /**
+   * @name get/verifyResetToken
+   * @method Controller for hanlding user's Verify Reset Token request
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async verifyResetToken(req, res, next) {
+    //Constructing the Verify Reset Token payload needed for completing Verify Reset Token process
+    console.log(req.params.resetToken);
+    const verifyResetTokenPayload = {
+      token: req.params.resetToken,
+    };
+
+    //Calling the Verify Reset Token Service
+    const isMatched = await service.verifyResetToken(verifyResetTokenPayload);
+
+    if (isMatched)
+      res.status(200).json({
+        status: 'success',
+        message: 'Reset Token is valid',
+      });
+  }
+
+  /**
+   * @name patch/resetPassword
+   * @method Controller for hanlding user's Reset Password request
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async resetPassword(req, res, next) {
+    //Constructing the Reset Password payload needed for completing Reset Password process
+    const forgetPasswordPayload = {
+      token: req.params.resetToken,
+      password: req.body.password,
+    };
+
+    //Calling the Reset Password Service
+    await service.resetPassword(forgetPasswordPayload);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Password Reseted Successfully',
     });
   }
 }
