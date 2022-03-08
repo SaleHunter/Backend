@@ -1,12 +1,12 @@
-const { func } = require('joi');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
+const { googleAuth } = require('../domains/auth/controllers');
 
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.G_CLIENT_ID,
-      clientSecret: process.env.G_CLIENT_SECRET,
+      clientSecret: process.env.G_SECRET,
       callbackURL: 'https://sale-hunter.vercel.app/',
       passReqToCallback: true,
     },

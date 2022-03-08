@@ -11,7 +11,6 @@
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
 const passport = require('passport');
-const Email = require('../shared/services/email');
 
 const controller = require('./controllers');
 const validation = require('./validations');
@@ -48,7 +47,7 @@ router.post(
   asyncHandler(controller.signup)
 );
 
-require('../../libraries/passport')(controller.googleAuth);
+require('../../libraries/passport');
 
 router.get(
   '/googleAuth',
