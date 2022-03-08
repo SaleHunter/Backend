@@ -10,6 +10,7 @@
 
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
+const { Passport } = require('passport');
 const passport = require('passport');
 
 const controller = require('./controllers');
