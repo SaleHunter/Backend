@@ -48,6 +48,13 @@ class InvalidResetTokenError extends BaseError {
     this.status = 'Fail';
   }
 }
+class FailedToSignUp extends BaseError {
+  constructor(email) {
+    super(`sign up failed: ${email}`);
+    this.statusCode = 501;
+    this.status = 'Fail';
+  }
+}
 
 /**
  * @class
@@ -69,4 +76,5 @@ module.exports = {
   IncorrectPasswordError,
   InvalidResetTokenError,
   ExpiredResetTokenError,
+  FailedToSignUp,
 };

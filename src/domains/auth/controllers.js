@@ -1,3 +1,4 @@
+const { ref } = require('joi');
 const service = require('./services');
 
 /**
@@ -102,6 +103,33 @@ class Controller {
       status: 'success',
       message: 'Password Reseted Successfully',
     });
+  }
+  async signup(req, res, next) {
+    const signupPayload = {
+      fullname: req.body.fullname,
+      email: req.body.email,
+      password: req.body.password,
+      profile_img: req.body.profile_img,
+    };
+
+    const { user, jwToken } = await service.signup(signupPayload);
+    res.status(201).json({
+      status: 'success',
+      message: 'Signed up successfully',
+      user,
+      token: jwToken,
+    });
+  }
+  async googleAuth(req, accessToken, refreshToken, profile, done) {
+    console.log('=======================================');
+    console.log('google auth');
+    console.log('accessToken: ', accessToken);
+    console.log('-------------------------------');
+    console.log('refreshToken: ', refreshToken);
+    console.log('-------------------------------');
+    console.log('profile: ', profile);
+    console.log('=======================================');
+    return done(null, profile);
   }
 }
 

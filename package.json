@@ -33,6 +33,8 @@
     "morgan": "^1.10.0",
     "mysql2": "^2.3.3",
     "node-mailjet": "^3.3.5",
+    "passport": "^0.5.2",
+    "passport-google-oauth2": "^0.2.0",
     "prettier": "^2.5.1",
     "sequelize": "^7.0.0-alpha.4",
     "swagger-jsdoc": "^6.1.0",
