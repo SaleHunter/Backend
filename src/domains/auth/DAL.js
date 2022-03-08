@@ -115,11 +115,11 @@ class DataAccessLayer {
     try {
       user.id = uuidv4();
       const queryString = `
-        INSERT INTO users (id, email, user_name, password, profile_img) VALUES (?, ?, ?, ?, ?);
+        INSERT INTO users (id, email, full_name, password, profile_img) VALUES (?, ?, ?, ?, ?)
       `;
 
       const results = await sequelize.query(queryString, {
-        type: sequelize.QueryTypes.SELECT,
+        type: sequelize.QueryTypes.INSERT,
         replacements: [
           user.id,
           user.email,
@@ -128,8 +128,7 @@ class DataAccessLayer {
           user.profile_img,
         ],
       });
-
-      if (!results[0]) throw new FailedToSignUp(user);
+      console.log(results);
 
       return results[0];
     } catch (error) {

@@ -10,11 +10,32 @@
 
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
+const passport = require('passport');
+const flash = require('express-flash');
+const session = require('express-session');
+const initializePassport = require('../../libraries/passport');
 
 const controller = require('./controllers');
 const validation = require('./validations');
 
+initializePassport(passport);
+
 const router = Router();
+
+// express-flash
+router.use(flash());
+
+// session
+router.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+//passport
+router.use(passport.initialize());
+router.use(passport.session());
 
 router.post(
   '/signin',
@@ -45,26 +66,6 @@ router.post(
   asyncHandler(validation.signup),
   asyncHandler(controller.signup)
 );
-
-require('../../libraries/passport');
-const flash = require('express-flash');
-const session = require('express-session');
-const passport = require('passport');
-
-// express-flash
-router.use(flash());
-
-// session
-router.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-//passport
-router.use(passport.initialize());
-router.use(passport.session());
 
 router.post(
   '/thirdparty',
