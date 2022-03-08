@@ -47,13 +47,32 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
 
 // ALl Routes
 //Authentication Router
-app.use('/api/v1/auth/', require('./api/routes/authRoutes.js'));
+app.use('/api/v1/auth/', require('./domains/auth/routes'));
 
 //Error Handlers
 // 1- Error Logger
 app.use(errorLogger);
 
-// 2- Globale Error Handler
-app.use(globalErrorHandler);
+//Handle Validation Errors
+app.use((err, req, res, next) => {
+  if (err.name === 'ValidationError') {
+    console.log('HERE: ', err.name);
+    return res.status(400).json({
+      status: 'Fail',
+      message: 'Validation Error',
+      details: err.message,
+    });
+  }
+
+  next(err);
+});
+
+// 3- Globale Error Handler
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).json({
+    status: err.status || 'Error',
+    message: err.message,
+  });
+});
 
 module.exports = app;
