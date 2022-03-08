@@ -50,12 +50,12 @@ router.post(
 require('../../libraries/passport');
 
 router.get(
-  '/googleAuth',
+  '/thirdparty',
   passport.authenticate('google', { scope: ['email', 'profile'] })
 );
 
 router.get(
-  'https://sale-hunter.vercel.app/',
+  '/',
   passport.authenticate('google', {
     successRedirect: 'https://sale-hunter.vercel.app/',
     failureRedirect: 'https://sale-hunter.vercel.app/signin-failed',
