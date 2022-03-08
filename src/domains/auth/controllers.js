@@ -1,3 +1,4 @@
+const { ref } = require('joi');
 const service = require('./services');
 
 /**
@@ -118,6 +119,17 @@ class Controller {
       user,
       token: jwToken,
     });
+  }
+  async googleAuth(req, accessToken, refreshToken, profile, done) {
+    console.log('=======================================');
+    console.log('google auth');
+    console.log('accessToken: ', accessToken);
+    console.log('-------------------------------');
+    console.log('refreshToken: ', refreshToken);
+    console.log('-------------------------------');
+    console.log('profile: ', profile);
+    console.log('=======================================');
+    return done(null, profile);
   }
 }
 

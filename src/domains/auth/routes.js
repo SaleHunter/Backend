@@ -10,6 +10,8 @@
 
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
+const passport = require('passport');
+const Email = require('../shared/services/email');
 
 const controller = require('./controllers');
 const validation = require('./validations');
@@ -45,5 +47,25 @@ router.post(
   asyncHandler(validation.signup),
   asyncHandler(controller.signup)
 );
+
+require('../../libraries/passport')(controller.googleAuth);
+
+router.get(
+  '/googleAuth',
+  passport.authenticate('google', { scope: ['email', 'profile'] })
+);
+
+router.get(
+  'https://sale-hunter.vercel.app/',
+  passport.authenticate('google', {
+    successRedirect: 'https://sale-hunter.vercel.app/',
+    failureRedirect: 'https://sale-hunter.vercel.app/signin-failed',
+  })
+);
+
+router.get('https://sale-hunter.vercel.app/signin-failed', (req, res) => {
+  res.sendStatus(404);
+  res.send('Failed to login using google');
+});
 
 module.exports = router;
