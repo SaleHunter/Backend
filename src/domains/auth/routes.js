@@ -49,7 +49,7 @@ router.post(
 
 require('../../libraries/passport');
 
-router.get(
+router.post(
   '/thirdparty',
   passport.authenticate('google', { scope: ['email', 'profile'] })
 );
