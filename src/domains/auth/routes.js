@@ -68,4 +68,5 @@ router.get('https://sale-hunter.vercel.app/signin-failed', (req, res) => {
   res.send('Failed to login using google');
 });
 
+//test
 module.exports = router;
