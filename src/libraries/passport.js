@@ -1,9 +1,5 @@
 const passport = require('passport');
 
-//prepare passport
-app.use(passport.initialize());
-app.use(passport.session());
-
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const { googleAuth } = require('../domains/auth/controllers');
 passport.use(

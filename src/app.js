@@ -1,8 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
-const flash = require('express-flash');
-const session = require('express-session');
 const swaggerUI = require('swagger-ui-express');
 // const swaggerJsDoc = require('swagger-jsdoc');
 
@@ -24,18 +22,6 @@ app.use(logger('dev'));
 console.log(app.get('env'));
 //Allowing app to recieve and parse json in request body
 app.use(express.json());
-
-// express-flash
-app.use(flash());
-
-// session
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
 
 //Configure Swagger API documentation
 // const options = {

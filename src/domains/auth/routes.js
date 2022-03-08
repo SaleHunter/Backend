@@ -10,8 +10,6 @@
 
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
-const { Passport } = require('passport');
-const passport = require('passport');
 
 const controller = require('./controllers');
 const validation = require('./validations');
@@ -49,6 +47,24 @@ router.post(
 );
 
 require('../../libraries/passport');
+const flash = require('express-flash');
+const session = require('express-session');
+const passport = require('passport');
+
+// express-flash
+router.use(flash());
+
+// session
+router.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+//passport
+router.use(passport.initialize());
+router.use(passport.session());
 
 router.post(
   '/thirdparty',
@@ -69,5 +85,4 @@ router.get('https://sale-hunter.vercel.app/signin-failed', (req, res) => {
   res.send('Failed to login using google');
 });
 
-//test
 module.exports = router;
