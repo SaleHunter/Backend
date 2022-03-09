@@ -120,7 +120,7 @@ class Controller {
       token: jwToken,
     });
   }
-  async googleAuth(req, accessToken, refreshToken, profile, done) {
+  async googleAuth(accessToken, refreshToken, profile, done) {
     console.log('=======================================');
     console.log('google auth');
     console.log('accessToken: ', accessToken);
