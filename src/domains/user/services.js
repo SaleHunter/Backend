@@ -221,6 +221,21 @@ class Service {
       throw error;
     }
   }
+  async thirdPartyAuth(payload) {
+    try {
+      const thirdParty_id = payload.thirdParty_id;
+      let user = await DataAccessLayer.getUserbyThirdPartyID(thirdParty_id);
+      console.log(user);
+      if (!user) {
+        await DataAccessLayer.createUser(payload);
+      }
+      user = await DataAccessLayer.getUserbyThirdPartyID(thirdParty_id);
+      const jwToken = await Helper.signJWT(user.id);
+      return { user, jwToken };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = new Service();

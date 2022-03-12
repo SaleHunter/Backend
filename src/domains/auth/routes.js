@@ -18,98 +18,82 @@ const validation = require('./validations');
 const router = Router();
 
 router.post(
-  '/auth/signin',
+  '/signin',
   asyncHandler(validation.signin),
   asyncHandler(controller.signin)
 );
 
 router.post(
-  '/auth/forgetPassword',
+  '/forgetPassword',
   asyncHandler(validation.forgetPassword),
   asyncHandler(controller.forgetPassword)
 );
 
 router.get(
-  '/auth/verifyResetToken/:resetToken',
+  '/verifyResetToken/:resetToken',
   asyncHandler(validation.verifyResetToken),
   asyncHandler(controller.verifyResetToken)
 );
 
 router.patch(
-  '/auth/resetPassword/:resetToken',
+  '/resetPassword/:resetToken',
   asyncHandler(validation.resetPassword),
   asyncHandler(controller.resetPassword)
 );
 
 router.post(
-  '/auth/signup',
+  '/signup',
   asyncHandler(validation.signup),
   asyncHandler(controller.signup)
 );
 
 router.get(
-  '/:id',
-  asyncHandler(validation.getUser),
-  asyncHandler(controller.getUser)
-);
-router.patch(
-  '/:id',
-  asyncHandler(validation.updateUser),
-  asyncHandler(controller.updateUser)
-);
-router.patch(
-  '/updatePassword/:id',
-  asyncHandler(validation.updatePassword),
-  asyncHandler(controller.updatePassword)
-);
-
-router.get(
-  '/auth/google',
+  '/thirdParty/google',
   passport.authenticate('google', { scope: ['email', 'profile'] })
 );
 
 router.get(
-  '/auth/google/callback',
+  '/thirdParty/google/callback',
   passport.authenticate('google', {
-    failureRedirect: '/api/v1/users/auth/google/fail',
-    successRedirect: '/api/v1/users/auth/google/success',
+    failureRedirect: '/api/v1/auth/thirdParty/google/fail',
+    successRedirect: '/api/v1/auth/thirdParty/google/success',
   })
 );
 
-router.get('/auth/google/success', (req, res) => {
+router.get('/thirdParty/google/success', (req, res) => {
   res.json({
     status: 'success',
     user: req.user,
   });
 });
 
-router.get('/auth/google/fail', (req, res) => {
+router.get('/thirdParty/google/fail', (req, res) => {
   res.json({
     status: 'failed',
   });
 });
 
 router.get(
-  '/auth/facebook',
+  '/thirdParty/facebook',
   passport.authenticate('facebook', { scope: ['email', 'profile'] })
 );
 
 router.get(
-  '/auth/facebook/callback',
+  '/thirdParty/facebook/callback',
   passport.authenticate('facebook', {
-    failureRedirect: '/api/v1/users/auth/facebook/fail',
-    successRedirect: '/api/v1/users/auth/facebook/success',
+    failureRedirect: '/api/v1/auth/thirdParty/facebook/fail',
+    successRedirect: '/api/v1/auth/thirdParty/facebook/success',
   })
 );
 
-router.get('/auth/facebook/success', (req, res) => {
+router.get('/thirdParty/facebook/success', (req, res) => {
   res.json({
     status: 'success',
     user: req.user,
   });
 });
 
-router.get('/auth/facebook/fail', (req, res) => {
+router.get('/thirdParty/facebook/fail', (req, res) => {
   res.json({
     status: 'failed',
   });

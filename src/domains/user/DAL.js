@@ -5,6 +5,7 @@ const {
   UserAlreadyExitsError,
 } = require('./errors');
 const { v4: uuidv4 } = require('uuid');
+const SQLError = require('../../api/error/SQLError');
 
 /**
  * @class
@@ -132,7 +133,7 @@ class DataAccessLayer {
   async createUser(user) {
     try {
       const queryString = `
-        INSERT INTO users (id, email, full_name, password, profile_img) VALUES (?, ?, ?, ?, ?)
+        INSERT INTO users (id, email, full_name, password, profile_img, thirdParty_id, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
 
       await sequelize.query(queryString, {
@@ -143,6 +144,8 @@ class DataAccessLayer {
           user.fullname,
           user.password,
           user.profile_img,
+          user.thirdParty_id,
+          user.phone_number,
         ],
       });
 
@@ -197,6 +200,37 @@ class DataAccessLayer {
 
       delete results.password;
       return results;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getUserbyThirdPartyID(thirdPartyID) {
+    try {
+      const queryString = `
+        SELECT id, email, full_name as fullname, profile_img, phone_number, last_seen FROM users where thirdParty_id = ?;
+      `;
+
+      const results = await sequelize.query(queryString, {
+        type: sequelize.QueryTypes.SELECT,
+        replacements: [thirdPartyID],
+      });
+      return results[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+  async getUserbyID(user_id) {
+    try {
+      const queryString = `
+        SELECT id, email, full_name as fullname, profile_img, phone_number, last_seen FROM
+        users where id = ?;
+      `;
+      const results = await sequelize.query(queryString, {
+        type: sequelize.QueryTypes.SELECT,
+        replacements: [user_id],
+      });
+
+      return results[0];
     } catch (error) {
       throw error;
     }
