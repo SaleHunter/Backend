@@ -1,8 +1,8 @@
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const DAL = require('../domains/auth/DAL');
-const helpers = require('../domains/auth/helpers');
-const { googleAuth, facebookAuth } = require('../domains/auth/controllers');
+const DAL = require('../domains/user/DAL');
+const helpers = require('../domains/user/helpers');
+const { googleAuth, facebookAuth } = require('../domains/user/controllers');
 
 function initializePassport(passport) {
   // Initializing Google Strategy
@@ -11,8 +11,7 @@ function initializePassport(passport) {
       {
         clientID: process.env.G_CLIENT_ID,
         clientSecret: process.env.G_SECRET,
-        callbackURL:
-          'http://localhost:6200/api/v1/auth/thirdParty/google/callback',
+        callbackURL: 'http://localhost:6200/api/v1/users/auth/google/callback',
         passReqToCallback: true,
       },
       googleAuth
@@ -26,7 +25,7 @@ function initializePassport(passport) {
         clientID: process.env.F_CLIENT_ID,
         clientSecret: process.env.F_SECRET,
         callbackURL:
-          'http://localhost:6200/api/v1/auth/thirdParty/facebook/callback',
+          'http://localhost:6200/api/v1/users/auth/facebook/callback',
         passReqToCallback: true,
         profileFields: ['email', 'id', 'name'],
       },

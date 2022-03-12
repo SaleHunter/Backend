@@ -10,32 +10,12 @@
 
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
-// const passport = require('passport');
-// const flash = require('express-flash');
-// const session = require('express-session');
-// const initializePassport = require('../../libraries/passport');
+const passport = require('passport');
 
 const controller = require('./controllers');
 const validation = require('./validations');
 
-// initializePassport(passport);
-
 const router = Router();
-
-// // express-flash
-// router.use(flash());
-
-// // session
-// router.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//   })
-// );
-// //passport
-// router.use(passport.initialize());
-// router.use(passport.session());
 
 router.post(
   '/auth/signin',
@@ -83,23 +63,56 @@ router.patch(
   asyncHandler(controller.updatePassword)
 );
 
-// router.post(
-//   '/thirdparty',
-//   passport.authenticate('google', { scope: ['email', 'profile'] })
-// );
+router.get(
+  '/auth/google',
+  passport.authenticate('google', { scope: ['email', 'profile'] })
+);
 
-// router.get(
-//   '/',
-//   passport.authenticate('google', {
-//     successRedirect: 'https://sale-hunter.vercel.app/',
-//     failureRedirect: 'https://sale-hunter.vercel.app/signin-failed',
-//   })
-// );
+router.get(
+  '/auth/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: '/api/v1/users/auth/google/fail',
+    successRedirect: '/api/v1/users/auth/google/success',
+  })
+);
 
-// router.get('https://sale-hunter.vercel.app/signin-failed', (req, res) => {
-//   res.sendStatus(404);
+router.get('/auth/google/success', (req, res) => {
+  res.json({
+    status: 'success',
+    user: req.user,
+  });
+});
 
-//   res.send('Failed to login using google');
-// });
+router.get('/auth/google/fail', (req, res) => {
+  res.json({
+    status: 'failed',
+  });
+});
+
+router.get(
+  '/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email', 'profile'] })
+);
+
+router.get(
+  '/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    failureRedirect: '/api/v1/users/auth/facebook/fail',
+    successRedirect: '/api/v1/users/auth/facebook/success',
+  })
+);
+
+router.get('/auth/facebook/success', (req, res) => {
+  res.json({
+    status: 'success',
+    user: req.user,
+  });
+});
+
+router.get('/auth/facebook/fail', (req, res) => {
+  res.json({
+    status: 'failed',
+  });
+});
 
 module.exports = router;

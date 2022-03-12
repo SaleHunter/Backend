@@ -297,7 +297,7 @@ class Validation {
       newPassword: req.body.newPassword,
       newPasswordConfirm: req.body.newPasswordConfirm,
     };
-    
+
     await schema.validateAsync(sourceObject);
 
     next();
