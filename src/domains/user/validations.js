@@ -158,20 +158,23 @@ class Validation {
 
         password: Joi.string()
           .min(8)
-          .pattern(new RegExp(/^[ A-Za-z0-9_@./#&+-]*$/)) // Accepts only letters, numbers and '-@./#&'
+          .pattern(
+            new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
+          ) // Accepts only letters, numbers and '-@./#&'
           .required()
           .messages({
-            'string.base': 'Password is must be string',
+            'string.base': 'Password must be string',
             'string.min': 'The minimum password length is 8',
-            'string.pattern.base': 'Please enter a valid password',
+            'string.pattern.base':
+              'Please enter a valid Password, must be Alphanumeric and contains special characters like (@#$%^&)',
             'any.required': 'Password is required',
           }),
-        passwordConfirmation: Joi.ref('password'),
+        passwordConfirm: Joi.ref('password'),
         fullname: Joi.string().min(3).max(30).required().messages({
           'string.base': 'Username must be string',
           'string.min': 'The minimum Username length is 3',
           'string.max': 'The maximum Username length is 30',
-          'any.required': 'Username is required',
+          'any.required': 'fullname is required',
         }),
         profile_img: Joi.string().messages({
           'string.base': 'Invalid Image.',
@@ -179,16 +182,123 @@ class Validation {
         access_token: [Joi.string(), Joi.number()],
       })
       .xor('password', 'access_token')
-      .with('password', 'passwordConfirmation');
-    try {
-      await schema.validateAsync(req.body);
-    } catch (err) {
-      res.json({
-        status: 'failed',
-        message: 'validation failed',
-        error: err.details,
+      .with('password', 'passwordConfirm');
+
+    await schema.validateAsync(req.body);
+
+    next();
+  }
+
+  /**
+   * @method Get User By Id Validation Schema
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async getUser(req, res, next) {
+    const schema = Joi.object({
+      id: Joi.number().required().messages({
+        'number.base': 'Id must be number',
+        'any.required': 'Id is required',
+      }),
+    });
+
+    await schema.validateAsync(req.params);
+
+    next();
+  }
+
+  /**
+   * @method Update User Validation Schema
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async updateUser(req, res, next) {
+    const schema = Joi.object()
+      .keys({
+        id: Joi.number().required().messages({
+          'number.base': 'Id must be number',
+          'any.required': 'Id is required',
+        }),
+        email: Joi.string().email().optional().messages({
+          'string.base': 'Email must be string',
+          'string.email': 'Please provide a valid email address',
+        }),
+        fullname: Joi.string().optional().messages({
+          'string.base': 'Fullname must be string',
+        }),
+      })
+      .or('email', 'fullname')
+      .required()
+      .messages({
+        'object.missing':
+          'At least one key (email, fullname) must be specified',
       });
-    }
+
+    const sourceObject = {
+      id: req.params.id,
+      email: req.body.email,
+      fullname: req.body.fullname,
+    };
+
+    console.log('Source', sourceObject);
+    await schema.validateAsync(sourceObject);
+
+    next();
+  }
+
+  /**
+   * @method Update User's Password Validation Schema
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async updatePassword(req, res, next) {
+    const schema = Joi.object({
+      id: Joi.number().required().messages({
+        'number.base': 'Id must be number',
+        'any.required': 'Id is required',
+      }),
+      oldPassword: Joi.string()
+        .min(8)
+        .pattern(
+          new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
+        ) // Accepts only letters, numbers and special characters
+        .required()
+        .messages({
+          'string.base': 'oldPassword is must be string',
+          'string.min': 'The minimum oldPassword length is 8',
+          'string.pattern.base':
+            'Please enter a valid oldPassword, must be Alphanumeric and contains special characters like (@#$%^&)',
+          'any.required': 'oldPassword is required',
+        }),
+
+      newPassword: Joi.string()
+        .min(8)
+        .pattern(
+          new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/)
+        ) // Accepts only letters, numbers and special characters
+        .required()
+        .messages({
+          'string.base': 'newPassword is must be string',
+          'string.min': 'The minimum newPassword length is 8',
+          'string.pattern.base':
+            'Please enter a valid newPassword, must be Alphanumeric and contains special characters like (@#$%^&)',
+          'any.required': 'newPassword is required',
+        }),
+
+      newPasswordConfirm: Joi.ref('newPassword'),
+    });
+
+    const sourceObject = {
+      id: req.params.id,
+      oldPassword: req.body.oldPassword,
+      newPassword: req.body.newPassword,
+      newPasswordConfirm: req.body.newPasswordConfirm,
+    };
+    
+    await schema.validateAsync(sourceObject);
 
     next();
   }

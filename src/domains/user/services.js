@@ -5,7 +5,7 @@ const EmailService = require('../shared/services/email');
 
 /**
  * @class
- * @classdesc Class for Authentication Services
+ * @classdesc Class for Users Services
  */
 class Service {
   /**
@@ -21,7 +21,7 @@ class Service {
       const { email, password } = payload;
 
       //Fetch the user information from the database
-      const user = await DataAccessLayer.getUserbyEmail(email);
+      const user = await DataAccessLayer.getUserby('email', email);
 
       //Compare the given password with the stored one
       const isMatched = await Helper.comparePasswords(password, user.password);
@@ -53,7 +53,7 @@ class Service {
       const { email } = payload;
 
       //Fetch the user information from the database
-      const user = await DataAccessLayer.getUserbyEmail(email);
+      const user = await DataAccessLayer.getUserby('email', email);
       console.log(user);
 
       let token;
@@ -124,8 +124,9 @@ class Service {
 
       //Update the user's password
       const result = await DataAccessLayer.updatePassword(
-        token,
-        hashedPassword
+        hashedPassword,
+        'token',
+        token
       );
     } catch (error) {
       throw error;
@@ -133,15 +134,89 @@ class Service {
   }
   async signup(payload) {
     try {
-      const { password } = payload;
+      const { password, email } = payload;
       const hashedPassword = await Helper.hashPassword(password);
       payload.password = hashedPassword;
-      const user = DataAccessLayer.createUser(payload);
+
+      const user = await DataAccessLayer.createUser(payload);
+
       const jwToken = Helper.signJWT(user.id);
 
-      delete user.password;
-      delete user.passwordConfirmation;
       return { user, jwToken };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * @method Service for getting user's info
+   * @access public
+   * @async
+   * @param {number} id - user's id
+   * @returns {Promise<object>} users's info object
+   */
+  async getUser(id) {
+    try {
+      const user = await DataAccessLayer.getUserby('id', id);
+
+      delete user.password;
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * @method Service for updating user's info
+   * @access public
+   * @async
+   * @param {object} payload - Object contains user's id, email and fullname
+   * @returns {Promise<object>} users's info object
+   */
+  async updateUser(payload) {
+    try {
+      const { id, email, fullname } = payload;
+      const user = await DataAccessLayer.updateUser(payload);
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * @method Service for updating user's Password info
+   * @access public
+   * @async
+   * @param {object} payload - Object contains user's id, oldPassword, newPassword
+   * @returns {Promise<object>} users's info object
+   */
+  async updatePassword(payload) {
+    try {
+      const { id, oldPassword, newPassword } = payload;
+
+      //Fetch the user information from the database
+      const user = await DataAccessLayer.getUserby('id', id);
+
+      //Compare the given password with the stored one
+      const isMatched = await Helper.comparePasswords(
+        oldPassword,
+        user.password
+      );
+
+      //If the passwords do not match, Throw an Error
+      if (isMatched === false) {
+        throw new IncorrectPasswordError();
+      }
+
+      //Hash the new password
+      const hashedPassword = await Helper.hashPassword(newPassword);
+
+      //Store the new hashed password into the database
+      await DataAccessLayer.updatePassword(hashedPassword, 'id', id);
+
+      delete user.password;
+      return user;
     } catch (error) {
       throw error;
     }

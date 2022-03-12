@@ -1,14 +1,14 @@
-const { ref } = require('joi');
 const service = require('./services');
+const helper = require('./helpers');
 
 /**
  * @class
- * @classdesc Class for Authentication Requset Controllers
+ * @classdesc Class for Users Requset Controllers
  */
 class Controller {
   /**
-   * @name post/login
-   * @method Service for handling user's signin request
+   * @name POST/signin
+   * @method Controller for handling user's signin request
    * @access public
    * @async
    * @param {callback} middleware - Express middleware.
@@ -23,16 +23,21 @@ class Controller {
     //Calling the sign in Service
     const { user, jwToken } = await service.signin(signinPayload);
 
+    //Set the jwt header
+    helper.setJWTHeader(jwToken, res);
+
+    // //Set the jwt cookie
+    helper.setJWTCookie(jwToken, res);
+
     res.status(200).json({
       status: 'success',
       message: 'Signed In successfully',
       user,
-      token: jwToken,
     });
   }
 
   /**
-   * @name post/forgetPassword
+   * @name POST/forgetPassword
    * @method Controller for handling user's forget password request
    * @access public
    * @async
@@ -59,7 +64,7 @@ class Controller {
   }
 
   /**
-   * @name get/verifyResetToken
+   * @name GET/verifyResetToken
    * @method Controller for hanlding user's Verify Reset Token request
    * @access public
    * @async
@@ -83,7 +88,7 @@ class Controller {
   }
 
   /**
-   * @name patch/resetPassword
+   * @name PATCH/resetPassword
    * @method Controller for hanlding user's Reset Password request
    * @access public
    * @async
@@ -104,6 +109,7 @@ class Controller {
       message: 'Password Reseted Successfully',
     });
   }
+
   async signup(req, res, next) {
     const signupPayload = {
       fullname: req.body.fullname,
@@ -113,24 +119,92 @@ class Controller {
     };
 
     const { user, jwToken } = await service.signup(signupPayload);
+
+    //Set the jwt header
+    helper.setJWTHeader(jwToken, res);
+
+    // //Set the jwt cookie
+    helper.setJWTCookie(jwToken, res);
+
     res.status(201).json({
       status: 'success',
       message: 'Signed up successfully',
       user,
-      token: jwToken,
     });
   }
-  async googleAuth(accessToken, refreshToken, profile, done) {
-    console.log('=======================================');
-    console.log('google auth');
-    console.log('accessToken: ', accessToken);
-    console.log('-------------------------------');
-    console.log('refreshToken: ', refreshToken);
-    console.log('-------------------------------');
-    console.log('profile: ', profile);
-    console.log('=======================================');
-    return done(null, profile);
+
+  /**
+   * @name GET /
+   * @method Controller handling get user by id request
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async getUser(req, res, next) {
+    const id = req.params.id;
+
+    const user = await service.getUser(id);
+    res.status(200).json({
+      status: 'success',
+      user,
+    });
   }
+
+  /**
+   * @name PATCH /
+   * @method Controller handling update user by id request
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async updateUser(req, res, next) {
+    const updateUserPayload = {
+      id: req.params.id,
+      fullname: req.body.fullname,
+      email: req.body.email,
+    };
+
+    const user = await service.updateUser(updateUserPayload);
+    res.status(200).json({
+      status: 'success',
+      message: 'User updated successfully',
+      user,
+    });
+  }
+
+  /**
+   * @name PATCH /updatePassword
+   * @method Controller handling update user's password by id request
+   * @access public
+   * @async
+   * @param {callback} middleware - Express middleware.
+   */
+  async updatePassword(req, res, next) {
+    const updatePasswordPayload = {
+      id: req.params.id,
+      oldPassword: req.body.oldPassword,
+      newPassword: req.body.newPassword,
+    };
+
+    const user = await service.updatePassword(updatePasswordPayload);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Password updated successfully',
+      user,
+    });
+  }
+  // async googleAuth(accessToken, refreshToken, profile, done) {
+  //   console.log('=======================================');
+  //   console.log('google auth');
+  //   console.log('accessToken: ', accessToken);
+  //   console.log('-------------------------------');
+  //   console.log('refreshToken: ', refreshToken);
+  //   console.log('-------------------------------');
+  //   console.log('profile: ', profile);
+  //   console.log('=======================================');
+  //   return done(null, profile);
+  // }
 }
 
 module.exports = new Controller();

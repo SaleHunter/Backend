@@ -2,9 +2,8 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 const swaggerUI = require('swagger-ui-express');
-// const swaggerJsDoc = require('swagger-jsdoc');
 
-const swaggerSpecs = require('./config/swagger');
+const swaggerDocs = require('./config/swagger-specs');
 const {
   errorLogger,
   globalErrorHandler,
@@ -19,35 +18,16 @@ app.use(cors());
 
 //Request Logger
 app.use(logger('dev'));
-console.log(app.get('env'));
+
 //Allowing app to recieve and parse json in request body
 app.use(express.json());
 
 //Configure Swagger API documentation
-// const options = {
-//   definition: {
-//     openapi: '3.0.0',
-//     info: {
-//       title: 'SaleHunter RESTful API',
-//       version: '1.0.0',
-//       description: 'A dedicated RESTful API for SaleHunter',
-//     },
-//     servers: [
-//       {
-//         url: 'http://localhost:4000',
-//       },
-//     ],
-//   },
-//   apis: ['./src/api/routes/*.js'],
-// };
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
-// const swaggerSpecs = swaggerJsDoc(options);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpecs));
-// console.log(swaggerSpecs);
-
-// ALl Routes
-//Authentication Router
-app.use('/api/v1/auth/', require('./domains/auth/routes'));
+// All Routes
+//User Router
+app.use('/api/v1/users', require('./domains/user/routes'));
 
 //Error Handlers
 // 1- Error Logger
@@ -67,7 +47,7 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-// 3- Globale Error Handler
+// 3- Global Error Handler
 app.use((err, req, res, next) => {
   res.status(err.statusCode).json({
     status: err.status || 'Error',
