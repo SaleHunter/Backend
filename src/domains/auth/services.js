@@ -2,6 +2,7 @@ const DataAccessLayer = require('./DAL');
 const Helper = require('./helpers');
 const { IncorrectPasswordError, ExpiredResetTokenError } = require('./errors');
 const EmailService = require('../shared/services/email');
+const { use } = require('passport');
 
 /**
  * @class
@@ -136,11 +137,26 @@ class Service {
       const { password } = payload;
       const hashedPassword = await Helper.hashPassword(password);
       payload.password = hashedPassword;
-      const user = DataAccessLayer.createUser(payload);
-      const jwToken = Helper.signJWT(user.id);
+      const user = await DataAccessLayer.createUser(payload);
+      const jwToken = await Helper.signJWT(user.id);
 
       delete user.password;
       delete user.passwordConfirmation;
+      return { user, jwToken };
+    } catch (error) {
+      throw error;
+    }
+  }
+  async thirdPartyAuth(payload) {
+    try {
+      const thirdParty_id = payload.thirdParty_id;
+      let user = await DataAccessLayer.getUserbyThirdPartyID(thirdParty_id);
+      console.log(user);
+      if (!user) {
+        await DataAccessLayer.createUser(payload);
+      }
+      user = await DataAccessLayer.getUserbyThirdPartyID(thirdParty_id);
+      const jwToken = await Helper.signJWT(user.id);
       return { user, jwToken };
     } catch (error) {
       throw error;

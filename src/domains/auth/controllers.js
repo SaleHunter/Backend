@@ -110,6 +110,8 @@ class Controller {
       email: req.body.email,
       password: req.body.password,
       profile_img: req.body.profile_img,
+      phone_number: req.body.phone_number,
+      thirdPartyID: req.body.thirdPartyID,
     };
 
     const { user, jwToken } = await service.signup(signupPayload);
@@ -120,16 +122,30 @@ class Controller {
       token: jwToken,
     });
   }
-  async googleAuth(accessToken, refreshToken, profile, done) {
-    console.log('=======================================');
-    console.log('google auth');
-    console.log('accessToken: ', accessToken);
-    console.log('-------------------------------');
-    console.log('refreshToken: ', refreshToken);
-    console.log('-------------------------------');
-    console.log('profile: ', profile);
-    console.log('=======================================');
-    return done(null, profile);
+  async googleAuth(req, accessToken, refreshToken, profile, done) {
+    let googlePayload = {
+      fullname: profile._json.name,
+      email: profile._json.email,
+      profile_img: profile._json.picture,
+      thirdParty_id: 'g-' + profile._json.sub,
+      phone_number: profile._json.phone_number,
+    };
+    let { jwToken } = await service.thirdPartyAuth(googlePayload);
+
+    return done(null, jwToken);
+  }
+  async facebookAuth(req, accessToken, refreshToken, profile, done) {
+    console.log(profile);
+    let googlePayload = {
+      fullname: profile._json.name,
+      email: profile._json.email,
+      profile_img: profile._json.picture,
+      thirdParty_id: 'fb-' + profile._json.id,
+      phone_number: profile._json.phone_number || '',
+    };
+    let { jwToken } = await service.thirdPartyAuth(googlePayload);
+
+    return done(null, jwToken);
   }
 }
 
