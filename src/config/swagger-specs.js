@@ -34,19 +34,19 @@ module.exports = {
     '/users/updatePassword': {
       patch: userPaths.updateAuthenticatedUserPassword,
     },
-    '/auth/signin': {
+    '/users/auth/signin': {
       post: userPaths.signin,
     },
-    '/auth/signup': {
+    '/users/auth/signup': {
       post: userPaths.signup,
     },
-    '/auth/forgetPassword': {
+    '/users/auth/forgetPassword': {
       post: userPaths.forgetPassword,
     },
-    '/auth/verifyResetToken/{resetToken}': {
+    '/users/auth/verifyResetToken/{resetToken}': {
       post: userPaths.verifyResetToken,
     },
-    '/auth/resetPassword/{resetToken}': {
+    '/users/auth/resetPassword/{resetToken}': {
       patch: userPaths.resetPassword,
     },
   },
