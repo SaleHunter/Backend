@@ -89,6 +89,31 @@ class Helper {
 
     return hashedPassword;
   }
+
+  /**
+   * @method Set the JWT Header to the response
+   * @param {string} jwt - The JWT for the user
+   * @param {object} res - The Express response object
+   * @async
+   * @access public
+   */
+  setJWTHeader(jwt, res) {
+    res.set('JWT', jwt);
+  }
+
+  /**
+   * @method Set the JWT Cookie to the response
+   * @param {string} jwt - The JWT for the user
+   * @param {object} res - The Express response object
+   * @async
+   * @access public
+   */
+  setJWTCookie(jwt, res) {
+    res.cookie('JWT', jwt, {
+      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // expires in 90 days
+      httpOnly: true,
+    });
+  }
 }
 
 module.exports = new Helper();

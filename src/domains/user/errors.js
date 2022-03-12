@@ -8,10 +8,9 @@ const BaseError = require('../shared/errors/BaseError');
 class NoUserFoundError extends BaseError {
   /**
    * Creating a NoUserFoundError
-   * @param {string} email - The email of the user
    */
-  constructor(email) {
-    super(`There is no user with given email: ${email}`);
+  constructor() {
+    super(`There is no user Found`);
     this.statusCode = 404;
     this.status = 'Fail';
   }
@@ -28,7 +27,7 @@ class IncorrectPasswordError extends BaseError {
    */
   constructor() {
     super(`Incorrect password`);
-    this.statusCode = 400;
+    this.statusCode = 401;
     this.status = 'Fail';
   }
 }
@@ -71,10 +70,27 @@ class ExpiredResetTokenError extends BaseError {
     this.status = 'Fail';
   }
 }
+
+/**
+ * @class
+ * @classdesc Represents a class for User Already Exits Error
+ * @extends BaseError
+ */
+class UserAlreadyExitsError extends BaseError {
+  /**
+   * Creating an UserAlreadyExitsError
+   */
+  constructor() {
+    super(`User Already Exits, Please try again with another email`);
+    this.statusCode = 409;
+    this.status = 'Fail';
+  }
+}
 module.exports = {
   NoUserFoundError,
   IncorrectPasswordError,
   InvalidResetTokenError,
   ExpiredResetTokenError,
   FailedToSignUp,
+  UserAlreadyExitsError,
 };

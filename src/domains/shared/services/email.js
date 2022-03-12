@@ -16,6 +16,7 @@ class Email {
    * @param {string} client - Client Type (web or mobile)
    */
   sendResetTokenEmail(user, token, client) {
+    const url = `https://sale-hunter.vercel.app/code/${token}`;
     // this.createTransporterMailjet();
     const request = mailjet.post('send', { version: 'v3.1' }).request({
       Messages: [
@@ -144,7 +145,7 @@ class Email {
                       Hi, ${user.email}<br />
                       Here is the reset password pin: ${token}
                     </p>
-                    <a class="main-button" href="#">Verify</a>
+                    <a class="main-button" href= ${url}>Verify</a>
                     <p class="main-paragraph">
                       Thank you,<br />
                       Sale Hunter Team.

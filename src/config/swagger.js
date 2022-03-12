@@ -6,14 +6,20 @@ const options = {
     info: {
       title: 'SaleHunter RESTful API',
       version: '1.0.0',
-      description: 'A dedicated RESTful API for SaleHunter',
+      description: 'A Dedicated RESTful API for SaleHunter',
+      contact: {
+        name: 'SaleHunter Support',
+        email: 'salehunter101@gmail.com',
+      },
     },
     servers: [
       {
-        url: 'http://localhost:4000',
+        url: 'https://sale-hunter.herokuapp.com/',
+        description: 'Staging Server',
       },
       {
-        url: 'https://sale-hunter.herokuapp.com/',
+        url: 'http://localhost:4000',
+        description: 'Development Server',
       },
     ],
   },

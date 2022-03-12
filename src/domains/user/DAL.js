@@ -1,5 +1,9 @@
 const { sequelize } = require('../../config/db');
-const { NoUserFoundError, InvalidResetTokenError } = require('./errors');
+const {
+  NoUserFoundError,
+  InvalidResetTokenError,
+  UserAlreadyExitsError,
+} = require('./errors');
 const { v4: uuidv4 } = require('uuid');
 const SQLError = require('../../api/error/SQLError');
 
@@ -13,23 +17,24 @@ class DataAccessLayer {
    * @method Get user's info by his email from database
    * @access public
    * @async
-   * @param {string} email - user's email
+   * @param {string} searchAttribute - Database attribute to search with
+   * @param {string | number} value - attribute's value
    * @throws {NoUserFoundError}
    * @returns {Promise<object>} user info object
    */
-  async getUserbyEmail(email) {
+  async getUserby(searchAttribute, value) {
     try {
       const queryString = `
-        SELECT id, email, full_name as fullname,
-        password, profile_img, last_seen FROM users where email = ?;
+        SELECT id, email, full_name as fullname, profile_img, last_seen, password
+        password, profile_img, last_seen FROM users where ${searchAttribute} = ?;
       `;
 
       const results = await sequelize.query(queryString, {
         type: sequelize.QueryTypes.SELECT,
-        replacements: [email],
+        replacements: [value],
       });
 
-      if (!results[0]) throw new NoUserFoundError(email);
+      if (!results[0]) throw new NoUserFoundError();
 
       return results[0];
     } catch (error) {
@@ -96,33 +101,45 @@ class DataAccessLayer {
    * @method Update the password for the user
    * @async
    * @access public
-   * @param {string} token - Current reset token
+   * @param {string} searchAttribute - Database attribute to search with
+   * @param {string | number} value - attribute's value
    * @param {string} password - New hashed password
    */
-  async updatePassword(token, password) {
+
+  async updatePassword(password, searchAttribute, value) {
     try {
-      const queryString = `UPDATE users SET password = ? WHERE token = ?`;
-      const results = await sequelize.query(queryString, {
+      const queryString = `UPDATE users SET password = ? WHERE ${searchAttribute} = ?`;
+      await sequelize.query(queryString, {
         type: sequelize.QueryTypes.UPDATE,
-        replacements: [password, token],
+        replacements: [password, value],
       });
 
+      const results = await this.getUserby(searchAttribute, value);
+
+      delete results.password;
       return results;
     } catch (error) {
       throw error;
     }
   }
+  /**
+   * @method Create new user
+   * @async
+   * @access public
+   * @param {object} user - user's info
+   * @throws {UserAlreadyExitsError}
+   * @results
+   */
   async createUser(user) {
     try {
-      user.id = uuidv4();
       const queryString = `
         INSERT INTO users (id, email, full_name, password, profile_img, thirdParty_id, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
 
-      const results = await sequelize.query(queryString, {
+      await sequelize.query(queryString, {
         type: sequelize.QueryTypes.INSERT,
         replacements: [
-          user.id,
+          2,
           user.email,
           user.fullname,
           user.password,
@@ -131,9 +148,58 @@ class DataAccessLayer {
           user.phone_number,
         ],
       });
-      console.log(results);
 
-      return results[0];
+      const results = await this.getUserby('email', user.email);
+
+      delete results.password;
+      console.log(results);
+      return results;
+    } catch (error) {
+      if (error.errors[0].validatorKey === 'not_unique')
+        throw new UserAlreadyExitsError();
+      throw error;
+    }
+  }
+
+  /**
+   * @method Create new user
+   * @async
+   * @access public
+   * @param {object} user - user's info
+   */
+  async updateUser(user) {
+    try {
+      let queryString = `
+        UPDATE users SET
+      `;
+
+      let replacementArray = [];
+
+      if (user.email) {
+        const str = queryString.endsWith('? ') ? ', email = ? ' : 'email = ? ';
+        queryString = queryString.concat(str);
+        replacementArray.push(user.email);
+      }
+      if (user.fullname) {
+        const str = queryString.endsWith('? ')
+          ? ', full_name = ? '
+          : 'full_name = ? ';
+        queryString = queryString.concat(str);
+        replacementArray.push(user.fullname);
+      }
+      queryString = queryString.concat('WHERE id = ?');
+
+      replacementArray.push(user.id);
+      console.log(queryString, '\n', replacementArray);
+      await sequelize.query(queryString, {
+        type: sequelize.QueryTypes.UPDATE,
+        replacements: replacementArray,
+      });
+
+      const results = await this.getUserby('id', user.id);
+
+      delete results.password;
+      return results;
     } catch (error) {
       throw error;
     }
