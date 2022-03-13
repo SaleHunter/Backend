@@ -27,10 +27,17 @@ module.exports = {
     },
   ],
   paths: {
+    '/users/auth/google/': {
+      get: userPaths.google_signin,
+    },
+    '/users/auth/facebook/': {
+      get: userPaths.google_signin,
+    },
     '/users': {
       get: userPaths.getAuthenticatedUser,
       patch: userPaths.updateAuthenticatedUser,
     },
+
     '/users/updatePassword': {
       patch: userPaths.updateAuthenticatedUserPassword,
     },

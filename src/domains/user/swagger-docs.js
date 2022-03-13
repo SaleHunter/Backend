@@ -567,4 +567,90 @@ module.exports = {
       },
     },
   },
+  google_signin: {
+    tags: ['Users'],
+    description: 'sign in user using google',
+    responses: {
+      200: {
+        description: 'User signed in successfully',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'Signed In successfully',
+                },
+                user: {
+                  description: "User's Object",
+                  type: 'object',
+                  $ref: '#/components/schemas/User',
+                },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        description: 'Validation Error',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ValidationError',
+            },
+          },
+        },
+      },
+    },
+  },
+  facebook_signin: {
+    tags: ['Users'],
+    description: 'sign in user using facebook',
+    responses: {
+      200: {
+        description: 'User signed in successfully',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'Signed In successfully',
+                },
+                user: {
+                  description: "User's Object",
+                  type: 'object',
+                  $ref: '#/components/schemas/User',
+                },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        description: 'Validation Error',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/components/schemas/ValidationError',
+            },
+          },
+        },
+      },
+    },
+  },
 };
