@@ -198,12 +198,12 @@ class Validation {
   async getUser(req, res, next) {
     const schema = Joi.object({
       id: Joi.number().required().messages({
-        'number.base': 'Id must be number',
+        'number.base': 'Id must be a number',
         'any.required': 'Id is required',
       }),
     });
 
-    await schema.validateAsync(req.params);
+    await schema.validateAsync({ id: req.user.id });
 
     next();
   }
@@ -218,7 +218,7 @@ class Validation {
     const schema = Joi.object()
       .keys({
         id: Joi.number().required().messages({
-          'number.base': 'Id must be number',
+          'number.base': 'Id must be a number',
           'any.required': 'Id is required',
         }),
         email: Joi.string().email().optional().messages({
@@ -237,7 +237,7 @@ class Validation {
       });
 
     const sourceObject = {
-      id: req.params.id,
+      id: req.user.id,
       email: req.body.email,
       fullname: req.body.fullname,
     };
@@ -257,7 +257,7 @@ class Validation {
   async updatePassword(req, res, next) {
     const schema = Joi.object({
       id: Joi.number().required().messages({
-        'number.base': 'Id must be number',
+        'number.base': 'Id must be  a number',
         'any.required': 'Id is required',
       }),
       oldPassword: Joi.string()
@@ -292,7 +292,7 @@ class Validation {
     });
 
     const sourceObject = {
-      id: req.params.id,
+      id: req.user.id,
       oldPassword: req.body.oldPassword,
       newPassword: req.body.newPassword,
       newPasswordConfirm: req.body.newPasswordConfirm,

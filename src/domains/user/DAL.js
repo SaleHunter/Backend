@@ -133,13 +133,12 @@ class DataAccessLayer {
   async createUser(user) {
     try {
       const queryString = `
-        INSERT INTO users (id, email, full_name, password, profile_img, thirdParty_id, phone_number) VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO users (email, full_name, password, profile_img, thirdParty_id, phone_number) VALUES (?, ?, ?, ?, ?, ?)
       `;
 
       await sequelize.query(queryString, {
         type: sequelize.QueryTypes.INSERT,
         replacements: [
-          2,
           user.email,
           user.fullname,
           user.password,

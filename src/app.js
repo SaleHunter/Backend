@@ -6,6 +6,7 @@ const exphbs = require('express-handlebars');
 var path = require('path');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
 
 require('./libraries/passport')(passport);
 // const swaggerJsDoc = require('swagger-jsdoc');
@@ -69,6 +70,9 @@ app.use(logger('dev'));
 //Allowing app to recieve and parse json in request body
 app.use(express.json());
 
+//Parse Cookies into req.cookies
+app.use(cookieParser());
+
 //Configure Swagger API documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
@@ -110,7 +114,7 @@ app.use((err, req, res, next) => {
 
 // 3- Global Error Handler
 app.use((err, req, res, next) => {
-  res.status(err.statusCode).json({
+  return res.status(err.statusCode).json({
     status: err.status || 'Error',
     message: err.message,
   });

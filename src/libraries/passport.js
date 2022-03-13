@@ -48,7 +48,10 @@ function initializePassport(passport) {
   passport.deserializeUser(async (token, done) => {
     // console.log('iam the problem', token);
     // return done(null, token);
-    const { id } = helpers.restoreFromJWT(token);
+    const JWTHelper = require('../domains/shared/helpers/JWTHelpers');
+    const { restoreFromJWT } = new JWTHelper();
+
+    const { id } = await restoreFromJWT(token);
     const user = await DAL.getUserbyID(id);
     return done(null, { ...user });
   });

@@ -143,7 +143,7 @@ class Controller {
    * @param {callback} middleware - Express middleware.
    */
   async getUser(req, res, next) {
-    const id = req.params.id;
+    const id = req.user.id;
 
     const user = await service.getUser(id);
     res.status(200).json({
@@ -161,7 +161,7 @@ class Controller {
    */
   async updateUser(req, res, next) {
     const updateUserPayload = {
-      id: req.params.id,
+      id: req.user.id,
       fullname: req.body.fullname,
       email: req.body.email,
     };
@@ -183,7 +183,7 @@ class Controller {
    */
   async updatePassword(req, res, next) {
     const updatePasswordPayload = {
-      id: req.params.id,
+      id: req.user.id,
       oldPassword: req.body.oldPassword,
       newPassword: req.body.newPassword,
     };

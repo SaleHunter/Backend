@@ -14,6 +14,7 @@ const passport = require('passport');
 
 const controller = require('./controllers');
 const validation = require('./validations');
+const isAuthenticated = require('../shared/middlewares/isAuthenticated');
 
 const router = Router();
 
@@ -48,17 +49,20 @@ router.post(
 );
 
 router.get(
-  '/:id',
+  '/',
+  asyncHandler(isAuthenticated),
   asyncHandler(validation.getUser),
   asyncHandler(controller.getUser)
 );
 router.patch(
-  '/:id',
+  '/',
+  asyncHandler(isAuthenticated),
   asyncHandler(validation.updateUser),
   asyncHandler(controller.updateUser)
 );
 router.patch(
-  '/updatePassword/:id',
+  '/updatePassword',
+  asyncHandler(isAuthenticated),
   asyncHandler(validation.updatePassword),
   asyncHandler(controller.updatePassword)
 );

@@ -1,0 +1,26 @@
+const { getUserby } = require('../../user/api');
+const JWTHelper = require('../helpers/JWTHelpers');
+const { UnAuthorizedError } = require('../errors/AuthError');
+
+const { extractJWT, restoreFromJWT } = new JWTHelper();
+
+module.exports = async (req, res, next) => {
+  //Extract the token fro Authorization header or cookie
+  const jwt = extractJWT(req);
+
+  if (jwt === '') throw new UnAuthorizedError();
+
+  //Decode the jwt token if valid and extract user's id
+  const { id } = await restoreFromJWT(jwt);
+  console.log(id);
+
+  //Get The user's info from the Database
+  const user = await getUserby('id', id);
+
+  //Exclude user's password fro the request
+  delete user.password;
+
+  req.user = user;
+
+  next();
+};

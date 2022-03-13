@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
 const jwt_decode = require('jwt-decode');
 const crypto = require('crypto');
 
@@ -34,11 +35,6 @@ class Helper {
     });
 
     return token;
-  }
-
-  restoreFromJWT(jwToken) {
-    const result = jwt_decode(jwToken, { payload: true });
-    return result;
   }
 
   /**
