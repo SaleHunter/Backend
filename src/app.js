@@ -64,6 +64,7 @@ app.use(passport.session());
 //Enable all CORS requests
 app.use(
   cors({
+    exposedHeaders: 'Authorization',
     origin: true,
     credentials: true,
   })
