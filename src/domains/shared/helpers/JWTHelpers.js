@@ -12,8 +12,8 @@ class Helper {
     if (authorizationHeader && authorizationHeader.startsWith('Bearer')) {
       token = authorizationHeader.split(' ')[1];
       return token;
-    } else if (req.cookies.JWT) {
-      token = req.cookies.JWT;
+    } else if (req.cookies.Authorization) {
+      token = req.cookies.Authorization;
       return token;
     }
     return '';
