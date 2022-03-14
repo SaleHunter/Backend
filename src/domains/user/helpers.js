@@ -111,6 +111,9 @@ class Helper {
       sameSite: false,
     });
   }
+  getImagePublicId(link) {
+    return link.split('|')[1];
+  }
 }
 
 module.exports = new Helper();

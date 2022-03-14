@@ -123,13 +123,13 @@ class Controller {
       phone_number: req.body.phone_number,
       thirdPartyID: req.body.thirdPartyID,
     };
-
+    //
     const { user, jwToken } = await service.signup(signupPayload);
 
     //Set the jwt header
     helper.setJWTHeader(jwToken, res);
 
-    // //Set the jwt cookie
+    //Set the jwt cookie
     helper.setJWTCookie(jwToken, res);
 
     res.status(201).json({
@@ -168,6 +168,7 @@ class Controller {
       id: req.user.id,
       fullname: req.body.fullname,
       email: req.body.email,
+      profile_img: req.body.profile_img,
     };
 
     const user = await service.updateUser(updateUserPayload);

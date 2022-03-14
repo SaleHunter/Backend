@@ -79,7 +79,8 @@ module.exports = {
             format: 'email',
           },
           profile_img: {
-            description: 'The profile image url of the user',
+            description:
+              'The profile image public_id of the user on cloudinary',
             type: 'string',
           },
           last_seen: {

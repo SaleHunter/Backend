@@ -2,7 +2,8 @@ const DataAccessLayer = require('./DAL');
 const Helper = require('./helpers');
 const { IncorrectPasswordError, ExpiredResetTokenError } = require('./errors');
 const EmailService = require('../shared/services/email');
-
+const { cloudinary } = require('../../config/cloudinary');
+const helpers = require('./helpers');
 /**
  * @class
  * @classdesc Class for Users Services
@@ -134,9 +135,9 @@ class Service {
   }
   async signup(payload) {
     try {
-      const { password, email } = payload;
-      const hashedPassword = await Helper.hashPassword(password);
-      payload.password = hashedPassword;
+      const { password } = payload;
+
+      payload.password = await Helper.hashPassword(password);
 
       const user = await DataAccessLayer.createUser(payload);
 
@@ -175,9 +176,25 @@ class Service {
    */
   async updateUser(payload) {
     try {
-      const { id, email, fullname } = payload;
-      const user = await DataAccessLayer.updateUser(payload);
+      const { id, profile_img } = payload;
+      if (profile_img) {
+        const user = await DataAccessLayer.getUserby('id', id);
+        // Delete old profile image
+        if (user.profile_img) {
+          const oldPhoto = helpers.getImagePublicId(user.profile_img);
+          await this.deleteImage(oldPhoto);
+        }
+        // set new profile image
+        const { url, public_id } = await this.uploadImage(
+          profile_img,
+          process.env.PROFILE_IMAGES_PRESET
+        );
+        payload.profile_img = url + '|' + public_id;
+      }
 
+      // update user with new data
+      const user = await DataAccessLayer.updateUser(payload);
+      user.profile_img = user.profile_img.split('|')[0];
       return user;
     } catch (error) {
       throw error;
@@ -234,6 +251,29 @@ class Service {
       return { user, jwToken };
     } catch (error) {
       throw error;
+    }
+  }
+  async uploadImage(base64Encodeing, preset) {
+    try {
+      const uploadedResponse = await cloudinary.uploader.upload(
+        base64Encodeing,
+        {
+          upload_preset: preset,
+        }
+      );
+      return uploadedResponse;
+    } catch (e) {
+      console.log({ error: 'Error in cloudinary service' });
+      console.log(e);
+      return {};
+    }
+  }
+  async deleteImage(id) {
+    try {
+      await cloudinary.uploader.destroy(id);
+    } catch (error) {
+      console.log(error);
+      return {};
     }
   }
 }

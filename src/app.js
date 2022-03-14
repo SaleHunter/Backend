@@ -74,7 +74,7 @@ app.use(
 app.use(logger('dev'));
 
 //Allowing app to recieve and parse json in request body
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
 //Parse Cookies into req.cookies
 app.use(cookieParser());

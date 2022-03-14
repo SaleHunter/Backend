@@ -63,6 +63,11 @@ module.exports = {
                 type: 'string',
                 format: 'email',
               },
+              email: {
+                description: 'The new profile photo of the user',
+                type: 'string',
+                format: 'base64Encodeing',
+              },
             },
           },
         },

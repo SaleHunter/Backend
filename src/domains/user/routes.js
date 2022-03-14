@@ -17,7 +17,27 @@ const validation = require('./validations');
 const isAuthenticated = require('../shared/middlewares/isAuthenticated');
 
 const router = Router();
+// user main routes
+router.get(
+  '/',
+  asyncHandler(isAuthenticated),
+  asyncHandler(validation.getUser),
+  asyncHandler(controller.getUser)
+);
+router.patch(
+  '/',
+  asyncHandler(isAuthenticated),
+  asyncHandler(validation.updateUser),
+  asyncHandler(controller.updateUser)
+);
+router.patch(
+  '/updatePassword',
+  asyncHandler(isAuthenticated),
+  asyncHandler(validation.updatePassword),
+  asyncHandler(controller.updatePassword)
+);
 
+// user authentication routes
 router.post(
   '/auth/signin',
   asyncHandler(validation.signin),
@@ -46,25 +66,6 @@ router.post(
   '/auth/signup',
   asyncHandler(validation.signup),
   asyncHandler(controller.signup)
-);
-
-router.get(
-  '/',
-  asyncHandler(isAuthenticated),
-  asyncHandler(validation.getUser),
-  asyncHandler(controller.getUser)
-);
-router.patch(
-  '/',
-  asyncHandler(isAuthenticated),
-  asyncHandler(validation.updateUser),
-  asyncHandler(controller.updateUser)
-);
-router.patch(
-  '/updatePassword',
-  asyncHandler(isAuthenticated),
-  asyncHandler(validation.updatePassword),
-  asyncHandler(controller.updatePassword)
 );
 
 router.get(

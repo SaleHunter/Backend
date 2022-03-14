@@ -168,6 +168,8 @@ class DataAccessLayer {
    */
   async updateUser(user) {
     try {
+      console.log('-----');
+      console.log(user.profile_img);
       let queryString = `
         UPDATE users SET
       `;
@@ -185,6 +187,13 @@ class DataAccessLayer {
           : 'full_name = ? ';
         queryString = queryString.concat(str);
         replacementArray.push(user.fullname);
+      }
+      if (user.profile_img) {
+        const str = queryString.endsWith('? ')
+          ? ', profile_img = ? '
+          : 'profile_img = ? ';
+        queryString = queryString.concat(str);
+        replacementArray.push(user.profile_img);
       }
       queryString = queryString.concat('WHERE id = ?');
 
