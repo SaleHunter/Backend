@@ -24,7 +24,8 @@ class Controller {
     const { user, jwToken } = await service.signin(signinPayload);
 
     //Set the jwt header
-    res.set('JWT', jwToken);
+    res.header('JWT', jwToken);
+    res.header('Access-Control-Expose-Headers', 'JWT');
 
     // //Set the jwt cookie
     // helper.setJWTCookie(jwToken, res);
