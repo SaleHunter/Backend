@@ -93,7 +93,7 @@ module.exports = {
           fullname: 'Will Smith',
           email: 'willsmith@gmail.com',
           profile_img:
-            'https://res.cloudinary.com/idemo/image/upload/c_fill,g_faces,h_200,w_300/df942yib5r6lzsrfarii.jpg',
+            'http://res.cloudinary.com/salehunter101/image/upload/v1647288905/profile/image/ritqurfuxecvny5vzal6.png',
           last_seen: new Date(),
         },
       },
