@@ -121,13 +121,19 @@ module.exports = {
           schema: {
             type: 'object',
             properties: {
-              password: {
+              oldPassword: {
+                description: 'The old password of the user',
+                type: 'string',
+                format: 'password',
+                example: '*********',
+              },
+              newPassword: {
                 description: 'The new password of the user',
                 type: 'string',
                 format: 'password',
                 example: '*********',
               },
-              passwordConfirm: {
+              newPasswordConfirm: {
                 description: 'The new password confirm of the user',
                 type: 'string',
                 format: 'password',

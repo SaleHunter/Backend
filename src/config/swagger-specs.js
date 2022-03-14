@@ -120,11 +120,18 @@ module.exports = {
             format: 'password',
             required: true,
           },
+          passwordConfirm: {
+            description: 'The Password confirm of the user',
+            type: 'string',
+            format: 'password',
+            required: true,
+          },
         },
         example: {
           fullname: 'Will Smith',
           email: 'willsmith@gmail.com',
           password: '**********',
+          passwordConfirm: '**********',
         },
       },
       NotFoundError: {
