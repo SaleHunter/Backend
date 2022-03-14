@@ -228,18 +228,22 @@ class Validation {
         fullname: Joi.string().optional().messages({
           'string.base': 'Fullname must be string',
         }),
+        profile_img: Joi.string().optional().messages({
+          'string.base': 'profile_img must be string',
+        }),
       })
-      .or('email', 'fullname')
+      .or('email', 'fullname', 'profile_img')
       .required()
       .messages({
         'object.missing':
-          'At least one key (email, fullname) must be specified',
+          'At least one key (email, fullname, profile_img) must be specified',
       });
 
     const sourceObject = {
       id: req.user.id,
       email: req.body.email,
       fullname: req.body.fullname,
+      profile_img: req.body.profile_img,
     };
 
     console.log('Source', sourceObject);
