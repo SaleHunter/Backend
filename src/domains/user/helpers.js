@@ -108,6 +108,7 @@ class Helper {
     res.cookie('JWT', jwt, {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // expires in 90 days
       httpOnly: true,
+      sameSite: false,
     });
   }
 }
