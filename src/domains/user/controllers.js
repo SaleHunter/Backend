@@ -24,10 +24,13 @@ class Controller {
     const { user, jwToken } = await service.signin(signinPayload);
 
     //Set the jwt header
-    helper.setJWTHeader(jwToken, res);
+    res.set('JWT', jwToken);
 
     // //Set the jwt cookie
-    helper.setJWTCookie(jwToken, res);
+    // helper.setJWTCookie(jwToken, res);
+    res.cookie('JWT', jwt, {
+      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // expires in 90 days
+    });
 
     res.status(200).json({
       status: 'success',

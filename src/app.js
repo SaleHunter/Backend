@@ -81,6 +81,16 @@ app.use(cookieParser());
 //Configure Swagger API documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
+app.use(function (req, res, next) {
+  res.header('Content-Type', 'application/json;charset=UTF-8');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
+
 // All Routes
 //User Router
 app.use('/api/v1/users', require('./domains/user/routes'));
