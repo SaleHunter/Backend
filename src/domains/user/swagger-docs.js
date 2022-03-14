@@ -57,13 +57,15 @@ module.exports = {
               fullname: {
                 description: 'The new Full name of the user',
                 type: 'string',
+                example: 'Will Smith',
               },
               email: {
                 description: 'The new Email of the user',
                 type: 'string',
                 format: 'email',
+                example: 'willsmith@msn.com',
               },
-              email: {
+              profile_img: {
                 description: 'The new profile photo of the user',
                 type: 'string',
                 format: 'base64Encodeing',
