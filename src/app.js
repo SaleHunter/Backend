@@ -43,8 +43,8 @@ app.engine(
     extname: '.hbs',
   })
 );
-app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', '.hbs');
+// app.set('views', path.join(__dirname, 'views'));
 
 // setup cookies
 app.use(
@@ -58,11 +58,16 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 //Global middlewares
 
 //Enable all CORS requests
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://localhost:3000',
+    credentials: true,
+  })
+);
 
 //Request Logger
 app.use(logger('dev'));
@@ -72,17 +77,6 @@ app.use(express.json());
 
 //Parse Cookies into req.cookies
 app.use(cookieParser());
-
-//Set Credential Headers
-app.use((req, res, next) => {
-  res.header('Content-Type', 'application/json;charset=UTF-8');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  next();
-});
 
 //Configure Swagger API documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
