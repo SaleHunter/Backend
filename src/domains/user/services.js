@@ -3,6 +3,7 @@ const Helper = require('./helpers');
 const { IncorrectPasswordError, ExpiredResetTokenError } = require('./errors');
 const EmailService = require('../shared/services/email');
 const { cloudinary } = require('../../config/cloudinary');
+const helpers = require('./helpers');
 /**
  * @class
  * @classdesc Class for Users Services
@@ -180,18 +181,20 @@ class Service {
         const user = await DataAccessLayer.getUserby('id', id);
         // Delete old profile image
         if (user.profile_img) {
-          await this.deleteImage(user.profile_img);
+          const oldPhoto = helpers.getImagePublicId(user.profile_img);
+          await this.deleteImage(oldPhoto);
         }
         // set new profile image
-        const { public_id } = await this.uploadImage(
+        const { url, public_id } = await this.uploadImage(
           profile_img,
           process.env.PROFILE_IMAGES_PRESET
         );
-        payload.profile_img = public_id;
+        payload.profile_img = url + '|' + public_id;
       }
+
       // update user with new data
       const user = await DataAccessLayer.updateUser(payload);
-
+      user.profile_img = user.profile_img.split('|')[0];
       return user;
     } catch (error) {
       throw error;

@@ -110,6 +110,9 @@ class Helper {
       httpOnly: true,
     });
   }
+  getImagePublicId(link) {
+    return link.split('|')[1];
+  }
 }
 
 module.exports = new Helper();
