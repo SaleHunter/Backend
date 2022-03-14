@@ -65,7 +65,11 @@ app.use(passport.session());
 app.use(
   cors({
     exposedHeaders: 'Authorization',
-    origin: 'https://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'https://localhost:3000',
+      'https://sale-hunter.vercel.app',
+    ],
     credentials: true,
   })
 );
