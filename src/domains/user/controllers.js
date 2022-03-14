@@ -28,7 +28,7 @@ class Controller {
 
     // //Set the jwt cookie
     // helper.setJWTCookie(jwToken, res);
-    res.cookie('JWT', jwt, {
+    res.cookie('JWT', jwToken, {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // expires in 90 days
     });
 
