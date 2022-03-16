@@ -53,6 +53,7 @@ function initializePassport(passport) {
 
     const { id } = await restoreFromJWT(token);
     const user = await DAL.getUserbyID(id);
+    user.token = token;
     return done(null, { ...user });
   });
 }

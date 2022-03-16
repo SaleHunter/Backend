@@ -15,6 +15,7 @@ const passport = require('passport');
 const controller = require('./controllers');
 const validation = require('./validations');
 const isAuthenticated = require('../shared/middlewares/isAuthenticated');
+const helpers = require('./helpers');
 
 const router = Router();
 // user main routes
@@ -82,6 +83,13 @@ router.get(
 );
 
 router.get('/auth/google/success', (req, res) => {
+  // assign token to header and cookies
+  helpers.setJWTHeader(req.user.token, res);
+  helpers.setJWTCookie(req.user.token, res);
+
+  // remove token from user obj
+  delete req.user.token;
+
   res.json({
     status: 'success',
     user: req.user,
@@ -108,6 +116,13 @@ router.get(
 );
 
 router.get('/auth/facebook/success', (req, res) => {
+  // assign token to header and cookies
+  helpers.setJWTHeader(req.user.token, res);
+  helpers.setJWTCookie(req.user.token, res);
+
+  // remove token from user obj
+  delete req.user.token;
+
   res.json({
     status: 'success',
     user: req.user,
