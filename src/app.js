@@ -43,8 +43,8 @@ app.engine(
     extname: '.hbs',
   })
 );
-app.set('view engine', '.hbs');
-app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', '.hbs');
+// app.set('views', path.join(__dirname, 'views'));
 
 // setup cookies
 app.use(
@@ -58,11 +58,21 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 //Global middlewares
 
 //Enable all CORS requests
-app.use(cors());
+app.use(
+  cors({
+    exposedHeaders: 'Authorization',
+    origin: [
+      'http://localhost:3000',
+      'https://localhost:3000',
+      'https://sale-hunter.vercel.app',
+    ],
+    credentials: true,
+  })
+);
 
 //Request Logger
 app.use(logger('dev'));
@@ -75,6 +85,18 @@ app.use(cookieParser());
 
 //Configure Swagger API documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
+app.use(function (req, res, next) {
+  res.header('Content-Type', 'application/json;charset=UTF-8');
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+
+  next();
+});
 
 // All Routes
 //User Router

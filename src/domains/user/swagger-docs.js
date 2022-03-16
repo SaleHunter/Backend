@@ -57,13 +57,15 @@ module.exports = {
               fullname: {
                 description: 'The new Full name of the user',
                 type: 'string',
+                example: 'Will Smith',
               },
               email: {
                 description: 'The new Email of the user',
                 type: 'string',
                 format: 'email',
+                example: 'willsmith@msn.com',
               },
-              email: {
+              profile_img: {
                 description: 'The new profile photo of the user',
                 type: 'string',
                 format: 'base64Encodeing',
@@ -126,13 +128,19 @@ module.exports = {
           schema: {
             type: 'object',
             properties: {
-              password: {
+              oldPassword: {
+                description: 'The old password of the user',
+                type: 'string',
+                format: 'password',
+                example: '*********',
+              },
+              newPassword: {
                 description: 'The new password of the user',
                 type: 'string',
                 format: 'password',
                 example: '*********',
               },
-              passwordConfirm: {
+              newPasswordConfirm: {
                 description: 'The new password confirm of the user',
                 type: 'string',
                 format: 'password',

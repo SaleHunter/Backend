@@ -79,8 +79,7 @@ module.exports = {
             format: 'email',
           },
           profile_img: {
-            description:
-              'The profile image public_id of the user on cloudinary',
+            description: 'The profile image url of the user on cloudinary',
             type: 'string',
           },
           last_seen: {
@@ -94,7 +93,7 @@ module.exports = {
           fullname: 'Will Smith',
           email: 'willsmith@gmail.com',
           profile_img:
-            'https://res.cloudinary.com/demo/image/upload/w_abc/sample.jpg',
+            'http://res.cloudinary.com/salehunter101/image/upload/v1647288905/profile/image/ritqurfuxecvny5vzal6.png',
           last_seen: new Date(),
         },
       },
@@ -121,11 +120,18 @@ module.exports = {
             format: 'password',
             required: true,
           },
+          passwordConfirm: {
+            description: 'The Password confirm of the user',
+            type: 'string',
+            format: 'password',
+            required: true,
+          },
         },
         example: {
           fullname: 'Will Smith',
           email: 'willsmith@gmail.com',
           password: '**********',
+          passwordConfirm: '**********',
         },
       },
       NotFoundError: {
