@@ -210,15 +210,14 @@ class Controller {
     return done(null, jwToken);
   }
   async facebookAuth(req, accessToken, refreshToken, profile, done) {
-    console.log(profile);
-    let googlePayload = {
+    let facebookPayload = {
       fullname: profile._json.name,
       email: profile._json.email,
       profile_img: profile._json.picture,
       thirdParty_id: 'fb-' + profile._json.id,
-      phone_number: profile._json.phone_number || '',
+      phone_number: profile._json.phone_number,
     };
-    let { jwToken } = await service.thirdPartyAuth(googlePayload);
+    let { jwToken } = await service.thirdPartyAuth(facebookPayload);
 
     return done(null, jwToken);
   }
