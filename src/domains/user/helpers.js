@@ -94,7 +94,8 @@ class Helper {
    * @access public
    */
   setJWTHeader(jwt, res) {
-    res.set('JWT', jwt);
+    res.header('Authorization', jwt);
+    res.header('Access-Control-Expose-Headers', 'Authorization');
   }
 
   /**
@@ -105,10 +106,16 @@ class Helper {
    * @access public
    */
   setJWTCookie(jwt, res) {
-    res.cookie('JWT', jwt, {
+    // res.cookie('JWT', jwt, {
+    //   expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // expires in 90 days
+    //   httpOnly: false,
+    //   sameSite: false,
+    // });
+    res.cookie('Authorization', jwt, {
       expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // expires in 90 days
-      httpOnly: false,
-      sameSite: false,
+
+      httpOnly: true,
+      path: '/',
     });
   }
   getImagePublicId(link) {

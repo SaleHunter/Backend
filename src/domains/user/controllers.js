@@ -24,14 +24,18 @@ class Controller {
     const { user, jwToken } = await service.signin(signinPayload);
 
     //Set the jwt header
-    res.header('Authorization', jwToken);
-    res.header('Access-Control-Expose-Headers', 'Authorization');
+    helper.setJWTHeader(jwToken, res);
+    // res.header('Authorization', jwToken);
+    // res.header('Access-Control-Expose-Headers', 'Authorization');
 
     // //Set the jwt cookie
-    // helper.setJWTCookie(jwToken, res);
-    res.cookie('Authorization', jwToken, {
-      expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // expires in 90 days
-    });
+    helper.setJWTCookie(jwToken, res);
+    // res.cookie('Authorization', jwToken, {
+    //   expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // expires in 90 days
+
+    //   httpOnly: true,
+    //   path: '/',
+    // });
 
     res.status(200).json({
       status: 'success',
