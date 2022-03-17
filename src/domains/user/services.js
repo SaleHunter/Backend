@@ -189,7 +189,7 @@ class Service {
           profile_img,
           process.env.PROFILE_IMAGES_PRESET
         );
-        payload.profile_img = url + '|' + public_id;
+        payload.profile_img = url;
       }
 
       // update user with new data
