@@ -16,7 +16,7 @@ module.exports = {
       description: 'Staging Server',
     },
     {
-      url: 'http://localhost:4000/api/v1',
+      url: 'http://localhost:6200/api/v1',
       description: 'Development Server',
     },
   ],
@@ -47,11 +47,11 @@ module.exports = {
     '/users/auth/signup': {
       post: userPaths.signup,
     },
-    '/users/auth/forgetPassword': {
-      post: userPaths.forgetPassword,
+    '/users/verifyEmail': {
+      post: userPaths.verifyEmail,
     },
-    '/users/auth/verifyResetToken/{resetToken}': {
-      post: userPaths.verifyResetToken,
+    '/users/verifyEmailToken/{resetToken}': {
+      post: userPaths.verifyEmailToken,
     },
     '/users/auth/resetPassword/{resetToken}': {
       patch: userPaths.resetPassword,

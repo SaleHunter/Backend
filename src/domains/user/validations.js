@@ -40,12 +40,12 @@ class Validation {
   }
 
   /**
-   * @method  Forget Password Validation Schema
+   * @method  Verify Email Validation Schema
    * @async
    * @access public
    * @param {callback} middleware - Express middleware.
    */
-  async forgetPassword(req, res, next) {
+  async verifyEmail(req, res, next) {
     const schema = Joi.object({
       email: Joi.string().email().required().messages({
         'string.base': 'Email is must be string',
@@ -60,12 +60,12 @@ class Validation {
   }
 
   /**
-   * @method Verify Reset Token Validation Schema
+   * @method Verify Email Token Validation Schema
    * @async
    * @access public
    * @param {callback} middleware - Express middleware.
    */
-  async verifyResetToken(req, res, next) {
+  async verifyEmailToken(req, res, next) {
     const schema = Joi.object({
       resetToken: Joi.alternatives().conditional('client', {
         is: 'mobile',

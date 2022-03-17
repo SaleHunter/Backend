@@ -46,15 +46,15 @@ router.post(
 );
 
 router.post(
-  '/auth/forgetPassword',
-  asyncHandler(validation.forgetPassword),
-  asyncHandler(controller.forgetPassword)
+  '/verifyEmail',
+  asyncHandler(validation.verifyEmail),
+  asyncHandler(controller.verifyEmail)
 );
 
 router.get(
-  '/auth/verifyResetToken/:resetToken',
-  asyncHandler(validation.verifyResetToken),
-  asyncHandler(controller.verifyResetToken)
+  '/verifyEmailToken/:resetToken',
+  asyncHandler(validation.verifyEmailToken),
+  asyncHandler(controller.verifyEmailToken)
 );
 
 router.patch(

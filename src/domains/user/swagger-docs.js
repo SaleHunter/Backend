@@ -337,7 +337,7 @@ module.exports = {
       },
     },
   },
-  forgetPassword: {
+  verifyEmail: {
     tags: ['Users'],
     description:
       'Forget Password, Request for getting reset token to given email',
@@ -394,7 +394,7 @@ module.exports = {
       },
     },
   },
-  verifyResetToken: {
+  verifyEmailToken: {
     tags: ['Users'],
     description: 'Verify Reset Token, check if reset token is valid or not',
     parameters: [

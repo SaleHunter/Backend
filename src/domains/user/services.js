@@ -43,13 +43,13 @@ class Service {
   }
 
   /**
-   * @method Service for Serving Forget Password by sending token if browser client or pin if mobile to given email
+   * @method Service for Serving Verify Email by sending token if browser client or pin if mobile to given email
    * @access public
    * @async
    * @param {object} payload - Object contains user's email
    * @returns {Promise<void>} User's info and jwToken
    */
-  async forgetPassword(payload, client) {
+  async verifyEmail(payload, client) {
     try {
       const { email } = payload;
 
@@ -82,7 +82,7 @@ class Service {
    * @throws {ExpiredResetTokenError}
    * @returns {Promise<boolean>} If reset token is valid
    */
-  async verifyResetToken(payload) {
+  async verifyEmailToken(payload) {
     try {
       const { token } = payload;
       console.log('resetToken is: ', token);

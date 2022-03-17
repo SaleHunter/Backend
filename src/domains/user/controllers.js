@@ -45,15 +45,15 @@ class Controller {
   }
 
   /**
-   * @name POST/forgetPassword
-   * @method Controller for handling user's forget password request
+   * @name POST/verifyEmail
+   * @method Controller for handling user's Verify Email request
    * @access public
    * @async
    * @param {callback} middleware - Express middleware.
    */
-  async forgetPassword(req, res, next) {
-    //Constructing the Forget Password payload needed for completing Forget Password process
-    const forgetPasswordPayload = {
+  async verifyEmail(req, res, next) {
+    //Constructing the Forget Password payload needed for completing Verify Email process
+    const verifyEmailPayload = {
       email: req.body.email,
     };
 
@@ -61,37 +61,37 @@ class Controller {
     const client = req.header('client') || 'web';
 
     //Calling the forget password Service
-    await service.forgetPassword(forgetPasswordPayload, client);
+    await service.verifyEmail(verifyEmailPayload, client);
 
     res.status(200).json({
       status: 'success',
-      message: `Password reset ${
+      message: `${
         client === 'mobile' ? 'pin' : 'token'
       } has successfully sent to your email address.`,
     });
   }
 
   /**
-   * @name GET/verifyResetToken
-   * @method Controller for hanlding user's Verify Reset Token request
+   * @name GET/verifyEmailToken
+   * @method Controller for hanlding user's Verify Email Token request
    * @access public
    * @async
    * @param {callback} middleware - Express middleware.
    */
-  async verifyResetToken(req, res, next) {
-    //Constructing the Verify Reset Token payload needed for completing Verify Reset Token process
+  async verifyEmailToken(req, res, next) {
+    //Constructing the Verify Email Token payload needed for completing Verify Email Token process
     console.log(req.params.resetToken);
-    const verifyResetTokenPayload = {
+    const verifyEmailTokenPayload = {
       token: req.params.resetToken,
     };
 
     //Calling the Verify Reset Token Service
-    const isMatched = await service.verifyResetToken(verifyResetTokenPayload);
+    const isMatched = await service.verifyEmailToken(verifyEmailTokenPayload);
 
     if (isMatched)
       res.status(200).json({
         status: 'success',
-        message: 'Reset Token is valid',
+        message: 'Token is valid',
       });
   }
 
