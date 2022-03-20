@@ -99,6 +99,9 @@ app.use(function (req, res, next) {
 });
 
 // All Routes
+//Product Router
+app.use('/api/v1/products', require('./domains/product/routes'));
+
 //User Router
 app.use('/api/v1/users', require('./domains/user/routes'));
 
