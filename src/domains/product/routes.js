@@ -15,8 +15,8 @@ const router = Router();
 router.get(
   '/',
   asyncHandler(prepareQueryObj),
-  asyncHandler(validation.search),
-  asyncHandler(controller.search)
+  asyncHandler(validation.searchForProducts),
+  asyncHandler(controller.searchForProducts)
 );
 // router.get(
 //   '/:id',

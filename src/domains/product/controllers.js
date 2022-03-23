@@ -1,9 +1,13 @@
+const service = require('./services');
+
 class Controller {
-  async search(req, res, next) {
-    console.log(req.query);
+  async searchForProducts(req, res, next) {
+    const products = await service.searchForProducts(req.query, req.headers);
+
     res.status(200).json({
       status: 'success',
-      products: [],
+      results: products.length,
+      products,
     });
   }
 }
