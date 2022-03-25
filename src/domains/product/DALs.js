@@ -41,11 +41,20 @@ class DataAccessLayer {
         replacements: [`%${searchText}%`],
       });
 
-      console.log(results[0]);
+      // console.log(results[0]);
 
       return results[0];
     } catch (error) {
       throw error;
+    }
+  }
+
+  async getProductById(id) {
+    try {
+      //TODO: Write Here SQL Query
+      return [];
+    } catch (error) {
+      console.error(error);
     }
   }
 }
