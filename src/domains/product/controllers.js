@@ -10,5 +10,14 @@ class Controller {
       products,
     });
   }
+
+  async getProductById(req, res, next) {
+    const product = await service.getProductById(req.params.id);
+
+    res.status(200).json({
+      status: 'success',
+      product,
+    });
+  }
 }
 module.exports = new Controller();

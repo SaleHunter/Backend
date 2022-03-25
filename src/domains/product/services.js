@@ -43,6 +43,14 @@ class Service {
       throw error;
     }
   }
+
+  async getProductById(id) {
+    try {
+      return await DAL.getProductById(id);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 module.exports = new Service();

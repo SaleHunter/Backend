@@ -18,9 +18,10 @@ router.get(
   asyncHandler(validation.searchForProducts),
   asyncHandler(controller.searchForProducts)
 );
-// router.get(
-//   '/:id',
-//   asyncHandler(validation.search),
-//   asyncHandler(controller.search)
-// );
+
+router.get(
+  '/:id',
+  asyncHandler(validation.getProductById),
+  asyncHandler(controller.getProductById)
+);
 module.exports = router;
