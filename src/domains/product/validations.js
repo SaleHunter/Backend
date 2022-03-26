@@ -92,6 +92,7 @@ class Validation {
         .default('en')
         .messages({
           'string.base': 'language must be string',
+          'any.required': 'Language is required field',
           'any.valid': 'language must be any of these values [en,ar]',
         }),
       lan: Joi.number().precision(6).messages({
@@ -106,7 +107,7 @@ class Validation {
       .with('filterBy', 'filterValue');
 
     const sourceObject = {
-      lan: req.headers.lan,
+      lan: req.headers.lon,
       lat: req.headers.lat,
       language: req.headers.language,
       ...req.query,
