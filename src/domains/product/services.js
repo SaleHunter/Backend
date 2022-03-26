@@ -1,54 +1,21 @@
-const DAL = require('./DALs');
 const helper = require('./helpers');
+const Products = require('./DAL');
 
 class Service {
-  async searchForProducts(query, headers) {
+  async getAllProducts() {
     try {
-      const searchText = query.searchText;
-
-      const language = query.language;
-
-      const userLocation = helper.buildUserLocationObject(headers);
-
-      const paginationObject = helper.buildPaginationObject(query);
-
-      const filterObject = helper.buildFilterObject(query);
-
-      const sortBy = query.sortBy || 'popular';
-
-      const storeType = query.storeType || 'all';
-
-      console.log(
-        searchText,
-        language,
-        paginationObject,
-        sortBy,
-        filterObject,
-        storeType,
-        userLocation
-      );
-
-      const products = await DAL.searchForProducts(
-        searchText,
-        language,
-        paginationObject,
-        filterObject,
-        sortBy,
-        storeType,
-        userLocation
-      );
-
+      const products = await Products.query();
       return products;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   }
-
   async getProductById(id) {
     try {
-      return await DAL.getProductById(id);
-    } catch (error) {
-      console.error(error);
+      const product = await Products.query().findById(id);
+      return product;
+    } catch (err) {
+      throw err;
     }
   }
 }
