@@ -17,10 +17,10 @@ class Helper {
   }
 
   buildUserLocationObject(headers) {
-    const lan = headers.lan;
+    const lon = headers.lon;
     const lat = headers.lat;
-    if (lan && lat) {
-      return { lan, lat };
+    if (lon && lat) {
+      return { lon, lat };
     }
 
     return null;

@@ -52,7 +52,25 @@ class DataAccessLayer {
   async getProductById(id) {
     try {
       //TODO: Write Here SQL Query
-      return [];
+      const queryString = `call products_get_one_by_id(?)`;
+      const results = await sequelize.query(queryString, {
+        raw: true,
+        type: sequelize.QueryTypes.SELECT,
+        replacements: [id],
+      });
+
+      // console.log(results);
+
+      const basic = results[0][0];
+      const prices = Object.values(results[1]);
+      const images = Object.values(results[2]);
+      const store = results[3][0];
+      const rating = results[4][0];
+      const views = results[5][0];
+      // const product = results.map((resultSet, i) => {})
+
+      return { basic, prices, images, store, rating, views };
+      // return [];
     } catch (error) {
       console.error(error);
     }
