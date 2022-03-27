@@ -6,7 +6,6 @@ const exphbs = require('express-handlebars');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
-const knex = require('./config/knex');
 
 require('./libraries/passport')(passport);
 // const swaggerJsDoc = require('swagger-jsdoc');
