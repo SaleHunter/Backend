@@ -1,5 +1,5 @@
 const knex = require('../../config/knex');
-const helper = require('./helpers');
+const { CustomQueryBuilder } = require('./helpers');
 
 class DataAccessLayer {
   async getProductById(id) {
@@ -73,9 +73,9 @@ class DataAccessLayer {
         .join('product_images  ', 'products.id', 'product_images.product_id')
         .join('reviews', 'products.id', 'reviews.product_id');
 
-      helper.addStoreTypeToQuery(storeType, queryString);
-      helper.addSearchTextToQuery(searchText, queryString);
-      helper.addSortToQuery(sort, queryString);
+      CustomQueryBuilder.addStoreTypeToQuery(storeType, queryString);
+      CustomQueryBuilder.addSearchTextToQuery(searchText, queryString);
+      CustomQueryBuilder.addSortToQuery(sort, queryString);
 
       /*TODO:
        * addFilterToQuery

@@ -1,7 +1,16 @@
 const knex = require('../../config/knex');
 
-class Helper {
-  buildFilterObject(query) {
+class AttributeExtractor {
+  extractLanguageValue(headers) {
+    return headers.language || 'en';
+  }
+  extractSortByValue(query) {
+    return query.sortBy || 'popular';
+  }
+  extractStoreTypeValue(query) {
+    return query.storeType || 'all';
+  }
+  extractFilterObject(query) {
     const key = query.filterBy;
     const value = query.filterValue;
     if (key && value) {
@@ -11,14 +20,14 @@ class Helper {
     return null;
   }
 
-  buildPaginationObject(query) {
+  extractPaginationObject(query) {
     return {
       page: query.page || 1,
       limit: query.limit || 20,
     };
   }
 
-  buildUserLocationObject(headers) {
+  extractUserLocationObject(headers) {
     const lon = headers.lon;
     const lat = headers.lat;
     if (lon && lat) {
@@ -27,7 +36,8 @@ class Helper {
 
     return null;
   }
-
+}
+class CustomQueryBuilder {
   addSortToQuery(sortBy, queryString) {
     let columnName,
       ascOrDesc = 'asc';
@@ -96,5 +106,5 @@ class Helper {
       .orWhereILike('products.title_ar', `%${searchText}%`);
   }
 }
-
-module.exports = new Helper();
+module.exports.AttributeExtractor = new AttributeExtractor();
+module.exports.CustomQueryBuilder = new CustomQueryBuilder();
