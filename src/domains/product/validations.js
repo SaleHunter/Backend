@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const { INTEGER } = require('sequelize');
 
 class Validation {
   async searchForProducts(req, res, next) {
@@ -9,13 +8,13 @@ class Validation {
         'any.required': 'searchText is required',
       }),
 
-      limit: Joi.number().min(10).max(100).default(20).messages({
+      limit: Joi.number().min(10).max(100).messages({
         'number.base': 'limit must be a number',
         'number.min': 'limit must be greater than 9 items',
         'number.max': 'limit must be less than 101 items',
       }),
 
-      page: Joi.number().min(0).default(1).messages({
+      page: Joi.number().min(0).messages({
         'number.base': 'page must be a number',
         'number.min': 'page must be greater than or equal to 0',
       }),
@@ -25,66 +24,41 @@ class Validation {
         'any.valid':
           'storeType must be any of these values [online, offline, all]',
       }),
+      price_min: Joi.number().min(0).max(1e6).default(0).messages({
+        'number.base': 'price_min must be a number',
+        'number.min': 'price_min must be atleast 0',
+        'number.max': 'price_min must be atmost 1000000',
+      }),
+      price_max: Joi.number().min(0).max(1e6).default(1e6).messages({
+        'number.base': 'price_max must be a number',
+        'number.min': 'price_max must be atleast 0',
+        'number.max': 'price_max must be atmost 1000000',
+      }),
+      category: Joi.string().messages({
+        'string.base': 'category must be a string',
+      }),
 
-      filterBy: Joi.string()
-        .valid('price_min', 'price_max', 'category', 'brand', 'store_name')
-        .messages({
-          'string.base': 'filterBy must be string',
-          'any.valid':
-            'filterBy must be any of these values [price_min, price_max, category, brand, store_name]',
-        }),
-      filterValue: Joi.alternatives().conditional('filterBy', [
-        {
-          is: 'price_min',
-          then: Joi.number().min(0).max(1e6).default(0).messages({
-            'number.base': 'price_min must be a number',
-            'number.min': 'price_min must be atleast 0',
-            'number.max': 'price_min must be atmost 1000000',
-          }),
-        },
-        {
-          is: 'price_max',
-          then: Joi.number().min(0).max(1e6).default(1e6).messages({
-            'number.base': 'price_max must be a number',
-            'number.min': 'price_max must be atleast 0',
-            'number.max': 'price_max must be atmost 1000000',
-          }),
-        },
-        {
-          is: 'category',
-          then: Joi.string().messages({
-            'string.base': 'category must be a string',
-          }),
-        },
-        {
-          is: 'brand',
-          then: Joi.string().messages({
-            'string.base': 'brand must be a string',
-          }),
-        },
-        {
-          is: 'store_name',
-          then: Joi.string().messages({
-            'string.base': 'store_name must be a string',
-          }),
-        },
-      ]),
-      sortBy: Joi.string()
+      brand: Joi.string().messages({
+        'string.base': 'brand must be a string',
+      }),
+      store_name: Joi.string().messages({
+        'string.base': 'store_name must be a string',
+      }),
+      sort: Joi.string()
         .valid(
-          'price_min',
-          'price_max',
+          'priceAsc',
+          'priceDsc',
           'popular',
           'rating',
           'nearest_store',
           'best_deal',
-          'updated_at',
-          'created_at'
+          'newest',
+          'oldest'
         )
-        .default('popular')
         .messages({
           'string.base': 'sortBy must be string',
           'any.valid':
-            'sortBy must be any of these values [price_min, price_max, popular, rating, nearest_store, best_deal, updated_at, created_at]',
+            'sortBy must be any of these values [priceAsc, priceDsc, popular, rating, nearest_store, best_deal, newest, oldest]',
         }),
       language: Joi.string()
         .valid('en', 'ar')
@@ -101,10 +75,7 @@ class Validation {
       lat: Joi.number().precision(6).messages({
         'number.base': 'lat must be number',
       }),
-    })
-      .with('page', 'limit')
-      .with('lat', 'lan')
-      .with('filterBy', 'filterValue');
+    }).with('lat', 'lan');
 
     const sourceObject = {
       lan: req.headers.lon,
