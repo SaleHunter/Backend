@@ -60,8 +60,7 @@ class Helper {
           '(SELECT COUNT(*) FROM user_product_views WHERE user_product_views.product_id = products.id)'
         );
     }
-
-    queryString.orderBy(columnName, ascOrDesc);
+    if (queryString) queryString.orderBy(columnName, ascOrDesc);
   }
 
   addStoreTypeToQuery(storeType, queryString) {
