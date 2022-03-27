@@ -56,11 +56,11 @@ class Helper {
         ascOrDesc = 'desc';
         break;
       default:
-        queryString.orderByRaw(
+        return queryString.orderByRaw(
           '(SELECT COUNT(*) FROM user_product_views WHERE user_product_views.product_id = products.id)'
         );
     }
-    if (queryString) queryString.orderBy(columnName, ascOrDesc);
+    queryString.orderBy(columnName, ascOrDesc);
   }
 
   addStoreTypeToQuery(storeType, queryString) {
