@@ -11,13 +11,22 @@ class AttributeExtractor {
     return query.storeType || 'all';
   }
   extractFilterObject(query) {
-    const key = query.filterBy;
-    const value = query.filterValue;
-    if (key && value) {
-      return { key, value };
-    }
-
-    return null;
+    const obj = {
+      price_min: parseFloat(query.price_min) || 0.0,
+      price_max: parseFloat(query.price_max) || 1e9,
+      category: query.category
+        ? query.category === 'all'
+          ? ''
+          : query.category
+        : '',
+      brand: query.brand ? (query.brand === 'all' ? '' : query.brand) : '',
+      store_type: query.store_type
+        ? query.store_type === 'all'
+          ? ''
+          : query.store_type
+        : '',
+    };
+    return obj;
   }
 
   extractPaginationObject(query) {
@@ -104,6 +113,18 @@ class CustomQueryBuilder {
     queryString
       .whereILike('products.title', `%${searchText}%`)
       .orWhereILike('products.title_ar', `%${searchText}%`);
+  }
+  addFiltersToQuery(filters, queryString) {
+    // Category, Brand Filteration
+    if (filters.category)
+      queryString.where('products.category', filters.category);
+    if (filters.brand) queryString.where('products.brand', filters.brand);
+
+    // Price Filteration
+    queryString.whereBetween('product_price.price', [
+      filters.price_min,
+      filters.price_max,
+    ]);
   }
 }
 module.exports.AttributeExtractor = new AttributeExtractor();

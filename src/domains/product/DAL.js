@@ -72,16 +72,16 @@ class DataAccessLayer {
         .join('product_price ', 'products.id', 'product_price.product_id')
         .join('product_images  ', 'products.id', 'product_images.product_id')
         .join('reviews', 'products.id', 'reviews.product_id');
-
       CustomQueryBuilder.addStoreTypeToQuery(storeType, queryString);
-      CustomQueryBuilder.addSearchTextToQuery(searchText, queryString);
       CustomQueryBuilder.addSortToQuery(sort, queryString);
+      CustomQueryBuilder.addFiltersToQuery(filter, queryString);
+      CustomQueryBuilder.addSearchTextToQuery(searchText, queryString);
 
       /*TODO:
        * addFilterToQuery
        * addPaginationToQuery
        */
-
+      console.log(queryString.toString());
       const products = await queryString;
       return products;
     } catch (error) {
