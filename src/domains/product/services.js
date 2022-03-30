@@ -16,16 +16,16 @@ class Service {
 
       const filterObject = AttributeExtractor.extractFilterObject(query);
 
-      const sortBy = AttributeExtractor.extractSortByValue(query);
+      const sort = AttributeExtractor.extractSortByValue(query);
 
-      const storeType = AttributeExtractor.extractSortByValue(query);
+      const storeType = AttributeExtractor.extractStoreTypeValue(query);
 
       const products = await DAL.searchForProducts(
         searchText,
         language,
         paginationObject,
         filterObject,
-        sortBy,
+        sort,
         storeType,
         userLocation
       );

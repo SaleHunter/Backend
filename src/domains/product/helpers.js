@@ -5,7 +5,7 @@ class AttributeExtractor {
     return headers.language || 'en';
   }
   extractSortByValue(query) {
-    return query.sortBy || 'popular';
+    return query.sort || 'popular';
   }
   extractStoreTypeValue(query) {
     return query.storeType || 'all';
@@ -51,10 +51,10 @@ class CustomQueryBuilder {
     let columnName,
       ascOrDesc = 'asc';
     switch (sortBy) {
-      case 'price_min':
+      case 'priceAsc':
         columnName = 'product_price.price';
         break;
-      case 'price_max':
+      case 'priceDsc':
         columnName = 'product_price.price';
         ascOrDesc = 'desc';
         break;
@@ -66,13 +66,12 @@ class CustomQueryBuilder {
         columnName = 'products.sale';
         ascOrDesc = 'desc';
         break;
-      case 'created_at':
+      case 'newest':
         columnName = 'products.created_at';
         ascOrDesc = 'desc';
         break;
-      case 'updated_at':
-        columnName = 'products.updated_at';
-        ascOrDesc = 'desc';
+      case 'oldest':
+        columnName = 'products.created_at';
         break;
       default:
         return queryString.orderByRaw(
@@ -95,6 +94,7 @@ class CustomQueryBuilder {
         });
         break;
       case 'offline':
+        console.log(storeType);
         queryString.join('stores', function () {
           this.on('products.store_id', '=', 'stores.id').andOn(
             'stores.store_type',

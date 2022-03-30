@@ -49,6 +49,7 @@ class DataAccessLayer {
     userLocation
   ) {
     try {
+      console.log(storeType);
       let queryString = knex
         .select(
           'products.id as product_id',
