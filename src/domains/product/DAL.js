@@ -4,36 +4,47 @@ const { CustomQueryBuilder } = require('./helpers');
 class DataAccessLayer {
   async getProductById(id) {
     try {
-      const product = await knex
-        .from('products')
-        .select(
-          'products.id as product_id',
-          'products.title as product_title',
-          'products.title_ar as product_title_ar',
-          'product_price.price as product_price',
-          'product_price.created_at as product_price_created_at',
-          'products.sale as product_sale',
-          'products.created_at as created_at',
-          'products.updated_at as updated_at',
-          'products.brand as product_brand',
-          'products.category as product_category',
-          'products.url as product_url',
-          'product_images.id AS image_id',
-          'product_images.link AS image_url',
-          'products.store_id as store_id',
-          'stores.name as store_name',
-          'stores.logo as store_logo',
-          'stores.store_type as store_type'
-        )
-        // .avg(`reviews.rating as rating_average`)
-        // .count('reviews.product_id as number_of_ratings')
-        .join('product_price ', 'products.id', 'product_price.product_id')
-        .join('product_images  ', 'products.id', 'product_images.product_id')
-        .join('reviews', 'products.id', 'reviews.product_id')
-        .join('stores', 'products.store_id', 'stores.id')
-        .where('products.id', '=', id);
+      // const product = await knex
+      //   .from('products')
+      //   .select(
+      //     'products.id as product_id',
+      //     'products.title as product_title',
+      //     'products.title_ar as product_title_ar',
+      //     'product_price.price as product_price',
+      //     'product_price.created_at as product_price_created_at',
+      //     'products.sale as product_sale',
+      //     'products.created_at as created_at',
+      //     'products.updated_at as updated_at',
+      //     'products.brand as product_brand',
+      //     'products.category as product_category',
+      //     'products.url as product_url',
+      //     'product_images.id AS image_id',
+      //     'product_images.link AS image_url',
+      //     'products.store_id as store_id',
+      //     'stores.name as store_name',
+      //     'stores.logo as store_logo',
+      //     'stores.store_type as store_type'
+      //   )
+      //   // .avg(`reviews.rating as rating_average`)
+      //   // .count('reviews.product_id as number_of_ratings')
+      //   .join('product_price ', 'products.id', 'product_price.product_id')
+      //   .join('product_images  ', 'products.id', 'product_images.product_id')
+      //   .join('reviews', 'products.id', 'reviews.product_id')
+      //   .join('stores', 'products.store_id', 'stores.id')
+      //   .where('products.id', '=', id);
 
-      return product;
+      const product = await knex.raw(
+        'CALL sale_hunter.products_get_one_by_id(?)',
+        [id]
+      );
+
+      const basic = product[0][0],
+        prices = product[0][1],
+        images = product[0][2],
+        rating = product[0][3],
+        views = product[0][4];
+
+      return { basic, prices, images, rating, views };
     } catch (error) {
       throw error;
     }
