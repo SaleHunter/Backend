@@ -1,60 +1,52 @@
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
-const DAL = require('../domains/user/DAL');
-const helpers = require('../domains/user/helpers');
-const { googleAuth, facebookAuth } = require('../domains/user/controllers');
+const GoogleTokenStrategy = require('passport-google-oauth-token');
+const FacebookTokenStrategy = require('passport-facebook-token');
+const {
+  googleStrategyHandler,
+  facebookStrategyHandler,
+} = require('../domains/user/controllers');
 
-function initializePassport(passport) {
+module.exports = function initializePassport(passport) {
   // Initializing Google Strategy
   passport.use(
-    new GoogleStrategy(
+    new GoogleTokenStrategy(
       {
         clientID: process.env.G_CLIENT_ID,
         clientSecret: process.env.G_SECRET,
-        callbackURL: 'http://localhost:6200/api/v1/users/auth/google/callback',
-        passReqToCallback: true,
       },
-      googleAuth
+      function (accessToken, refreshToken, profile, done) {
+        console.log(accessToken);
+        googleStrategyHandler(
+          accessToken,
+          refreshToken,
+          profile,
+          function (err, user) {
+            return done(err, user);
+          }
+        );
+      }
     )
   );
 
   // Initialize Facebook Strategy
   passport.use(
-    new FacebookStrategy(
+    new FacebookTokenStrategy(
       {
         clientID: process.env.F_CLIENT_ID,
         clientSecret: process.env.F_SECRET,
-        callbackURL:
-          'http://localhost:6200/api/v1/users/auth/facebook/callback',
-        passReqToCallback: true,
-        profileFields: ['email', 'id', 'name'],
+        fbGraphVersion: 'v13.0',
       },
-      facebookAuth
+      function (accessToken, refreshToken, profile, done) {
+        console.log(accessToken);
+
+        facebookStrategyHandler(
+          accessToken,
+          refreshToken,
+          profile,
+          function (err, user) {
+            return done(err, user);
+          }
+        );
+      }
     )
   );
-
-  // post jwt into cookies
-  passport.serializeUser((token, done) => {
-    return done(null, token);
-  });
-
-  // restore token from cookies and decode it
-  // return user to the req
-
-  /**
-   * TODO: separate what varies
-   * mode getting user and decoding token from here
-   */
-  passport.deserializeUser(async (token, done) => {
-    // console.log('iam the problem', token);
-    // return done(null, token);
-    const JWTHelper = require('../domains/shared/helpers/JWTHelpers');
-    const { restoreFromJWT } = new JWTHelper();
-
-    const { id } = await restoreFromJWT(token);
-    const user = await DAL.getUserbyID(id);
-    user.token = token;
-    return done(null, { ...user });
-  });
-}
-module.exports = initializePassport;
+};

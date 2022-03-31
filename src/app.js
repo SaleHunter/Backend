@@ -5,10 +5,10 @@ const swaggerUI = require('swagger-ui-express');
 const exphbs = require('express-handlebars');
 var path = require('path');
 const passport = require('passport');
+const initializePassport = require('./libraries/passport');
 const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
 
-require('./libraries/passport')(passport);
 // const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerDocs = require('./config/swagger-specs');
 const {
@@ -46,17 +46,8 @@ app.engine(
 // app.set('view engine', '.hbs');
 // app.set('views', path.join(__dirname, 'views'));
 
-// setup cookies
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [process.env.COOKIE_KEY],
-  })
-);
-
 // initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
+initializePassport(passport);
 
 // app.use(express.static(path.join(__dirname, 'public')));
 //Global middlewares

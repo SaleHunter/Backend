@@ -247,8 +247,7 @@ class Service {
         await DataAccessLayer.createUser(payload);
       }
       user = await DataAccessLayer.getUserbyThirdPartyID(thirdParty_id);
-      const jwToken = await Helper.signJWT(user.id);
-      return { user, jwToken };
+      return user;
     } catch (error) {
       throw error;
     }

@@ -205,29 +205,53 @@ class Controller {
       user,
     });
   }
-  async googleAuth(req, accessToken, refreshToken, profile, done) {
-    let googlePayload = {
-      fullname: profile._json.name,
-      email: profile._json.email,
-      profile_img: profile._json.picture,
-      thirdParty_id: 'g-' + profile._json.sub,
-      phone_number: profile._json.phone_number,
-    };
-    let { jwToken } = await service.thirdPartyAuth(googlePayload);
+  async googleStrategyHandler(accessToken, refreshToken, profile, done) {
+    try {
+      let googlePayload = {
+        fullname: `${profile.name.givenName} ${profile.name.familyName}`,
+        email: profile.emails[0].value,
+        profile_img: profile.photos[0].value,
+        thirdParty_id: 'g-' + profile.id,
+        phone_number: profile.phone_number,
+      };
+      let user = await service.thirdPartyAuth(googlePayload);
 
-    return done(null, jwToken);
+      return done(null, user);
+    } catch (error) {
+      return done(error, user);
+    }
   }
-  async facebookAuth(req, accessToken, refreshToken, profile, done) {
-    let facebookPayload = {
-      fullname: profile._json.name,
-      email: profile._json.email,
-      profile_img: profile._json.picture,
-      thirdParty_id: 'fb-' + profile._json.id,
-      phone_number: profile._json.phone_number,
-    };
-    let { jwToken } = await service.thirdPartyAuth(facebookPayload);
+  async facebookStrategyHandler(accessToken, refreshToken, profile, done) {
+    try {
+      let facebookPayload = {
+        fullname: `${profile.name.givenName} ${profile.name.familyName}`,
+        email: profile.emails[0].value,
+        profile_img: profile.photos[0].value,
+        thirdParty_id: 'fb-' + profile.id,
+        phone_number: profile.phone_number,
+      };
+      let user = await service.thirdPartyAuth(facebookPayload);
 
-    return done(null, jwToken);
+      return done(null, user);
+    } catch (error) {
+      console.log('Error');
+      return done(error, user);
+    }
+  }
+
+  async socialAuthHandler(req, res, next) {
+    if (!req.user) {
+      return res.send(401, 'User Not Authenticated');
+    }
+
+    const jwToken = helper.signJWT(req.user.id);
+    helper.setJWTHeader(jwToken, res);
+    helper.setJWTCookie(jwToken, res);
+
+    return res.status(200).json({
+      status: 'success',
+      user: req.user,
+    });
   }
 }
 
