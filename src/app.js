@@ -3,7 +3,6 @@ const logger = require('morgan');
 const cors = require('cors');
 const swaggerUI = require('swagger-ui-express');
 const exphbs = require('express-handlebars');
-var path = require('path');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
@@ -99,6 +98,9 @@ app.use(function (req, res, next) {
 });
 
 // All Routes
+//Product Router
+app.use('/api/v1/products', require('./domains/product/routes'));
+
 //User Router
 app.use('/api/v1/users', require('./domains/user/routes'));
 

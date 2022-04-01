@@ -1,4 +1,5 @@
 const userPaths = require('../domains/user/swagger-docs');
+const productPaths = require('../domains/product/swagger-docs');
 module.exports = {
   openapi: '3.0.0',
   info: {
@@ -24,6 +25,10 @@ module.exports = {
     {
       name: 'Users',
       description: 'Users endpoints',
+    },
+    {
+      name: 'Products',
+      description: 'Products endpoints',
     },
   ],
   paths: {
@@ -55,6 +60,12 @@ module.exports = {
     },
     '/users/auth/resetPassword/{resetToken}': {
       patch: userPaths.resetPassword,
+    },
+    '/products': {
+      get: productPaths.searchForProducts,
+    },
+    '/products/{id}': {
+      get: productPaths.getProductById,
     },
   },
   components: {
@@ -208,6 +219,137 @@ module.exports = {
             description: 'Error message',
             type: 'string',
             example: 'Un Authorized User, Please sign in to continue',
+          },
+        },
+      },
+      ProductBasicWithStoreInfo: {
+        name: 'Product Basic With Store Information',
+        in: 'body',
+        description:
+          'The Basic Information of the requested product with Store Information',
+        type: 'object',
+        properties: {
+          product_id: {
+            description: 'The Product Id',
+            type: 'number',
+          },
+          product_title: {
+            description: 'The Product Title',
+            type: 'string',
+          },
+          product_title_ar: {
+            description: 'The Arabic Product Title',
+            type: 'string',
+          },
+          product_brand: {
+            description: 'The Product Brand',
+            type: 'string',
+          },
+          product_category: {
+            description: 'The Product Category',
+            type: 'string',
+          },
+          product_category_ar: {
+            description: 'The Arabic Product Category',
+            type: 'string',
+          },
+          product_url: {
+            description: 'The Product Url',
+            type: 'string',
+          },
+          store_id: {
+            description: 'The Store ID',
+            type: 'number',
+          },
+          store_name: {
+            description: 'The Store name',
+            type: 'string',
+          },
+          store_logo: {
+            description: 'The Store Logo',
+            type: 'string',
+          },
+          store_type: {
+            description: 'The Store Type',
+            type: 'string',
+          },
+        },
+      },
+      ProductDetailedInfo: {
+        name: 'Product Detailed Information',
+        in: 'body',
+        description: 'The Detailed Information of the requested product',
+        type: 'object',
+        properties: {
+          basic: {
+            description: 'The Basic Information of the requested product',
+            type: 'object',
+            example: {
+              product_id: 1,
+              product_title: 'Apple iPhone 13 Pro Max 256GB Blue',
+              product_title_ar:
+                'موبايل ايفون 13 Pro Max، 256 جيجابايت، ازرق سييرا',
+              product_brand: 'apple',
+              product_category: 'Electronics',
+              product_category_ar: 'إلكترونيات',
+              product_url: 'https://www.amazon.eg/dp/B09G9CD8PS?language=en_AE',
+              product_sale: 25000,
+            },
+          },
+          prices: {
+            description: 'All The Price of the Product',
+            type: 'array',
+            example: [
+              {
+                price: 27976,
+                created_at: '2022-03-23',
+              },
+              {
+                price: 28000,
+                created_at: '2022-03-25',
+              },
+            ],
+          },
+          images: {
+            description: 'All The Images of the Product',
+            type: 'array',
+            example: [
+              {
+                img_id: 1,
+                img_url:
+                  'https://images-na.ssl-images-amazon.com/images/I/61i8Vjb17SL.__AC_SX300_SY300_QL70_ML2_.jpg',
+              },
+              {
+                img_id: 2,
+                img_url:
+                  'https://images-na.ssl-images-amazon.com/images/I/61i8Vjb17SL.__AC_SX300_SY300_QL70_ML2_.jpg',
+              },
+            ],
+          },
+          store: {
+            description: 'The Store of the Product',
+            type: 'object',
+            example: {
+              store_id: 1,
+              store_name: 'Amazon',
+              store_logo: null,
+              store_type: 'online',
+            },
+          },
+          rating: {
+            description: 'The Rating of the Product',
+            type: 'object',
+            example: {
+              rating_average: '4.0',
+              number_of_ratings: 1,
+            },
+          },
+          rating: {
+            description: 'The Total Number of Views of the Product',
+            type: 'object',
+            example: {
+              number_of_views: 387,
+            },
           },
         },
       },
