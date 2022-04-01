@@ -293,6 +293,7 @@ module.exports = {
               product_category: 'Electronics',
               product_category_ar: 'إلكترونيات',
               product_url: 'https://www.amazon.eg/dp/B09G9CD8PS?language=en_AE',
+              product_sale: 25000,
             },
           },
           prices: {

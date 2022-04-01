@@ -3,7 +3,6 @@
  * 1. search for products
  * 2. get product by id
  */
-
 const { Router } = require('express');
 const asyncHandler = require('express-async-handler');
 const controller = require('./controllers');

@@ -11,48 +11,70 @@ module.exports = {
         type: 'string',
       },
       {
-        name: 'filterBy',
+        name: 'price_min',
         in: 'query',
-        description: 'The Filter Criteria',
+        description:
+          'Get elements that price greater than or equal to price_min',
         required: false,
-        schema: {
-          type: 'string',
-          enum: ['price_min', 'price_max', 'category', 'brand', 'store_name'],
-        },
+        type: 'number',
+        default: 0,
       },
       {
-        name: 'filterValue',
+        name: 'price_max',
         in: 'query',
-        description: 'The Filter Value',
+        description: 'Get elements that price less than or equal to price_max',
         required: false,
-        schema: {
-          type: 'string',
-        },
+        type: 'number',
+        default: 1e9,
       },
       {
-        name: 'sortBy',
+        name: 'category',
         in: 'query',
-        description: 'Sort By',
+        description: 'Get elements that category equal to category value',
+        required: false,
+        type: 'string',
+        default: 'all',
+      },
+      {
+        name: 'brand',
+        in: 'query',
+        description: 'Get elements that brand equal to brand value',
+        required: false,
+        type: 'string',
+        default: 'all',
+      },
+      {
+        name: 'store_type',
+        in: 'query',
+        description: 'Get elements that store_type equal to store_type value',
+        required: false,
+        type: 'string',
+        default: 'all',
+      },
+      {
+        name: 'sort',
+        in: 'query',
+        description: 'Sort elements by specific attribute',
         required: false,
         schema: {
           type: 'string',
           enum: [
-            'price_min',
-            'price_max',
+            'priceAsc',
+            'priceDsc',
             'popular',
             'rating',
             'nearest_store',
             'best_deal',
-            'updated_at',
-            'created_at',
+            'newest',
+            'oldest',
           ],
           default: 'popular',
         },
       },
       {
-        name: 'page',
+        name: 'cursor',
         in: 'query',
-        description: 'The Page Number',
+        description: 'The id of last element in prev page',
         required: false,
         schema: {
           type: 'number',
@@ -68,6 +90,16 @@ module.exports = {
           type: 'number',
         },
         default: 20,
+      },
+      {
+        name: 'cursorDirection',
+        in: 'query',
+        required: false,
+        schema: {
+          type: 'string',
+          enum: ['previous', 'next'],
+        },
+        default: 'next',
       },
       {
         name: 'language',
@@ -128,11 +160,13 @@ module.exports = {
                     {
                       product_id: 1,
                       product_title: 'Apple iPhone 13 Pro Max 256GB Blue',
+                      product_price: 27646,
                       product_title_ar:
                         'موبايل ايفون 13 Pro Max، 256 جيجابايت، ازرق سييرا',
                       product_brand: 'apple',
                       product_category: 'Electronics',
                       product_category_ar: 'إلكترونيات',
+                      product_sale: 25000,
                       product_url:
                         'https://www.amazon.eg/dp/B09G9CD8PS?language=en_AE',
                       image_url:
@@ -146,11 +180,13 @@ module.exports = {
                       product_id: 7,
                       product_title:
                         'Apple MacBook Pro Late 2020 MYD82 Model With Touch Bar And Touch ID',
+                      product_price: 404500,
                       product_title_ar:
                         'ابل ماك بوك برو اصدار اواخر 2020 MYD82 مع شريط لمس وخاصية تاتش اي دي',
                       product_brand: 'apple',
                       product_category: 'Electronics',
                       product_category_ar: 'إلكترونيات',
+                      product_sale: 35000,
                       product_url:
                         'https://www.amazon.eg/dp/B08N5WRTN2?language=en_AE',
                       image_url:

@@ -1,54 +1,46 @@
-const DAL = require('./DALs');
-const helper = require('./helpers');
+const DAL = require('./DAL');
+const { AttributeExtractor } = require('./helpers');
 
 class Service {
   async searchForProducts(query, headers) {
     try {
       const searchText = query.searchText;
 
-      const language = query.language;
+      const language = AttributeExtractor.extractLanguageValue(headers);
 
-      const userLocation = helper.buildUserLocationObject(headers);
+      const userLocation =
+        AttributeExtractor.extractUserLocationObject(headers);
 
-      const paginationObject = helper.buildPaginationObject(query);
+      const paginationObject =
+        AttributeExtractor.extractPaginationObject(query);
 
-      const filterObject = helper.buildFilterObject(query);
+      const filterObject = AttributeExtractor.extractFilterObject(query);
 
-      const sortBy = query.sortBy || 'popular';
+      const sort = AttributeExtractor.extractSortByValue(query);
 
-      const storeType = query.storeType || 'all';
-
-      console.log(
-        searchText,
-        language,
-        paginationObject,
-        sortBy,
-        filterObject,
-        storeType,
-        userLocation
-      );
+      const storeType = AttributeExtractor.extractStoreTypeValue(query);
 
       const products = await DAL.searchForProducts(
         searchText,
         language,
         paginationObject,
         filterObject,
-        sortBy,
+        sort,
         storeType,
         userLocation
       );
 
       return products;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   }
-
   async getProductById(id) {
     try {
-      return await DAL.getProductById(id);
-    } catch (error) {
-      console.error(error);
+      const product = await DAL.getProductById(id);
+      return product;
+    } catch (err) {
+      throw err;
     }
   }
 }

@@ -3,7 +3,6 @@ const logger = require('morgan');
 const cors = require('cors');
 const swaggerUI = require('swagger-ui-express');
 const exphbs = require('express-handlebars');
-var path = require('path');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
