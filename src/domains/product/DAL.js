@@ -87,8 +87,9 @@ class DataAccessLayer {
       CustomQueryBuilder.addStoreTypeToQuery(storeType, queryString);
       CustomQueryBuilder.addSortToQuery(sort, queryString);
       CustomQueryBuilder.addFiltersToQuery(filter, queryString);
-      CustomQueryBuilder.addSearchTextToQuery(searchText, queryString);
 
+      CustomQueryBuilder.addPaginationToQuery(pagination, queryString);
+      CustomQueryBuilder.addSearchTextToQuery(searchText, queryString);
       /*TODO:
        * addFilterToQuery
        * addPaginationToQuery

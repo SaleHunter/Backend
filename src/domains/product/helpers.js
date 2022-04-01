@@ -31,8 +31,9 @@ class AttributeExtractor {
 
   extractPaginationObject(query) {
     return {
-      page: query.page || 1,
+      cursor: query.cursor || 0,
       limit: query.limit || 20,
+      cursorDirection: query.cursorDirection || 'next',
     };
   }
 
@@ -125,6 +126,16 @@ class CustomQueryBuilder {
       filters.price_min,
       filters.price_max,
     ]);
+  }
+  addPaginationToQuery(paginationObj, queryString) {
+    console.log(paginationObj);
+    queryString
+      .where(
+        'products.id',
+        paginationObj.cursorDirection == 'next' ? '>' : '<',
+        paginationObj.cursor
+      )
+      .limit(paginationObj.limit);
   }
 }
 module.exports.AttributeExtractor = new AttributeExtractor();

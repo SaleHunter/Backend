@@ -10,15 +10,18 @@ class Validation {
 
       limit: Joi.number().min(10).max(100).messages({
         'number.base': 'limit must be a number',
-        'number.min': 'limit must be greater than 9 items',
-        'number.max': 'limit must be less than 101 items',
+        'number.min': 'limit must be atleast 10 items',
+        'number.max': 'limit must be atmost 100 items',
       }),
 
-      page: Joi.number().min(0).messages({
-        'number.base': 'page must be a number',
-        'number.min': 'page must be greater than or equal to 0',
+      cursor: Joi.number().messages({
+        'number.base': 'cursor must be a number',
       }),
-
+      cursorDirection: Joi.string().valid('next', 'previous').messages({
+        'string.base': 'cursorDirection mst be a string',
+        'any.valid':
+          'cursorDirection must be any of these values [next, previous]',
+      }),
       storeType: Joi.string().valid('online', 'offline', 'all').messages({
         'string.base': 'storeType must be string',
         'any.valid':

@@ -72,9 +72,9 @@ module.exports = {
         },
       },
       {
-        name: 'page',
+        name: 'cursor',
         in: 'query',
-        description: 'The Page Number',
+        description: 'The id of last element in prev page',
         required: false,
         schema: {
           type: 'number',
@@ -90,6 +90,16 @@ module.exports = {
           type: 'number',
         },
         default: 20,
+      },
+      {
+        name: 'cursorDirection',
+        in: 'query',
+        required: false,
+        schema: {
+          type: 'string',
+          enum: ['previous', 'next'],
+        },
+        default: 'next',
       },
       {
         name: 'language',
