@@ -38,13 +38,14 @@ class DataAccessLayer {
         [id]
       );
 
-      const basic = product[0][0],
+      const basic = product[0][0][0],
         prices = product[0][1],
-        images = product[0][2],
-        rating = product[0][3],
-        views = product[0][4];
+        images = product[0][2][0],
+        store = product[0][3],
+        rating = product[0][4][0],
+        views = product[0][5][0];
 
-      return { basic, prices, images, rating, views };
+      return { basic, prices, images, store, rating, views };
     } catch (error) {
       throw error;
     }
@@ -72,6 +73,7 @@ class DataAccessLayer {
           'products.updated_at as updated_at',
           'products.brand as product_brand',
           'products.category as product_category',
+          'products.sale as product_sale',
           'reviews.rating as product_rating',
           'products.url as product_url',
           'product_images.link AS image_url',

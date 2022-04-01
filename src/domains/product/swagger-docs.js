@@ -160,11 +160,13 @@ module.exports = {
                     {
                       product_id: 1,
                       product_title: 'Apple iPhone 13 Pro Max 256GB Blue',
+                      product_price: 27646,
                       product_title_ar:
                         'موبايل ايفون 13 Pro Max، 256 جيجابايت، ازرق سييرا',
                       product_brand: 'apple',
                       product_category: 'Electronics',
                       product_category_ar: 'إلكترونيات',
+                      product_sale: 25000,
                       product_url:
                         'https://www.amazon.eg/dp/B09G9CD8PS?language=en_AE',
                       image_url:
@@ -178,11 +180,13 @@ module.exports = {
                       product_id: 7,
                       product_title:
                         'Apple MacBook Pro Late 2020 MYD82 Model With Touch Bar And Touch ID',
+                      product_price: 404500,
                       product_title_ar:
                         'ابل ماك بوك برو اصدار اواخر 2020 MYD82 مع شريط لمس وخاصية تاتش اي دي',
                       product_brand: 'apple',
                       product_category: 'Electronics',
                       product_category_ar: 'إلكترونيات',
+                      product_sale: 35000,
                       product_url:
                         'https://www.amazon.eg/dp/B08N5WRTN2?language=en_AE',
                       image_url:
