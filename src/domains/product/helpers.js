@@ -111,9 +111,10 @@ class CustomQueryBuilder {
   }
 
   addSearchTextToQuery(searchText, queryString) {
-    queryString
-      .whereILike('products.title', `%${searchText}%`)
-      .orWhereILike('products.title_ar', `%${searchText}%`);
+    queryString.whereRaw(
+      '(products.title LIKE ? OR products.title_ar LIKE ? )',
+      [`%${searchText}%`, `%${searchText}%`]
+    );
   }
   addFiltersToQuery(filters, queryString) {
     // Category, Brand Filteration
