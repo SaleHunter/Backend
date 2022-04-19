@@ -86,7 +86,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-
 //Request Logger
 app.use(logger('dev'));
 
@@ -98,7 +97,6 @@ app.use(cookieParser());
 
 //Configure Swagger API documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
-
 
 // All Routes
 //Product Router
