@@ -73,7 +73,6 @@ app.use(passport.session());
 //   })
 // );
 
-
 //Request Logger
 app.use(logger('dev'));
 
