@@ -73,18 +73,6 @@ app.use(passport.session());
 //   })
 // );
 
-app.use(function (req, res, next) {
-  res.setHeader('Content-Type', 'application/json;charset=UTF-8');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Expose-setHeaders', '*, Authorization');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-
-  next();
-});
 
 //Request Logger
 app.use(logger('dev'));
@@ -97,6 +85,19 @@ app.use(cookieParser());
 
 //Configure Swagger API documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
+app.use(function (req, res, next) {
+  res.setHeader('Content-Type', 'application/json;charset=UTF-8');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Expose-setHeaders', '*, Authorization');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+
+  next();
+});
 
 // All Routes
 //Product Router
