@@ -61,17 +61,30 @@ app.use(passport.session());
 //Global middlewares
 
 //Enable all CORS requests
-app.use(
-  cors({
-    exposedHeaders: 'Authorization',
-    origin: [
-      'http://localhost:3000',
-      'https://localhost:3000',
-      'https://sale-hunter.vercel.app',
-    ],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     exposedHeaders: 'Authorization',
+//     origin: [
+//       'http://localhost:3000',
+//       'https://localhost:3000',
+//       'https://sale-hunter.vercel.app',
+//     ],
+//     credentials: true,
+//   })
+// );
+
+app.use(function (req, res, next) {
+  res.setHeader('Content-Type', 'application/json;charset=UTF-8');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Expose-setHeaders', '*, Authorization');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+
+  next();
+});
 
 //Request Logger
 app.use(logger('dev'));
@@ -84,18 +97,6 @@ app.use(cookieParser());
 
 //Configure Swagger API documentation
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
-
-app.use(function (req, res, next) {
-  res.header('Content-Type', 'application/json;charset=UTF-8');
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-
-  next();
-});
 
 // All Routes
 //Product Router
