@@ -87,10 +87,10 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.use(function (req, res, next) {
   res.header('Content-Type', 'application/json;charset=UTF-8');
-  res.header(
-    'Access-Control-Allow-Origin',
-    '*, http://localhost:3000, https://localhost:3000, https://sale-hunter.vercel.app'
-  );
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', 'https://localhost:3000');
+  res.header('Access-Control-Allow-Origin', 'https://sale-hunter.vercel.app');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Expose-Headers', '*, Authorization');
   res.header(
