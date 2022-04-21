@@ -91,6 +91,7 @@ app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Origin', 'https://localhost:3000');
   res.header('Access-Control-Allow-Origin', 'https://sale-hunter.vercel.app');
+  res.header('Access-Control-Allow-Origin', 'https://192.168.1.2:3000');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Expose-Headers', '*, Authorization');
   res.header(
