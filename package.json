@@ -21,6 +21,7 @@
   "homepage": "https://github.com/SaleHunter/Backend#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "bullmq": "^1.80.5",
     "cloudinary": "^1.28.1",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.0.0",
@@ -33,6 +34,7 @@
     "express-session": "^1.17.2",
     "google-auth-library": "^7.11.0",
     "handlebars": "^4.7.7",
+    "ioredis": "^5.0.4",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",

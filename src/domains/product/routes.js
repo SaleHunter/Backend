@@ -8,6 +8,7 @@ const asyncHandler = require('express-async-handler');
 const controller = require('./controllers');
 const validation = require('./validations');
 const { prepareQueryObj } = require('./middlewares');
+const { canRecommend } = require('../shared/middlewares/Authentication');
 const router = Router();
 
 // search for products
@@ -22,5 +23,11 @@ router.get(
   '/:id',
   asyncHandler(validation.getProductById),
   asyncHandler(controller.getProductById)
+);
+
+router.get(
+  '/recommended',
+  asyncHandler(canRecommend),
+  asyncHandler(controller.recommendProductsForUser)
 );
 module.exports = router;

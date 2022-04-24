@@ -19,5 +19,19 @@ class Controller {
       product,
     });
   }
+
+  async recommendProductsForUser(req, res, next) {
+    const canRecommend = req.canRecommend;
+    let products = [];
+    if (canRecommend)
+      products = service.getRecommendedProductsByUserId(req.user.id);
+    products = service.getTopProducts();
+
+    res.status(200).json({
+      status: 'success',
+      Authenticated: canRecommend,
+      products,
+    });
+  }
 }
 module.exports = new Controller();

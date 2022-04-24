@@ -1,4 +1,5 @@
-const knex = require('../../config/knex');
+const { tryCatch } = require('bullmq');
+const knex = require('../../dataStores/knex');
 const { CustomQueryBuilder } = require('./helpers');
 
 class DataAccessLayer {
@@ -99,6 +100,52 @@ class DataAccessLayer {
       console.log(queryString.toString());
       const products = await queryString;
       return products;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getTopProducts() {
+    try {
+      const queryString = `
+      SELECT 
+          products.id AS id,
+          title,
+          sale,
+          description,
+          brand,
+          store_id,
+          stores.name AS store_name,
+          sale,
+          (SELECT 
+                  price
+              FROM
+                  product_price
+              WHERE
+                  products.id = product_price.product_id
+              ORDER BY created_at
+              LIMIT 1) AS price,
+          (SELECT 
+                  SUM(user_product_views.views)
+              FROM
+                  user_product_views
+              WHERE
+                  products.id = user_product_views.product_id) AS n_views,
+        (select count(product_id)  FROM
+                  favourite_product
+              WHERE
+                  products.id = favourite_product.product_id) AS favourite,
+          (SELECT (favourite / n_views)) as top_ratio
+      FROM
+          products
+              JOIN
+          stores ON products.store_id = stores.id
+      ORDER BY top_ratio DESC
+      LIMIT 30; `;
+
+      const product = await knex.query(queryString, []);
+
+      return product;
     } catch (error) {
       throw error;
     }

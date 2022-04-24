@@ -14,7 +14,7 @@ const passport = require('passport');
 
 const controller = require('./controllers');
 const validation = require('./validations');
-const isAuthenticated = require('../shared/middlewares/isAuthenticated');
+const { isAuthenticated } = require('../shared/middlewares/Authentication');
 const helpers = require('./helpers');
 
 const router = Router();
