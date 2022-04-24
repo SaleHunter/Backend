@@ -40,8 +40,8 @@ class DataAccessLayer {
 
       const basic = product[0][0][0],
         prices = product[0][1],
-        images = product[0][2][0],
-        store = product[0][3],
+        images = product[0][2],
+        store = product[0][3][0],
         rating = product[0][4][0],
         views = product[0][5][0];
 
