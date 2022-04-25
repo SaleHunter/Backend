@@ -9,6 +9,12 @@ const mysql = require('./dataStores/sequelize').authenticateSequelize();
 const knex = require('./dataStores/knex');
 const redis = require('./dataStores/redis');
 
+//Starting Redis Publisher/Consumer
+const pubSub = require('./pubSub/index');
+
+//Starting Job Scheduler
+const jobScheduler = require('./jobScheduler/index');
+
 const port = process.env.PORT || 5000;
 const app = require('./app.js');
 

@@ -1,4 +1,5 @@
 const service = require('./services');
+const publisher = require('../../pubSub/publisher');
 
 class Controller {
   async searchForProducts(req, res, next) {
@@ -12,7 +13,9 @@ class Controller {
   }
 
   async getProductById(req, res, next) {
-    const product = await service.getProductById(req.params.id);
+    const productId = req.params.id;
+    if (req.authenticated) publisher.publishProductView(productId, req.user.id);
+    const product = await service.getProductById(productId);
 
     res.status(200).json({
       status: 'success',
@@ -21,7 +24,7 @@ class Controller {
   }
 
   async recommendProductsForUser(req, res, next) {
-    const canRecommend = req.canRecommend;
+    const canRecommend = req.authenticated;
     let products = [];
     if (canRecommend)
       products = service.getRecommendedProductsByUserId(req.user.id);
@@ -29,7 +32,7 @@ class Controller {
 
     res.status(200).json({
       status: 'success',
-      Authenticated: canRecommend,
+      Authenticated: authenticated,
       products,
     });
   }

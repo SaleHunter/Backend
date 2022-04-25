@@ -1,5 +1,7 @@
 const DAL = require('./DAL');
+const cache = require('./cache');
 const { AttributeExtractor } = require('./helpers');
+const axios = require('axios');
 
 class Service {
   async searchForProducts(query, headers) {
@@ -50,6 +52,17 @@ class Service {
        * if Hit: return back list of products
        * if Miss: retrive it from database then cache it and finally return it back
        */
+
+      let products = [];
+      products = await cache.getTopProducts();
+
+      if (!products) {
+        products = await DAL.getTopProducts();
+      }
+
+      await cache.setTopProducts(products);
+
+      return products;
     } catch (err) {
       throw err;
     }
@@ -61,9 +74,32 @@ class Service {
        * if Hit: return back list of products
        * if Miss: retrive it from ML Recommendation System then cache it and finally return it back
        */
+      let products = [];
+
+      products = await cache.getRecommendedProductsByUserId(userId);
+      if (!products) {
+        const topProducts = this.getTopProducts();
+        products = await this.predictProductsForUser(userId, topProducts);
+        cache.setRecommendedProductsByUserId(userId, products);
+      }
+
+      return products;
     } catch (err) {
       throw err;
     }
+  }
+
+  async predictProductsForUser(userId, products) {
+    const response = await axios({
+      method: 'GET',
+      url,
+      data: {
+        userId,
+        items: products.map(product => product.id),
+      },
+    });
+
+    return response.data;
   }
 }
 
