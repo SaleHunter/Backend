@@ -1,5 +1,11 @@
 const IORedis = require('ioredis');
-const subscriber = new IORedis({ maxRetriesPerRequest: null });
+const subscriber = new IORedis({
+  maxRetriesPerRequest: null,
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST,
+  password: process.env.REDIS_PASSWORD,
+});
+const knex = require('../dataStores/knex');
 
 subscriber.subscribe('productViews', (err, count) => {
   if (err) {
@@ -11,6 +17,15 @@ subscriber.subscribe('productViews', (err, count) => {
   }
 });
 
-subscriber.on('message', (channel, message) => {
-  console.log(`Received ${message} from ${channel}`);
+subscriber.on('message', async (channel, message) => {
+  try {
+    const { user_id, product_id, viewed_at } = JSON.parse(message);
+    console.log(`Received ${message} from ${channel}`);
+
+    const res = await knex('user_product_views').insert({
+      viewed_at,
+      user_id,
+      product_id,
+    });
+  } catch (error) {}
 });

@@ -21,6 +21,7 @@ class Service {
       const sort = AttributeExtractor.extractSortByValue(query);
 
       const storeType = AttributeExtractor.extractStoreTypeValue(query);
+      const store_name = AttributeExtractor.extractStoreNameValue(query);
 
       const products = await DAL.searchForProducts(
         searchText,
@@ -29,6 +30,7 @@ class Service {
         filterObject,
         sort,
         storeType,
+        store_name,
         userLocation
       );
 
@@ -55,7 +57,7 @@ class Service {
 
       let products = [];
       products = await cache.getTopProducts();
-
+      // console.log(products.length);
       if (!products) {
         products = await DAL.getTopProducts();
       }
@@ -77,9 +79,11 @@ class Service {
       let products = [];
 
       products = await cache.getRecommendedProductsByUserId(userId);
+      // console.log(products.length !== 0);
       if (!products) {
-        const topProducts = this.getTopProducts();
+        const topProducts = await this.getTopProducts();
         products = await this.predictProductsForUser(userId, topProducts);
+        console.log('HEREREDFEGEGE');
         cache.setRecommendedProductsByUserId(userId, products);
       }
 
@@ -90,16 +94,29 @@ class Service {
   }
 
   async predictProductsForUser(userId, products) {
+    console.log('Predicting');
+    // const top = products.map(product => product.id);
+    // console.log(top);
+
     const response = await axios({
       method: 'GET',
-      url,
+      url: 'https://recommenderengine20211014165927.azurewebsites.net/api/Predict',
       data: {
         userId,
         items: products.map(product => product.id),
       },
     });
 
-    return response.data;
+    console.log('data', response.data);
+
+    const recommendedProducts = response.data;
+
+    const detailedRecommendedProducts = recommendedProducts.map(product => {
+      const found = products.find(top => top.id === product.Item);
+      return { ...found, score: product.Score };
+    });
+
+    return detailedRecommendedProducts;
   }
 }
 

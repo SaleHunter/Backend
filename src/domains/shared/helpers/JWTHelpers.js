@@ -5,7 +5,7 @@ const { UnAuthorizedError } = require('../errors/AuthError');
 class Helper {
   extractJWT(req) {
     let authorizationHeader = req.headers.authorization;
-    console.log('authorizationHeader: ', authorizationHeader);
+    // console.log('authorizationHeader: ', authorizationHeader);
     let token;
     console.log(token);
 
