@@ -5,4 +5,3 @@ exports.prepareQueryObj = (req, res, next) => {
   req.query.language = req.headers.language;
   next();
 };
-
