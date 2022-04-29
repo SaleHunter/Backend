@@ -1,10 +1,9 @@
-const { sequelize } = require('../../config/db');
+const { sequelize } = require('../../dataStores/sequelize');
 const {
   NoUserFoundError,
   InvalidResetTokenError,
   UserAlreadyExitsError,
 } = require('./errors');
-const { v4: uuidv4 } = require('uuid');
 const SQLError = require('../../api/error/SQLError');
 
 /**
