@@ -95,7 +95,8 @@ class DataAccessLayer {
         .join('product_price ', 'products.id', 'product_price.product_id')
         .join('product_images  ', 'products.id', 'product_images.product_id');
       CustomQueryBuilder.addStoreTypeToQuery(storeType, queryString);
-      CustomQueryBuilder.addStoreNameToQuery(store_name, queryString);
+      if (store_name && store_name !== 'all')
+        CustomQueryBuilder.addStoreNameToQuery(store_name, queryString);
       CustomQueryBuilder.addSortToQuery(sort, queryString);
       CustomQueryBuilder.addFiltersToQuery(filter, queryString);
 
