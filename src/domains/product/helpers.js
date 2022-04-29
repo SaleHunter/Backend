@@ -10,6 +10,9 @@ class AttributeExtractor {
   extractStoreTypeValue(query) {
     return query.storeType || 'all';
   }
+  extractStoreNameValue(query) {
+    return query.store_name || 'all';
+  }
   extractFilterObject(query) {
     const obj = {
       price_min: parseFloat(query.price_min) || 0.0,
@@ -108,6 +111,10 @@ class CustomQueryBuilder {
         queryString.join('stores', 'products.store_id', 'stores.id');
         break;
     }
+  }
+
+  addStoreNameToQuery(storeName, queryString) {
+    queryString.whereRaw('stores.name LIKE ?', [`%${storeName}%`]);
   }
 
   addSearchTextToQuery(searchText, queryString) {

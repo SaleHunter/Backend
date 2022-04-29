@@ -12,11 +12,27 @@ class Controller {
   }
 
   async getProductById(req, res, next) {
-    const product = await service.getProductById(req.params.id);
+    const productId = req.params.id;
+    const product = await service.getProductById(productId);
 
     res.status(200).json({
       status: 'success',
       product,
+    });
+  }
+
+  async recommendProductsForUser(req, res, next) {
+    const canRecommend = req.authenticated;
+    let products = [];
+    if (canRecommend)
+      products = await service.getRecommendedProductsByUserId(req.user.id);
+    else products = await service.getTopProducts();
+
+    res.status(200).json({
+      status: 'success',
+      Authenticated: canRecommend,
+      results: products.length,
+      products,
     });
   }
 }

@@ -3,15 +3,14 @@ const Joi = require('joi');
 class Validation {
   async searchForProducts(req, res, next) {
     const schema = Joi.object({
-      searchText: Joi.string().trim().required().messages({
+      searchText: Joi.string().trim().messages({
         'string.base': 'searchText is must be string',
-        'any.required': 'searchText is required',
       }),
 
       limit: Joi.number().min(10).max(100).messages({
         'number.base': 'limit must be a number',
-        'number.min': 'limit must be atleast 10 items',
-        'number.max': 'limit must be atmost 100 items',
+        'number.min': 'limit must be at least 10 items',
+        'number.max': 'limit must be at most 100 items',
       }),
 
       cursor: Joi.number().messages({

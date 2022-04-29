@@ -7,7 +7,6 @@ module.exports = {
         name: 'searchText',
         in: 'query',
         description: 'The Search Query for Products',
-        required: true,
         type: 'string',
       },
       {
@@ -255,6 +254,46 @@ module.exports = {
                   description: 'The response message',
                   type: 'string',
                   example: 'Invalid Product Id',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  getRecommendedProducts: {
+    tags: ['Products'],
+    description:
+      'Get Recommended Products if User Authenticated / Top Products If not',
+    responses: {
+      200: {
+        description: 'Recommended / Top Products Returned Successfuly',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                Authenticated: {
+                  description:
+                    'If The user Authenticated or not, if authenticated recommended products returned, else top products',
+                  type: 'boolean',
+                  example: 'true',
+                },
+                results: {
+                  description: 'The number of products returned',
+                  type: 'number',
+                  example: 10,
+                },
+                products: {
+                  description: 'The Array of Products',
+                  type: 'array',
+                  $ref: '#/components/schemas/RecommendedProducts',
                 },
               },
             },
