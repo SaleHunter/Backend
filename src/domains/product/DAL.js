@@ -116,10 +116,10 @@ class DataAccessLayer {
     try {
       const queryString = `
       SELECT 
-    p.id,
-    p.title,
-    p.title_ar,
-    p.brand,
+    p.id AS product_id,
+    p.title AS product_title,
+    p.title_ar AS product_title_ar,
+    p.brand AS product_brand,
     (SELECT 
             price
         FROM
@@ -127,31 +127,31 @@ class DataAccessLayer {
         WHERE
             pp.product_id = p.id
         ORDER BY pp.created_at
-        LIMIT 1) AS price,
+        LIMIT 1) AS product_price,
     (SELECT 
             link
         FROM
             product_images AS pimgs
         WHERE
             pimgs.product_id = p.id
-        LIMIT 1) AS image,
-    p.sale,
+        LIMIT 1) AS image_url,
+    p.sale AS product_sale ,
     p.store_id,
-    s.name,
-    s.logo,
+    s.name AS store_name,
+    s.logo AS store_logo,
     s.store_type,
     (SELECT 
             AVG(rating)
         FROM
             reviews AS r
         WHERE
-            r.product_id = p.id) AS rating,
+            r.product_id = p.id) AS product_rating,
     (SELECT 
             COUNT(product_id)
         FROM
             reviews AS r
         WHERE
-            r.product_id = p.id) AS rating_count,
+            r.product_id = p.id) AS product_rating_count,
     (SELECT 
             COUNT(vv.product_id)
         FROM

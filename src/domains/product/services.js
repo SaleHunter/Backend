@@ -103,7 +103,7 @@ class Service {
       url: 'https://recommenderengine20211014165927.azurewebsites.net/api/Predict',
       data: {
         userId,
-        items: products.map(product => product.id),
+        items: products.map(product => product.product_id),
       },
     });
 
@@ -112,7 +112,7 @@ class Service {
     const recommendedProducts = response.data;
 
     const detailedRecommendedProducts = recommendedProducts.map(product => {
-      const found = products.find(top => top.id === product.Item);
+      const found = products.find(top => top.product_id === product.Item);
       return { ...found, score: product.Score };
     });
 
