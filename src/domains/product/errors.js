@@ -11,4 +11,15 @@ class NoProductFoundError extends BaseError {
   }
 }
 
-module.exports = { NoProductFoundError };
+class ProductAlreadyInFavourites extends BaseError {
+  /**
+   * Creating a ProductAlreadyInFavourites
+   */
+  constructor() {
+    super(`Product is already in your favorites`);
+    this.statusCode = 409;
+    this.status = 'Fail';
+  }
+}
+
+module.exports = { NoProductFoundError, ProductAlreadyInFavourites };

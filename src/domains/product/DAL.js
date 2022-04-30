@@ -1,7 +1,7 @@
 const { tryCatch } = require('bullmq');
 const knex = require('../../dataStores/knex');
 const { CustomQueryBuilder } = require('./helpers');
-const { NoProductFoundError } = require('./errors');
+const { NoProductFoundError, ProductAlreadyInFavourites } = require('./errors');
 
 class DataAccessLayer {
   async getProductById(id) {
@@ -172,6 +172,87 @@ LIMIT 10;`;
 
       return product[0];
     } catch (error) {
+      throw error;
+    }
+  }
+
+  async getFavoriteProductsForUser(userId) {
+    try {
+      const queryString = `SELECT 
+      p.id,
+      p.title,
+      (SELECT 
+              pp.price
+          FROM
+              product_price AS pp
+          WHERE
+              p.id = pp.product_id
+          ORDER BY pp.created_at DESC
+          LIMIT 1) AS price,
+      (SELECT 
+              pimgs.link
+          FROM
+              product_images AS pimgs
+          WHERE
+              p.id = pimgs.product_id
+          LIMIT 1) AS image,
+      (SELECT 
+              AVG(rating)
+          FROM
+              reviews AS r
+          WHERE
+              r.product_id = p.id) AS rating,
+      (SELECT 
+              COUNT(product_id)
+          FROM
+              reviews AS r
+          WHERE
+              r.product_id = p.id) AS rating_count,
+      s.id AS store_id,
+      s.name AS store_name,
+      s.store_type,
+      s.logo,
+      f.created_at as favourite_date
+  FROM
+      favourite_product AS f
+          JOIN
+      products AS p ON p.id = f.product_id
+          JOIN
+      stores AS s ON s.id = p.store_id
+  WHERE
+      f.user_id = ?
+  ORDER BY f.created_at DESC
+  LIMIT 20;`;
+
+      const products = await knex.raw(queryString, [userId]);
+
+      return products[0];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addProductToFavourites(userId, productId) {
+    try {
+      const queryString = `INSERT INTO favourite_product(user_id, product_id, created_at) VALUES(?, ?, ?);`;
+
+      await knex.raw(queryString, [userId, productId, Date.now()]);
+
+      return true;
+    } catch (error) {
+      console.log(error);
+      if (error.errno === 1062) throw new ProductAlreadyInFavourites();
+      else throw new NoProductFoundError();
+    }
+  }
+
+  async removeProductFromFavourites(userId, productId) {
+    try {
+      const queryString = `DELETE FROM favourite_product WHERE user_id = ? AND product_id = ?;`;
+
+      await knex.raw(queryString, [userId, productId]);
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }
