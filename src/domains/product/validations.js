@@ -62,15 +62,10 @@ class Validation {
           'any.valid':
             'sortBy must be any of these values [priceAsc, priceDsc, popular, rating, nearest_store, best_deal, newest, oldest]',
         }),
-      language: Joi.string()
-        .valid('en', 'ar')
-        .required()
-        .default('en')
-        .messages({
-          'string.base': 'language must be string',
-          'any.required': 'Language is required field',
-          'any.valid': 'language must be any of these values [en,ar]',
-        }),
+      language: Joi.string().valid('en', 'ar').default('en').messages({
+        'string.base': 'language must be string',
+        'any.valid': 'language must be any of these values [en,ar]',
+      }),
       lan: Joi.number().precision(6).messages({
         'number.base': 'lan must be number',
       }),

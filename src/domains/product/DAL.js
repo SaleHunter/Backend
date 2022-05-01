@@ -4,41 +4,27 @@ const { CustomQueryBuilder } = require('./helpers');
 const { NoProductFoundError } = require('./errors');
 
 class DataAccessLayer {
-  async getProductById(id) {
+  async getProductById(productId, userId) {
     try {
-      // const product = await knex
-      //   .from('products')
-      //   .select(
-      //     'products.id as product_id',
-      //     'products.title as product_title',
-      //     'products.title_ar as product_title_ar',
-      //     'product_price.price as product_price',
-      //     'product_price.created_at as product_price_created_at',
-      //     'products.sale as product_sale',
-      //     'products.created_at as created_at',
-      //     'products.updated_at as updated_at',
-      //     'products.brand as product_brand',
-      //     'products.category as product_category',
-      //     'products.url as product_url',
-      //     'product_images.id AS image_id',
-      //     'product_images.link AS image_url',
-      //     'products.store_id as store_id',
-      //     'stores.name as store_name',
-      //     'stores.logo as store_logo',
-      //     'stores.store_type as store_type'
-      //   )
-      //   // .avg(`reviews.rating as rating_average`)
-      //   // .count('reviews.product_id as number_of_ratings')
-      //   .join('product_price ', 'products.id', 'product_price.product_id')
-      //   .join('product_images  ', 'products.id', 'product_images.product_id')
-      //   .join('reviews', 'products.id', 'reviews.product_id')
-      //   .join('stores', 'products.store_id', 'stores.id')
-      //   .where('products.id', '=', id);
-
       const product = await knex.raw(
         'CALL sale_hunter.products_get_one_by_id(?)',
-        [id]
+        [productId]
       );
+
+      console.log(userId, productId);
+      let is_favourite = 0;
+      if (userId !== 0) {
+        is_favourite = await knex.raw(
+          `SELECT 
+        CASE WHEN EXISTS 
+            (SELECT 1 FROM favourite_product AS f WHERE f.user_id = ? and f.product_id = ?) 
+            THEN 1 ELSE 0
+            END AS is_favourite;`,
+          [userId, productId]
+        );
+
+        is_favourite = is_favourite[0][0].is_favourite;
+      }
 
       const basic = product[0][0][0],
         prices = product[0][1],
@@ -48,7 +34,15 @@ class DataAccessLayer {
         views = product[0][5][0];
 
       if (!basic || prices.length === 0) throw new NoProductFoundError();
-      return { basic, prices, images, store, rating, views };
+      return {
+        basic,
+        prices,
+        images,
+        store,
+        rating,
+        views,
+        is_favourite,
+      };
     } catch (error) {
       throw error;
     }
@@ -62,11 +56,12 @@ class DataAccessLayer {
     sort,
     storeType,
     store_name,
-    userLocation
+    userLocation,
+    userId
   ) {
     try {
       console.log(storeType);
-      let queryString = knex
+      let searchQueryString = knex
         .select(
           'products.id as product_id',
           'products.title as product_title',
@@ -88,46 +83,98 @@ class DataAccessLayer {
         .select(
           knex.raw(
             `(SELECT AVG(rating) FROM reviews WHERE reviews.product_id = products.id) AS product_rating,
-             (SELECT COUNT(reviews.product_id) FROM reviews WHERE reviews.product_id = products.id) AS product_rating_count`
+             (SELECT COUNT(reviews.product_id) FROM reviews WHERE reviews.product_id = products.id) AS product_rating_count,
+             CASE WHEN EXISTS 
+              (SELECT 1 FROM favourite_product AS f WHERE f.user_id = ? and f.product_id = products.id) 
+              THEN 1 ELSE 0
+            END AS is_favourite`,
+            [userId]
           )
         )
         .from('products')
         .join('product_price ', 'products.id', 'product_price.product_id')
         .join('product_images  ', 'products.id', 'product_images.product_id');
-      CustomQueryBuilder.addStoreTypeToQuery(storeType, queryString);
+      CustomQueryBuilder.addStoreTypeToQuery(storeType, searchQueryString);
       if (store_name && store_name !== 'all')
-        CustomQueryBuilder.addStoreNameToQuery(store_name, queryString);
-      CustomQueryBuilder.addSortToQuery(sort, queryString);
-      CustomQueryBuilder.addFiltersToQuery(filter, queryString);
+        CustomQueryBuilder.addStoreNameToQuery(store_name, searchQueryString);
+      CustomQueryBuilder.addSortToQuery(sort, searchQueryString);
+      CustomQueryBuilder.addFiltersToQuery(filter, searchQueryString);
 
-      CustomQueryBuilder.addPaginationToQuery(pagination, queryString);
+      CustomQueryBuilder.addPaginationToQuery(pagination, searchQueryString);
       if (searchText)
-        CustomQueryBuilder.addSearchTextToQuery(searchText, queryString);
+        CustomQueryBuilder.addSearchTextToQuery(searchText, searchQueryString);
 
-      console.log(queryString.toString());
-      const products = await queryString;
+      console.log(searchQueryString.toString());
 
-      const secondQueryString = knex.select(
+      const totalProductsQueryString = knex.select(
         knex.raw(
           'COUNT(products.id) AS totalProductsNumber FROM products JOIN product_price ON products.id = product_price.product_id'
         )
       );
-      CustomQueryBuilder.addStoreTypeToQuery(storeType, secondQueryString);
+      CustomQueryBuilder.addStoreTypeToQuery(
+        storeType,
+        totalProductsQueryString
+      );
       if (store_name && store_name !== 'all')
-        CustomQueryBuilder.addStoreNameToQuery(store_name, secondQueryString);
-      CustomQueryBuilder.addFiltersToQuery(filter, secondQueryString);
+        CustomQueryBuilder.addStoreNameToQuery(
+          store_name,
+          totalProductsQueryString
+        );
+      CustomQueryBuilder.addFiltersToQuery(filter, totalProductsQueryString);
 
       if (searchText)
-        CustomQueryBuilder.addSearchTextToQuery(searchText, secondQueryString);
+        CustomQueryBuilder.addSearchTextToQuery(
+          searchText,
+          totalProductsQueryString
+        );
 
-      console.log(secondQueryString.toString());
+      console.log(totalProductsQueryString.toString());
 
-      let totalProductsNumber = await secondQueryString;
+      const categoriesQueryString = knex.select(
+        knex.raw(
+          ' DISTINCT products.category FROM products JOIN product_price ON products.id = product_price.product_id'
+        )
+      );
+      CustomQueryBuilder.addStoreTypeToQuery(storeType, categoriesQueryString);
+      if (store_name && store_name !== 'all')
+        CustomQueryBuilder.addStoreNameToQuery(
+          store_name,
+          categoriesQueryString
+        );
+      CustomQueryBuilder.addFiltersToQuery(filter, categoriesQueryString);
 
-      console.log(totalProductsNumber);
+      if (searchText)
+        CustomQueryBuilder.addSearchTextToQuery(
+          searchText,
+          categoriesQueryString
+        );
+
+      const brandsQueryString = knex.select(
+        knex.raw(
+          ' DISTINCT products.brand FROM products JOIN product_price ON products.id = product_price.product_id'
+        )
+      );
+      CustomQueryBuilder.addStoreTypeToQuery(storeType, brandsQueryString);
+      if (store_name && store_name !== 'all')
+        CustomQueryBuilder.addStoreNameToQuery(store_name, brandsQueryString);
+      CustomQueryBuilder.addFiltersToQuery(filter, brandsQueryString);
+
+      if (searchText)
+        CustomQueryBuilder.addSearchTextToQuery(searchText, brandsQueryString);
+
+      const [products, totalProductsNumber] = await Promise.all([
+        searchQueryString,
+        totalProductsQueryString,
+        // categoriesQueryString,
+        // brandsQueryString,
+      ]);
+
+      // console.log(products, totalProductsNumber, categories, brands);
       return {
         products,
         totalProductsNumber: totalProductsNumber[0].totalProductsNumber,
+        // categories: categories.map(c => c.category),
+        // brands: brands.map(b => b.brand),
       };
     } catch (error) {
       throw error;

@@ -2,23 +2,27 @@ const service = require('./services');
 
 class Controller {
   async searchForProducts(req, res, next) {
-    const { products, totalProductsNumber } = await service.searchForProducts(
-      req.query,
-      req.headers
-    );
+    let userId = 0;
+    if (req.user) userId = req.user.id;
+
+    const { products, totalProductsNumber, categories, brands } =
+      await service.searchForProducts(req.query, req.headers, userId);
 
     res.status(200).json({
       status: 'success',
       results: products.length,
       totalProductsNumber,
       products,
+      categories,
+      brands,
     });
   }
 
   async getProductById(req, res, next) {
     const productId = req.params.id;
-    const product = await service.getProductById(productId);
-
+    let userId = 0;
+    if (req.user) userId = req.user.id;
+    const product = await service.getProductById(productId, userId);
     res.status(200).json({
       status: 'success',
       product,

@@ -13,6 +13,7 @@ router.get(
   '/',
   asyncHandler(prepareQueryObj),
   asyncHandler(validation.searchForProducts),
+  asyncHandler(isAuthenticatedWithOutException),
   asyncHandler(controller.searchForProducts)
 );
 

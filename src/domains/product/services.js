@@ -4,7 +4,7 @@ const { AttributeExtractor } = require('./helpers');
 const axios = require('axios');
 
 class Service {
-  async searchForProducts(query, headers) {
+  async searchForProducts(query, headers, userId) {
     try {
       const searchText = query.searchText;
 
@@ -23,25 +23,27 @@ class Service {
       const storeType = AttributeExtractor.extractStoreTypeValue(query);
       const store_name = AttributeExtractor.extractStoreNameValue(query);
 
-      const { products, totalProductsNumber } = await DAL.searchForProducts(
-        searchText,
-        language,
-        paginationObject,
-        filterObject,
-        sort,
-        storeType,
-        store_name,
-        userLocation
-      );
+      const { products, totalProductsNumber, categories, brands } =
+        await DAL.searchForProducts(
+          searchText,
+          language,
+          paginationObject,
+          filterObject,
+          sort,
+          storeType,
+          store_name,
+          userLocation,
+          userId
+        );
 
-      return { products, totalProductsNumber };
+      return { products, totalProductsNumber, categories, brands };
     } catch (err) {
       throw err;
     }
   }
-  async getProductById(id) {
+  async getProductById(productId, userId) {
     try {
-      const product = await DAL.getProductById(id);
+      const product = await DAL.getProductById(productId, userId);
       return product;
     } catch (err) {
       throw err;
