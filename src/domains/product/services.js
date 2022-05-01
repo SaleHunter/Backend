@@ -130,6 +130,13 @@ class Service {
       throw error;
     }
   }
+  async addProductToFavourites(userId, productId) {
+    try {
+      await DAL.addProductToFavourites(userId, productId);
+    } catch (error) {
+      throw error;
+    }
+  }
   async removeProductFromFavourites(userId, productId) {
     try {
       await DAL.removeProductFromFavourites(userId, productId);
