@@ -94,29 +94,59 @@ class Service {
   }
 
   async predictProductsForUser(userId, products) {
-    console.log('Predicting');
-    // const top = products.map(product => product.id);
-    // console.log(top);
+    try {
+      console.log('Predicting');
+      // const top = products.map(product => product.id);
+      // console.log(top);
 
-    const response = await axios({
-      method: 'GET',
-      url: 'https://recommenderengine20211014165927.azurewebsites.net/api/Predict',
-      data: {
-        userId,
-        items: products.map(product => product.id),
-      },
-    });
+      const response = await axios({
+        method: 'GET',
+        url: 'https://recommenderengine20211014165927.azurewebsites.net/api/Predict',
+        data: {
+          userId,
+          items: products.map(product => product.id),
+        },
+      });
 
-    console.log('data', response.data);
+      console.log('data', response.data);
 
-    const recommendedProducts = response.data;
+      const recommendedProducts = response.data;
 
-    const detailedRecommendedProducts = recommendedProducts.map(product => {
-      const found = products.find(top => top.id === product.Item);
-      return { ...found, score: product.Score };
-    });
+      const detailedRecommendedProducts = recommendedProducts.map(product => {
+        const found = products.find(top => top.id === product.Item);
+        return { ...found, score: product.Score };
+      });
 
-    return detailedRecommendedProducts;
+      return detailedRecommendedProducts;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getFavouriteProductsForUser(userId) {
+    try {
+      const products = await DAL.getFavoriteProductsForUser(userId);
+
+      return products;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addProductToFavourites(userId, productId) {
+    try {
+      await DAL.addProductToFavourites(userId, productId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async removeProductFromFavourites(userId, productId) {
+    try {
+      await DAL.removeProductFromFavourites(userId, productId);
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

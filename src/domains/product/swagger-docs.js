@@ -302,4 +302,164 @@ module.exports = {
       },
     },
   },
+  getFavouriteProducts: {
+    tags: ['Products'],
+    description: 'Get All Favourite Products For Authenticated User',
+    responses: {
+      200: {
+        description: 'Favourite Products For Authenticated User',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                results: {
+                  description: 'The number of products returned',
+                  type: 'number',
+                  example: 5,
+                },
+                products: {
+                  description: 'The Array of Products',
+                  type: 'array',
+                  $ref: '#/components/schemas/FavouriteProducts',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  addProductToFavourites: {
+    tags: ['Products'],
+    description: 'Add Product To Favourites',
+    responses: {
+      201: {
+        description: 'Product successfully added to your Favourites',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'Product successfully added to your Favourites',
+                },
+              },
+            },
+          },
+        },
+      },
+      409: {
+        description: 'Product is already in your favorites',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'fail',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'Product is already in your favorites',
+                },
+              },
+            },
+          },
+        },
+      },
+      401: {
+        description: 'User not signed in, Please sign in and try again later',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'fail',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example:
+                    'User not signed in, Please sign in and try again later',
+                },
+              },
+            },
+          },
+        },
+      },
+      404: {
+        description: 'There is no product found',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'fail',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'There is no product found',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  deleteProductFromFavourites: {
+    tags: ['Products'],
+    description: 'Delete Product From Favourites',
+    responses: {
+      204: {
+        description: 'Product Deleted successfully from Favourites',
+      },
+      401: {
+        description: 'User not signed in, Please sign in and try again later',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'fail',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example:
+                    'User not signed in, Please sign in and try again later',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };
