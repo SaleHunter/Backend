@@ -120,6 +120,23 @@ class Service {
 
     return detailedRecommendedProducts;
   }
+
+  async getFavouriteProductsForUser(userId) {
+    try {
+      const products = await DAL.getFavoriteProductsForUser(userId);
+
+      return products;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async removeProductFromFavourites(userId, productId) {
+    try {
+      await DAL.removeProductFromFavourites(userId, productId);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = new Service();

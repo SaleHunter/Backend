@@ -5,6 +5,7 @@ const validation = require('./validations');
 const { prepareQueryObj } = require('./middlewares');
 const {
   isAuthenticatedWithOutException,
+  isAuthenticated,
 } = require('../shared/middlewares/Authentication');
 const router = Router();
 
@@ -16,6 +17,24 @@ router.get(
   asyncHandler(isAuthenticatedWithOutException),
   asyncHandler(controller.searchForProducts)
 );
+
+router.get(
+  '/favourites',
+  asyncHandler(isAuthenticated),
+  asyncHandler(controller.getFavouriteProductsForUser)
+);
+
+router
+  .use(asyncHandler(isAuthenticated))
+  .route('/favourites/:productId')
+  .post(
+    asyncHandler(validation.operationsOnFavourites),
+    asyncHandler(controller.addProductToFavourites)
+  )
+  .delete(
+    asyncHandler(validation.operationsOnFavourites),
+    asyncHandler(controller.removeProductFromFavourites)
+  );
 
 router.get(
   '/recommended',

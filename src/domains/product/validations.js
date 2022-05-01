@@ -103,6 +103,25 @@ class Validation {
 
     next();
   }
+  async operationsOnFavourites(req, res, next) {
+    const schema = Joi.object({
+      productId: Joi.number().required().positive().messages({
+        'number.base': 'productId must be a number',
+        'number.required': 'productId is required',
+        'number.positive': 'productId must be a positive number',
+      }),
+    });
+
+    console.log(req.params);
+
+    const sourceObject = {
+      productId: req.params.productId,
+    };
+
+    await schema.validateAsync(sourceObject);
+
+    next();
+  }
 }
 
 module.exports = new Validation();
