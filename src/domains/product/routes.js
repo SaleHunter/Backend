@@ -26,8 +26,14 @@ router.get(
 router
   .use(asyncHandler(isAuthenticated))
   .route('/favourites/:productId')
-  .post(asyncHandler(controller.addProductToFavourites))
-  .delete(asyncHandler(controller.removeProductFromFavourites));
+  .post(
+    asyncHandler(validation.operationsOnFavourites),
+    asyncHandler(controller.addProductToFavourites)
+  )
+  .delete(
+    asyncHandler(validation.operationsOnFavourites),
+    asyncHandler(controller.removeProductFromFavourites)
+  );
 
 router.get(
   '/recommended',

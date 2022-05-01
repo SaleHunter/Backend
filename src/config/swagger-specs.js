@@ -70,6 +70,15 @@ module.exports = {
     '/products/recommended': {
       get: productPaths.getRecommendedProducts,
     },
+    '/products/favourites': {
+      get: productPaths.getFavouriteProducts,
+    },
+    '/products/favourites/{productid}': {
+      post: productPaths.addProductToFavourites,
+    },
+    '/products/favourites/{productId}': {
+      delete: productPaths.deleteProductFromFavourites,
+    },
   },
   components: {
     schemas: {
@@ -538,6 +547,84 @@ module.exports = {
             rating: '5.0000',
             rating_count: 1,
             views_today: 5,
+          },
+        ],
+      },
+      FavouriteProducts: {
+        name: 'Recommended  Top Products',
+        in: 'body',
+        description: 'The Array of Recommended  Top Products',
+        type: 'array',
+        example: [
+          {
+            id: 117,
+            title: 'Euphoria Intense - For Men - EDT -  100 Ml',
+            price: 825,
+            image:
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/40/3865/1.jpg?4012',
+            rating: '2.0000',
+            rating_count: 1,
+            store_id: 2,
+            store_name: 'Jumia',
+            store_type: 'online',
+            logo: null,
+            favourite_date: '2022-04-30T11:10:06.000Z',
+          },
+          {
+            id: 1,
+            title: 'IPhone 13 Single SIM With FaceTime - 128GB - Starlight',
+            price: 17400,
+            image:
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/04/690352/1.jpg?0605',
+            rating: '2.0000',
+            rating_count: 1,
+            store_id: 2,
+            store_name: 'Jumia',
+            store_type: 'online',
+            logo: null,
+            favourite_date: '2022-04-30T10:45:25.000Z',
+          },
+          {
+            id: 111,
+            title: 'Beauty - EDP - For Women - 100 Ml',
+            price: 634.989990234375,
+            image:
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/91/230401/1.jpg?9218',
+            rating: '1.0000',
+            rating_count: 1,
+            store_id: 2,
+            store_name: 'Jumia',
+            store_type: 'online',
+            logo: null,
+            favourite_date: null,
+          },
+          {
+            id: 103,
+            title: 'Bomber Men Jacket -black',
+            price: 120,
+            image:
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/38/502052/1.jpg?9067',
+            rating: '4.0000',
+            rating_count: 1,
+            store_id: 2,
+            store_name: 'Jumia',
+            store_type: 'online',
+            logo: null,
+            favourite_date: null,
+          },
+          {
+            id: 102,
+            title: 'Jacquard Bomber Jacket - Turquoise',
+            price: 425,
+            image:
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/79/572742/1.jpg?4012',
+            rating: '5.0000',
+            rating_count: 1,
+            store_id: 2,
+            store_name: 'Jumia',
+            store_type: 'online',
+            logo: null,
+            favourite_date: null,
           },
         ],
       },
