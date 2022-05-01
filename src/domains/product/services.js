@@ -23,7 +23,7 @@ class Service {
       const storeType = AttributeExtractor.extractStoreTypeValue(query);
       const store_name = AttributeExtractor.extractStoreNameValue(query);
 
-      const products = await DAL.searchForProducts(
+      const { products, totalProductsNumber } = await DAL.searchForProducts(
         searchText,
         language,
         paginationObject,
@@ -34,7 +34,7 @@ class Service {
         userLocation
       );
 
-      return products;
+      return { products, totalProductsNumber };
     } catch (err) {
       throw err;
     }

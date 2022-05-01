@@ -106,7 +106,29 @@ class DataAccessLayer {
 
       console.log(queryString.toString());
       const products = await queryString;
-      return products;
+
+      const secondQueryString = knex.select(
+        knex.raw(
+          'COUNT(products.id) AS totalProductsNumber FROM products JOIN product_price ON products.id = product_price.product_id'
+        )
+      );
+      CustomQueryBuilder.addStoreTypeToQuery(storeType, secondQueryString);
+      if (store_name && store_name !== 'all')
+        CustomQueryBuilder.addStoreNameToQuery(store_name, secondQueryString);
+      CustomQueryBuilder.addFiltersToQuery(filter, secondQueryString);
+
+      if (searchText)
+        CustomQueryBuilder.addSearchTextToQuery(searchText, secondQueryString);
+
+      console.log(secondQueryString.toString());
+
+      let totalProductsNumber = await secondQueryString;
+
+      console.log(totalProductsNumber);
+      return {
+        products,
+        totalProductsNumber: totalProductsNumber[0].totalProductsNumber,
+      };
     } catch (error) {
       throw error;
     }
