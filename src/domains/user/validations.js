@@ -306,6 +306,52 @@ class Validation {
 
     next();
   }
+
+  async googleAuth(req, res, next) {
+    const schema = Joi.object().keys({
+      email: Joi.string().email().messages({
+        'string.base': 'Email is must be a string',
+        'string.email': 'Please provide a valid email address',
+      }),
+      fullname: Joi.string().min(3).max(30).required().messages({
+        'string.base': 'Username must be string',
+        'string.min': 'The minimum Username length is 3',
+        'string.max': 'The maximum Username length is 30',
+        'any.required': 'fullname is required',
+      }),
+      profile_img: Joi.string().messages({
+        'string.base': 'Invalid Image.',
+      }),
+      thirdParty_id: Joi.string().required().messages({
+        'string.base': 'thirdParty_id must be a string',
+        'any.required': 'Please provide a valid thirdParty_id address',
+      }),
+    });
+    await schema.validateAsync(req.body);
+
+    next();
+  }
+
+  async facebookAuth(req, res, next) {
+    const schema = Joi.object().keys({
+      fullname: Joi.string().min(3).max(30).required().messages({
+        'string.base': 'Username must be string',
+        'string.min': 'The minimum Username length is 3',
+        'string.max': 'The maximum Username length is 30',
+        'any.required': 'fullname is required',
+      }),
+      profile_img: Joi.string().messages({
+        'string.base': 'Invalid Image.',
+      }),
+      thirdParty_id: Joi.string().required().messages({
+        'string.base': 'thirdParty_id must be a string',
+        'any.required': 'Please provide a valid thirdParty_id address',
+      }),
+    });
+    await schema.validateAsync(req.body);
+
+    next();
+  }
 }
 
 module.exports = new Validation();

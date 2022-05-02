@@ -71,48 +71,14 @@ router.post(
 
 router.get(
   '/auth/google',
-  passport.authenticate('google', { scope: ['email', 'profile'] })
+  asyncHandler(validation.googleAuth),
+  asyncHandler(controller.googleAuth)
 );
-
-router.get(
-  '/auth/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: '/api/v1/users/auth/google/fail',
-    successRedirect: '/api/v1/users/auth/google/success',
-  })
-);
-
-router.get('/auth/google/success', (req, res) => {
-  // assign token to header and cookies
-  helpers.setJWTHeader(req.user.token, res);
-  helpers.setJWTCookie(req.user.token, res);
-
-  // remove token from user obj
-  delete req.user.token;
-
-  res.json({
-    status: 'success',
-    user: req.user,
-  });
-});
-
-router.get('/auth/google/fail', (req, res) => {
-  res.json({
-    status: 'failed',
-  });
-});
 
 router.get(
   '/auth/facebook',
-  passport.authenticate('facebook', { scope: ['email', 'profile'] })
-);
-
-router.get(
-  '/auth/facebook/callback',
-  passport.authenticate('facebook', {
-    failureRedirect: '/api/v1/users/auth/facebook/fail',
-    successRedirect: '/api/v1/users/auth/facebook/success',
-  })
+  asyncHandler(validation.facebookAuth),
+  asyncHandler(controller.facebookAuth)
 );
 
 router.get('/auth/facebook/success', (req, res) => {
@@ -126,12 +92,6 @@ router.get('/auth/facebook/success', (req, res) => {
   res.json({
     status: 'success',
     user: req.user,
-  });
-});
-
-router.get('/auth/facebook/fail', (req, res) => {
-  res.json({
-    status: 'failed',
   });
 });
 
