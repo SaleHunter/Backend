@@ -205,29 +205,49 @@ class Controller {
       user,
     });
   }
-  async googleAuth(req, accessToken, refreshToken, profile, done) {
+
+  async googleAuth(req, res, next) {
     let googlePayload = {
-      fullname: profile._json.name,
-      email: profile._json.email,
-      profile_img: profile._json.picture,
-      thirdParty_id: 'g-' + profile._json.sub,
-      phone_number: profile._json.phone_number,
+      fullname: req.body.fullname,
+      email: req.body.email,
+      profileImg: req.body.profile_img,
+      thirdPartyId: req.body.thirdParty_id,
     };
-    let { jwToken } = await service.thirdPartyAuth(googlePayload);
 
-    return done(null, jwToken);
+    const { user, jwToken } = await service.signup(googlePayload);
+
+    //Set the jwt header
+    helper.setJWTHeader(jwToken, res);
+
+    //Set the jwt cookie
+    helper.setJWTCookie(jwToken, res);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Signed in successfully',
+      user,
+    });
   }
-  async facebookAuth(req, accessToken, refreshToken, profile, done) {
-    let facebookPayload = {
-      fullname: profile._json.name,
-      email: profile._json.email,
-      profile_img: profile._json.picture,
-      thirdParty_id: 'fb-' + profile._json.id,
-      phone_number: profile._json.phone_number,
+  async facebookAuth(req, res, next) {
+    let googlePayload = {
+      fullname: req.body.fullname,
+      profileImg: req.body.profile_img,
+      thirdPartyId: req.body.thirdParty_id,
     };
-    let { jwToken } = await service.thirdPartyAuth(facebookPayload);
 
-    return done(null, jwToken);
+    const { user, jwToken } = await service.signup(googlePayload);
+
+    //Set the jwt header
+    helper.setJWTHeader(jwToken, res);
+
+    //Set the jwt cookie
+    helper.setJWTCookie(jwToken, res);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Signed in successfully',
+      user,
+    });
   }
 }
 
