@@ -2,13 +2,8 @@ const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
 const swaggerUI = require('swagger-ui-express');
-const exphbs = require('express-handlebars');
-const passport = require('passport');
-const cookieSession = require('cookie-session');
 const cookieParser = require('cookie-parser');
 
-require('./libraries/passport')(passport);
-// const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerDocs = require('./config/swagger-specs');
 const {
   errorLogger,
@@ -16,62 +11,6 @@ const {
 } = require('./api/error/errorHandlers');
 
 const app = express();
-
-// Handlebars Helpers
-const {
-  formatDate,
-  stripTags,
-  truncate,
-  editIcon,
-  select,
-} = require('./helpers/hbs');
-const exp = require('constants');
-
-// Handlebars
-app.engine(
-  '.hbs',
-  exphbs.engine({
-    helpers: {
-      formatDate,
-      stripTags,
-      truncate,
-      editIcon,
-      select,
-    },
-    defaultLayout: 'main',
-    extname: '.hbs',
-  })
-);
-// app.set('view engine', '.hbs');
-// app.set('views', path.join(__dirname, 'views'));
-
-// setup cookies
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [process.env.COOKIE_KEY],
-  })
-);
-
-// initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// app.use(express.static(path.join(__dirname, 'public')));
-//Global middlewares
-
-//Enable all CORS requests
-// app.use(
-//   cors({
-//     exposedHeaders: 'Authorization',
-//     origin: [
-//       'http://localhost:3000',
-//       'https://localhost:3000',
-//       'https://sale-hunter.vercel.app',
-//     ],
-//     credentials: true,
-//   })
-// );
 
 //Request Logger
 app.use(logger('dev'));
@@ -114,20 +53,6 @@ app.use('/api/v1/products', require('./domains/product/routes'));
 //User Router
 app.use('/api/v1/users', require('./domains/user/routes'));
 
-app.get('/', (req, res) => {
-  res.render('login', {
-    layout: 'login',
-  });
-});
-app.get('/dashboard', (req, res) => {
-  res.render('dashboard', {
-    name: 'youssef',
-  });
-});
-app.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
-});
 //Error Handlers
 // 1- Error Logger
 app.use(errorLogger);
@@ -148,10 +73,17 @@ app.use((err, req, res, next) => {
 
 // 3- Global Error Handler
 app.use((err, req, res, next) => {
-  return res.status(err.statusCode).json({
-    status: err.status || 'Error',
-    message: err.message,
-  });
+  if (err.operational !== undefined && err.operational === true) {
+    console.log('YAAAAAA');
+    return res.status(err.statusCode).json({
+      status: err.status || 'Error',
+      message: err.message,
+    });
+  } else
+    return res.status(500).json({
+      status: 'Error',
+      message: 'Something went wrong',
+    });
 });
 
 module.exports = app;
