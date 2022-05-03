@@ -1,4 +1,3 @@
-const { tryCatch } = require('bullmq');
 const knex = require('../../dataStores/knex');
 const { CustomQueryBuilder } = require('./helpers');
 const { NoProductFoundError, ProductAlreadyInFavourites } = require('./errors');
@@ -321,6 +320,50 @@ LIMIT 10;`;
       const queryString = `DELETE FROM favourite_product WHERE user_id = ? AND product_id = ?;`;
 
       await knex.raw(queryString, [userId, productId]);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getViewedProductsForUser(userId) {
+    try {
+      const queryString = `
+      SELECT DISTINCT
+      v.product_id AS id,
+      p.title,
+      (SELECT 
+              pp.price
+          FROM
+              product_price AS pp
+          WHERE
+              p.id = pp.product_id
+          ORDER BY pp.created_at DESC
+          LIMIT 1) AS price,
+      (SELECT 
+              pimgs.link
+          FROM
+              product_images AS pimgs
+          WHERE
+              p.id = pimgs.product_id
+          LIMIT 1) AS image,
+      v.viewed_at
+      FROM
+          user_product_views AS v
+              LEFT JOIN
+          user_product_views AS vv ON v.product_id = vv.product_id
+              AND v.viewed_at < vv.viewed_at
+              JOIN
+          products AS p ON p.id = v.product_id
+      WHERE
+          v.user_id = ? AND vv.viewed_at IS NULL
+      ORDER BY v.viewed_at DESC
+      LIMIT 20;
+      `;
+
+      const products = await knex.raw(queryString, [userId]);
+
+      return products[0];
     } catch (error) {
       console.log(error);
       throw error;

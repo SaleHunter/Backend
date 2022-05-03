@@ -462,4 +462,37 @@ module.exports = {
       },
     },
   },
+  getViewedProducts: {
+    tags: ['Products'],
+    description: 'Get All Viewed Products For Authenticated User',
+    responses: {
+      200: {
+        description: 'Viewed Products For Authenticated User',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                results: {
+                  description: 'The number of products returned',
+                  type: 'number',
+                  example: 6,
+                },
+                products: {
+                  description: 'The Array of Products',
+                  type: 'array',
+                  $ref: '#/components/schemas/ViewedProducts',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };

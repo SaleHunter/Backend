@@ -10,6 +10,8 @@ exports.isAuthenticated = async (req, res, next) => {
 
   if (jwt === '') throw new UnAuthorizedError();
 
+  console.log("I am Here");
+
   //Decode the jwt token if valid and extract user's id
   const { id } = await restoreFromJWT(jwt);
   console.log(id);

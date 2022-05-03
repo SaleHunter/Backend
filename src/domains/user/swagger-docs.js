@@ -286,7 +286,7 @@ module.exports = {
   },
   signup: {
     tags: ['Users'],
-    description: 'sign in user',
+    description: 'sign up user',
     requestBody: {
       required: true,
       content: {
@@ -583,6 +583,23 @@ module.exports = {
   google_signin: {
     tags: ['Users'],
     description: 'sign in user using google',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            example: {
+              fullname: 'Will Smith',
+              email: 'willSmith@gmail.com',
+              thirdParty_id: '98284bcv7667876628iuyi878',
+              profile_img:
+                'http://res.cloudinary.com/salehunter101/image/upload/v1651267295/profile/image/n83i2jc1id79lcy2zve7.jpg',
+            },
+          },
+        },
+      },
+    },
     responses: {
       200: {
         description: 'User signed in successfully',
@@ -604,7 +621,13 @@ module.exports = {
                 user: {
                   description: "User's Object",
                   type: 'object',
-                  $ref: '#/components/schemas/User',
+                  example: {
+                    fullname: 'Will Smith',
+                    email: 'willSmith@gmail.com',
+                    thirdParty_id: '98284bcv7667876628iuyi878',
+                    profile_img:
+                      'http://res.cloudinary.com/salehunter101/image/upload/v1651267295/profile/image/n83i2jc1id79lcy2zve7.jpg',
+                  },
                 },
               },
             },
@@ -626,6 +649,22 @@ module.exports = {
   facebook_signin: {
     tags: ['Users'],
     description: 'sign in user using facebook',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            example: {
+              fullname: 'Will Smith',
+              thirdParty_id: '98284bcv7667876628iuyi878',
+              profile_img:
+                'http://res.cloudinary.com/salehunter101/image/upload/v1651267295/profile/image/n83i2jc1id79lcy2zve7.jpg',
+            },
+          },
+        },
+      },
+    },
     responses: {
       200: {
         description: 'User signed in successfully',
@@ -647,7 +686,12 @@ module.exports = {
                 user: {
                   description: "User's Object",
                   type: 'object',
-                  $ref: '#/components/schemas/User',
+                  example: {
+                    fullname: 'Will Smith',
+                    thirdParty_id: '98284bcv7667876628iuyi878',
+                    profile_img:
+                      'http://res.cloudinary.com/salehunter101/image/upload/v1651267295/profile/image/n83i2jc1id79lcy2zve7.jpg',
+                  },
                 },
               },
             },

@@ -7,7 +7,6 @@ class Helper {
     let authorizationHeader = req.headers.authorization;
     // console.log('authorizationHeader: ', authorizationHeader);
     let token;
-    console.log(token);
 
     if (authorizationHeader && authorizationHeader.startsWith('Bearer')) {
       token = authorizationHeader.split(' ')[1];
@@ -16,6 +15,7 @@ class Helper {
       token = req.cookies.Authorization;
       return token;
     }
+
     return '';
   }
 

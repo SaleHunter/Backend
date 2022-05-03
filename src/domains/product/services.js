@@ -144,6 +144,16 @@ class Service {
       throw error;
     }
   }
+
+  async getViewedProductsForUser(userId) {
+    try {
+      const products = await DAL.getViewedProductsForUser(userId);
+
+      return products;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = new Service();

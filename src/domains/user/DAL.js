@@ -1,4 +1,6 @@
 const { sequelize } = require('../../dataStores/sequelize');
+const knex = require('../../dataStores/knex');
+
 const {
   NoUserFoundError,
   InvalidResetTokenError,
@@ -240,6 +242,63 @@ class DataAccessLayer {
       return results[0];
     } catch (error) {
       throw error;
+    }
+  }
+
+  async googleAuth(payload) {
+    try {
+      const { email, fullname, profileImg, thirdPartyId } = payload;
+
+      const insertQueryString = `INSERT INTO users(full_name, email, profile_img, thirdParty_id)
+      VALUES(?, ?, ?, ?)`;
+
+      const selectQueryString = `SELECT id, full_name, email, profile_img, thirdParty_id
+      FROM users WHERE email = ? || thirdParty_id = ?`;
+
+      let user = await knex.raw(selectQueryString, [email, thirdPartyId]);
+
+      if (user[0].length) {
+        console.log('herererer', user[0][0]);
+        return user[0][0];
+      }
+
+      await knex.raw(insertQueryString, [
+        fullname,
+        email,
+        profileImg,
+        thirdPartyId,
+      ]);
+
+      user = await knex.raw(selectQueryString, [email, thirdPartyId]);
+      return user[0][0];
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async facebookAuth(payload) {
+    try {
+      const { fullname, profileImg, thirdPartyId } = payload;
+
+      const insertQueryString = `INSERT INTO users(full_name, profile_img, thirdParty_id)
+      VALUES(?, ?, ?)`;
+
+      const selectQueryString = `SELECT id, full_name, profile_img, thirdParty_id
+      FROM users WHERE thirdParty_id = ?`;
+
+      let user = await knex.raw(selectQueryString, [thirdPartyId]);
+
+      if (user[0].length) {
+        console.log('herererer', user[0][0]);
+        return user[0][0];
+      }
+
+      await knex.raw(insertQueryString, [fullname, profileImg, thirdPartyId]);
+
+      user = await knex.raw(selectQueryString, [thirdPartyId]);
+      return user[0][0];
+    } catch (error) {
+      console.log(error);
     }
   }
 }

@@ -36,7 +36,7 @@ module.exports = {
       get: userPaths.google_signin,
     },
     '/users/auth/facebook/': {
-      get: userPaths.google_signin,
+      get: userPaths.facebook_signin,
     },
     '/users': {
       get: userPaths.getAuthenticatedUser,
@@ -69,6 +69,9 @@ module.exports = {
     },
     '/products/recommended': {
       get: productPaths.getRecommendedProducts,
+    },
+    '/products/viewed': {
+      get: productPaths.getViewedProducts,
     },
     '/products/favourites': {
       get: productPaths.getFavouriteProducts,
@@ -551,81 +554,61 @@ module.exports = {
           },
         ],
       },
-      FavouriteProducts: {
-        name: 'Recommended  Top Products',
+      ViewedProducts: {
+        name: 'Favourite Products',
         in: 'body',
-        description: 'The Array of Recommended  Top Products',
+        description: 'The Array of Favourite Products',
         type: 'array',
         example: [
-          {
-            id: 117,
-            title: 'Euphoria Intense - For Men - EDT -  100 Ml',
-            price: 825,
-            image:
-              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/40/3865/1.jpg?4012',
-            rating: '2.0000',
-            rating_count: 1,
-            store_id: 2,
-            store_name: 'Jumia',
-            store_type: 'online',
-            logo: null,
-            favourite_date: '2022-04-30T11:10:06.000Z',
-          },
           {
             id: 1,
             title: 'IPhone 13 Single SIM With FaceTime - 128GB - Starlight',
             price: 17400,
             image:
               'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/04/690352/1.jpg?0605',
-            rating: '2.0000',
-            rating_count: 1,
-            store_id: 2,
-            store_name: 'Jumia',
-            store_type: 'online',
-            logo: null,
-            favourite_date: '2022-04-30T10:45:25.000Z',
+            viewed_at: '2022-05-02T18:59:46.000Z',
           },
           {
-            id: 111,
-            title: 'Beauty - EDP - For Women - 100 Ml',
-            price: 634.989990234375,
+            id: 665,
+            title: 'Modern Dining Table -  150*90*75cm',
+            price: 3500,
             image:
-              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/91/230401/1.jpg?9218',
-            rating: '1.0000',
-            rating_count: 1,
-            store_id: 2,
-            store_name: 'Jumia',
-            store_type: 'online',
-            logo: null,
-            favourite_date: null,
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/87/950002/1.jpg?7546',
+            viewed_at: '2022-05-01T13:04:12.000Z',
           },
           {
-            id: 103,
-            title: 'Bomber Men Jacket -black',
-            price: 120,
+            id: 67,
+            title: 'Vl Court 2.0 Shoes Vl Court 2.0 Shoes Da9868',
+            price: 1749,
             image:
-              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/38/502052/1.jpg?9067',
-            rating: '4.0000',
-            rating_count: 1,
-            store_id: 2,
-            store_name: 'Jumia',
-            store_type: 'online',
-            logo: null,
-            favourite_date: null,
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/95/328512/1.jpg?4575',
+            viewed_at: '2022-05-01T12:52:10.000Z',
           },
           {
-            id: 102,
-            title: 'Jacquard Bomber Jacket - Turquoise',
-            price: 425,
+            id: 272,
+            title:
+              '32" Samsung Odyssey QLED Curved Gaming Monitor 1MS 240Hz - LC32G75TQSMXZN',
+            price: 10999,
             image:
-              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/79/572742/1.jpg?4012',
-            rating: '5.0000',
-            rating_count: 1,
-            store_id: 2,
-            store_name: 'Jumia',
-            store_type: 'online',
-            logo: null,
-            favourite_date: null,
+              'https://images-na.ssl-images-amazon.com/images/I/41AITSj1UPL.__AC_SY300_SX300_QL70_ML2_.jpg',
+            viewed_at: '2022-05-01T12:51:32.000Z',
+          },
+          {
+            id: 175,
+            title:
+              'Dell Gaming G15 5511, 15.6-inch inch FHD 120Hz Non-Touch Laptop - Intel Core i7-11800H, 16GB DDR4 RAM, 512GB SSD, NVIDIA GeForce RTX 3060 6GB GDDR6, Windows 11 Home - Black (Latest Model)',
+            price: 26300,
+            image:
+              'https://images-na.ssl-images-amazon.com/images/I/71fInSXtYpL.__AC_SX300_SY300_QL70_ML2_.jpg',
+            viewed_at: '2022-05-01T12:50:35.000Z',
+          },
+          {
+            id: 525,
+            title: 'Reebok mens FLEXAGON ENERGY TR 3.0',
+            price: 1329,
+            image:
+              'https://images-na.ssl-images-amazon.com/images/I/71fCgf5FPXL.__AC_SY395_SX395_QL70_ML2_.jpg',
+            viewed_at: '2022-05-01T12:48:22.000Z',
           },
         ],
       },

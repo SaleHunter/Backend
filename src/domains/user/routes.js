@@ -69,30 +69,16 @@ router.post(
   asyncHandler(controller.signup)
 );
 
-router.get(
+router.post(
   '/auth/google',
   asyncHandler(validation.googleAuth),
   asyncHandler(controller.googleAuth)
 );
 
-router.get(
+router.post(
   '/auth/facebook',
   asyncHandler(validation.facebookAuth),
   asyncHandler(controller.facebookAuth)
 );
-
-router.get('/auth/facebook/success', (req, res) => {
-  // assign token to header and cookies
-  helpers.setJWTHeader(req.user.token, res);
-  helpers.setJWTCookie(req.user.token, res);
-
-  // remove token from user obj
-  delete req.user.token;
-
-  res.json({
-    status: 'success',
-    user: req.user,
-  });
-});
 
 module.exports = router;

@@ -211,10 +211,10 @@ class Controller {
       fullname: req.body.fullname,
       email: req.body.email,
       profileImg: req.body.profile_img,
-      thirdPartyId: req.body.thirdParty_id,
+      thirdPartyId: `g-${req.body.thirdParty_id}`,
     };
 
-    const { user, jwToken } = await service.signup(googlePayload);
+    const { user, jwToken } = await service.googleAuth(googlePayload);
 
     //Set the jwt header
     helper.setJWTHeader(jwToken, res);
@@ -232,10 +232,10 @@ class Controller {
     let googlePayload = {
       fullname: req.body.fullname,
       profileImg: req.body.profile_img,
-      thirdPartyId: req.body.thirdParty_id,
+      thirdPartyId: `fb-${req.body.thirdParty_id}`,
     };
 
-    const { user, jwToken } = await service.signup(googlePayload);
+    const { user, jwToken } = await service.facebookAuth(googlePayload);
 
     //Set the jwt header
     helper.setJWTHeader(jwToken, res);

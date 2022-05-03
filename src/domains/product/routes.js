@@ -43,6 +43,12 @@ router.get(
 );
 
 router.get(
+  '/viewed',
+  asyncHandler(isAuthenticated),
+  asyncHandler(controller.getViewedProductsForUser)
+);
+
+router.get(
   '/:id',
   asyncHandler(validation.getProductById),
   asyncHandler(isAuthenticatedWithOutException),

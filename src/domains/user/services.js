@@ -276,6 +276,30 @@ class Service {
       return {};
     }
   }
+
+  async googleAuth(payload) {
+    try {
+      const user = await DataAccessLayer.googleAuth(payload);
+
+      const jwToken = Helper.signJWT(user.id);
+
+      return { user, jwToken };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async facebookAuth(payload) {
+    try {
+      const user = await DataAccessLayer.facebookAuth(payload);
+
+      const jwToken = Helper.signJWT(user.id);
+
+      return { user, jwToken };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = new Service();
