@@ -25,19 +25,24 @@ router.get(
 );
 
 router
-  .use(asyncHandler(isAuthenticated))
   .route('/favourites/:productId')
   .post(
+    asyncHandler(isAuthenticated),
     asyncHandler(validation.operationsOnFavourites),
     asyncHandler(controller.addProductToFavourites)
   )
   .delete(
+    asyncHandler(isAuthenticated),
     asyncHandler(validation.operationsOnFavourites),
     asyncHandler(controller.removeProductFromFavourites)
   );
 
 router.get(
   '/recommended',
+  (req, res, next) => {
+    console.log('HERE in recommended');
+    next();
+  },
   asyncHandler(isAuthenticatedWithOutException),
   asyncHandler(controller.recommendProductsForUser)
 );
@@ -50,6 +55,10 @@ router.get(
 
 router.get(
   '/:id',
+  (req, res, next) => {
+    console.log('HERE in get product');
+    next();
+  },
   asyncHandler(validation.getProductById),
   asyncHandler(isAuthenticatedWithOutException),
   asyncHandler(async (req, res, next) => {
