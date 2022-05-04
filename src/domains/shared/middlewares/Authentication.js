@@ -31,7 +31,7 @@ exports.isAuthenticatedWithOutException = async function (req, res, next) {
   const jwt = extractJWT(req);
   console.log(jwt);
   if (jwt === '') {
-    console.log("JWT not found");
+    console.log('JWT not found');
     req.authenticated = false;
     return next();
   }
