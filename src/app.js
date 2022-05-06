@@ -27,7 +27,12 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use(function (req, res, next) {
   console.log(req.headers);
   res.set('Content-Type', 'application/json;charset=UTF-8');
-  res.set('Access-Control-Allow-Origin', '*');
+  res.set(
+    'Access-Control-Allow-Origin',
+    req.headers.origin !== undefined
+      ? req.headers.origin
+      : 'https://localhost:3000'
+  );
   // res.header('Access-Control-Allow-Origin', req.headers.origin);
   // res.set(
   //   'Access-Control-Allow-Origin',
