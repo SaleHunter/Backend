@@ -40,7 +40,7 @@ app.use(function (req, res, next) {
   res.set('Access-Control-Allow-Credentials', true);
   res.set('Access-Control-Expose-Headers', '*, Authorization');
   res.set(
-    'set-Control-Allow-Headers',
+    'Access-Control-Allow-Headers',
     '*, Origin, X-Requested-With, Content-Type, Accept, Authorization, language, lan, lat'
   );
   res.set('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS,PATCH');
