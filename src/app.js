@@ -27,12 +27,12 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 app.use(function (req, res, next) {
   console.log(req.headers);
   res.set('Content-Type', 'application/json;charset=UTF-8');
-  res.set('Access-Control-Allow-Origin', '*');
+  // res.set('Access-Control-Allow-Origin', '*');
   // res.header('Access-Control-Allow-Origin', req.headers.origin);
-  // res.header(
-  //   'Access-Control-Allow-Origin',
-  //   'http://localhost:3000, https://localhost:3000, https://sale-hunter.vercel.app, http://sale-hunter.vercel.app, https://192.168.1.2:3000'
-  // );
+  res.set(
+    'Access-Control-Allow-Origin',
+    'http://localhost:3000,https://localhost:3000,https://sale-hunter.vercel.app,http://sale-hunter.vercel.app,https://192.168.1.2:3000'
+  );
   // res.header('Access-Control-Allow-Origin', 'https://localhost:3000');
   // res.header('Access-Control-Allow-Origin', 'https://sale-hunter.vercel.app');
   // res.header('Access-Control-Allow-Origin', 'http://sale-hunter.vercel.app');
