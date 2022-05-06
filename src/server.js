@@ -4,7 +4,7 @@ const path = require('path');
 //Setup Enviroment Variables
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-//Connection to Database Server and Redis
+//Connection to Database and Redis Server
 const mysql = require('./dataStores/sequelize').authenticateSequelize();
 const knex = require('./dataStores/knex');
 const redis = require('./dataStores/redis');
