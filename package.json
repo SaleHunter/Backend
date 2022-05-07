@@ -2,7 +2,7 @@
   "name": "salehunter-backend",
   "version": "1.0.0",
   "description": "Tha backend and API for SaleHunter",
-  "main": "src/app.js",
+  "main": "src/server.js",
   "engines": {
     "node": ">=12.18.2"
   },
