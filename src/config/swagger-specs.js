@@ -38,10 +38,10 @@ module.exports = {
   ],
   paths: {
     '/users/auth/google/': {
-      get: userPaths.google_signin,
+      post: userPaths.google_signin,
     },
     '/users/auth/facebook/': {
-      get: userPaths.facebook_signin,
+      post: userPaths.facebook_signin,
     },
     '/users': {
       get: userPaths.getAuthenticatedUser,
