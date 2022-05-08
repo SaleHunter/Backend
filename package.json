@@ -4,7 +4,7 @@
   "description": "Tha backend and API for SaleHunter",
   "main": "src/server.js",
   "engines": {
-    "node": ">=12.18.2"
+    "node": ">=14.16.0"
   },
   "scripts": {
     "start": "SET NODE_ENV=production && node -r dotenv/config src/server.js",

@@ -60,6 +60,9 @@ app.use('/api/v1/products', require('./domains/product/routes'));
 //User Router
 app.use('/api/v1/users', require('./domains/user/routes'));
 
+//Stores Router
+app.use('/api/v1/stores', require('./domains/store/routes'));
+
 //Error Handlers
 // 1- Error Logger
 app.use(errorLogger);

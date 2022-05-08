@@ -171,9 +171,9 @@ class Validation {
           }),
         passwordConfirm: Joi.ref('password'),
         fullname: Joi.string().min(3).max(30).required().messages({
-          'string.base': 'Username must be string',
-          'string.min': 'The minimum Username length is 3',
-          'string.max': 'The maximum Username length is 30',
+          'string.base': 'fullname must be string',
+          'string.min': 'The minimum fullname length is 3',
+          'string.max': 'The maximum fullname length is 30',
           'any.required': 'fullname is required',
         }),
         profile_img: Joi.string().messages({
@@ -314,9 +314,9 @@ class Validation {
         'string.email': 'Please provide a valid email address',
       }),
       fullname: Joi.string().min(3).max(30).required().messages({
-        'string.base': 'Username must be string',
-        'string.min': 'The minimum Username length is 3',
-        'string.max': 'The maximum Username length is 30',
+        'string.base': 'fullname must be string',
+        'string.min': 'The minimum fullname length is 3',
+        'string.max': 'The maximum fullname length is 30',
         'any.required': 'fullname is required',
       }),
       profile_img: Joi.string().messages({
@@ -335,9 +335,9 @@ class Validation {
   async facebookAuth(req, res, next) {
     const schema = Joi.object().keys({
       fullname: Joi.string().min(3).max(30).required().messages({
-        'string.base': 'Username must be string',
-        'string.min': 'The minimum Username length is 3',
-        'string.max': 'The maximum Username length is 30',
+        'string.base': 'fullname must be string',
+        'string.min': 'The minimum fullname length is 3',
+        'string.max': 'The maximum fullname length is 30',
         'any.required': 'fullname is required',
       }),
       profile_img: Joi.string().messages({

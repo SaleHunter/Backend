@@ -26,8 +26,8 @@ class DataAccessLayer {
   async getUserby(searchAttribute, value) {
     try {
       const queryString = `
-        SELECT id, email, full_name as fullname, profile_img, last_seen, password
-        password, profile_img, last_seen FROM users where ${searchAttribute} = ?;
+        SELECT users.id, email, full_name as fullname, profile_img, last_seen, password
+        password, profile_img, stores.id as store_id FROM users LEFT JOIN stores ON users.id = stores.user_id where users.${searchAttribute} = ?;
       `;
 
       const results = await sequelize.query(queryString, {
