@@ -89,11 +89,13 @@ app.use((err, req, res, next) => {
       status: err.status || 'Error',
       message: err.message,
     });
-  } else
+  } else {
+    console.log(err);
     return res.status(500).json({
       status: 'Error',
       message: 'Something went wrong',
     });
+  }
 });
 
 module.exports = app;

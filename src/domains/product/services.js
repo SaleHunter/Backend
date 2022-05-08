@@ -109,9 +109,9 @@ class Service {
       },
     });
 
-    if (response.data.startsWith('data User or Item')) return products;
-
     console.log('data', response.data);
+    if (!Array.isArray(response.data)) return products;
+
 
     const recommendedProducts = response.data;
 
