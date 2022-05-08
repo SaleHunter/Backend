@@ -1,5 +1,6 @@
 const userPaths = require('../domains/user/swagger-docs');
 const productPaths = require('../domains/product/swagger-docs');
+const storePaths = require('../domains/store/swagger-docs');
 module.exports = {
   openapi: '3.0.0',
   info: {
@@ -29,6 +30,10 @@ module.exports = {
     {
       name: 'Products',
       description: 'Products endpoints',
+    },
+    {
+      name: 'Stores',
+      description: 'Stores endpoints',
     },
   ],
   paths: {
@@ -81,6 +86,15 @@ module.exports = {
     },
     '/products/favourites/{productId}': {
       delete: productPaths.deleteProductFromFavourites,
+    },
+    '/stores': {
+      post: storePaths.createStore,
+    },
+    '/stores/{storeId}': {
+      get: storePaths.getStoreById,
+    },
+    '/stores/{storeid}': {
+      delete: storePaths.deleteStoreById,
     },
   },
   components: {
@@ -704,6 +718,96 @@ module.exports = {
             viewed_at: '2022-05-01T12:48:22.000Z',
           },
         ],
+      },
+      CreateStore: {
+        name: 'Create Store ',
+        in: 'body',
+        description: 'Store Information',
+        type: 'object',
+        properties: {
+          name: {
+            description: 'The Store name',
+            type: 'string',
+            required: true,
+          },
+          niche_market: {
+            description: 'The Store niche market',
+            type: 'string',
+            required: true,
+          },
+          address: {
+            description: 'The Store address',
+            type: 'string',
+            required: true,
+          },
+          latitude: {
+            description: 'The Store latitude',
+            type: 'number',
+            required: true,
+          },
+          longitude: {
+            description: 'The Store longitude',
+            type: 'number',
+            required: true,
+          },
+          logo: {
+            description: 'The Store logo',
+            type: 'string',
+          },
+          phone: {
+            description: 'The Store phone number',
+            type: 'number',
+          },
+          whatsapp: {
+            description: 'The Store whatsapp number',
+            type: 'number',
+          },
+          facebook: {
+            description: 'The Store facebook page',
+            type: 'string',
+          },
+          instagram: {
+            description: 'The Store instagram page',
+            type: 'string',
+          },
+          description: {
+            description: 'The Store description',
+            type: 'string',
+          },
+        },
+        example: {
+          name: 'Amuse',
+          phone: 01005744350,
+          whatsapp: 01005744350,
+          logo: 'BASE64',
+          address: '15 Ismail Mohamed St, Borj Jeddah on the ground floor',
+          latitude: 30.064329,
+          longitude: 31.2193658,
+          facebook:
+            'https://www.facebook.com/Amuse-Lifestyle-concept-store-163180847037985/',
+          instagram: 'https://www.instagram.com/amusecairo/?hl=en',
+          description:
+            'Most of the clothes are contemporary designer pieces, along with fashion accessories, art pieces, and home accessories.',
+          niche_market: 'Fashion',
+        },
+      },
+      Store: {
+        example: {
+          id: 3,
+          name: 'Amuse',
+          phone: 01005744350,
+          whatsapp: 01005744350,
+          logo: 'BASE64',
+          address: '15 Ismail Mohamed St, Borj Jeddah on the ground floor',
+          latitude: 30.064329,
+          longitude: 31.2193658,
+          facebook:
+            'https://www.facebook.com/Amuse-Lifestyle-concept-store-163180847037985/',
+          instagram: 'https://www.instagram.com/amusecairo/?hl=en',
+          description:
+            'Most of the clothes are contemporary designer pieces, along with fashion accessories, art pieces, and home accessories.',
+          niche_market: 'Fashion',
+        },
       },
     },
     securitySchemes: {
