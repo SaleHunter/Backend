@@ -1,7 +1,7 @@
 module.exports = {
   createStore: {
     tags: ['Stores'],
-    description: 'Search a store',
+    description: 'Create a store',
     requestBody: {
       required: true,
       content: {
