@@ -8,18 +8,23 @@ const {
 } = require('../shared/middlewares/Authentication');
 const router = Router();
 
-router.get(
+router.post(
   '/',
   asyncHandler(isAuthenticated),
-  asyncHandler(controller.getAllStores)
+  asyncHandler(validation.createStore),
+  asyncHandler(controller.createStore)
 );
 
 router
   .route('/:id')
   .get(
-    asyncHandler(isAuthenticated),
     asyncHandler(validation.getStoreById),
     asyncHandler(controller.getStoreById)
+  )
+  .delete(
+    asyncHandler(isAuthenticated),
+    asyncHandler(validation.deleteStoreById),
+    asyncHandler(controller.deleteStoreById)
   );
 
 module.exports = router;

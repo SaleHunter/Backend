@@ -1,39 +1,35 @@
 const service = require('./services');
 
 class Controller {
-  async getAllStores(req, res, next) {
-    const userId = req.user.id;
-
-    const stores = await service.getAllStores(userId);
-
-    res.status(200).json({
-      status: 'success',
-      results: stores.length,
-      stores,
-    });
-  }
-
   async getStoreById(req, res, next) {
-    const userId = req.user.id,
-      storeId = req.params.id;
+    const storeId = req.params.id;
 
-    const store = await service.getStoreById(userId, storeId);
+    const pagination = {
+      page: req.query.page * 1 ?? 1,
+      limit: req.query.limit * 1 ?? 20,
+    };
+
+    console.log('In CNT ', pagination);
+
+    const { store, products } = await service.getStoreById(storeId, pagination);
 
     res.status(200).json({
       status: 'success',
       store,
+      productsLength: products.length,
+      products,
     });
   }
 
   async createStore(req, res, next) {
     const storeInfo = req.body,
-      userId = req.user.id,
-      storeId = req.params.id;
+      userId = req.user.id;
 
-    await service.createStore(userId, storeId, storeInfo);
+    const store = await service.createStore(userId, storeInfo);
     res.status(201).json({
       status: 'success',
       message: 'Store Created Successfully',
+      store,
     });
   }
 

@@ -1,4 +1,5 @@
 const DAL = require('./DAL');
+const { cloudinary } = require('../../config/cloudinary');
 
 class Service {
   async getAllStores(userId) {
@@ -11,22 +12,24 @@ class Service {
       throw error;
     }
   }
-  async getStoreById(userId, storeId) {
+  async getStoreById(storeId, pagination) {
     try {
-      const store = await DAL.getStoreById(userId, storeId);
-
-      return store;
+      return await DAL.getStoreById(storeId, pagination);
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
 
-  async createStore(userId, storeId, storeInfo) {
+  async createStore(userId, storeInfo) {
     try {
-      await DAL.createStore(userId, storeId, storeInfo);
+      // console.log(storeInfo);
+      if (storeInfo.logo)
+        storeInfo.logo = await this.uploadStoreLogo(storeInfo.logo);
 
-      return;
+      const store = await DAL.createStore(userId, storeInfo);
+
+      return store;
     } catch (error) {
       console.log(error);
       throw error;
@@ -38,6 +41,19 @@ class Service {
       await DAL.deleteStoreById(userId, storeId);
 
       return;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async uploadStoreLogo(logoString) {
+    try {
+      const uploadedResponse = await cloudinary.uploader.upload(logoString, {
+        upload_preset: 'storeLogos',
+      });
+      console.log(uploadedResponse.url);
+      return uploadedResponse.url;
     } catch (error) {
       console.log(error);
       throw error;

@@ -5,10 +5,20 @@ class NoStoreFoundError extends BaseError {
    * Creating a NoStoreFoundError
    */
   constructor() {
-    super(`You don't have store with this id`);
+    super(`There is no store with this id`);
     this.statusCode = 404;
     this.status = 'Fail';
   }
 }
 
-module.exports = { NoStoreFoundError };
+class AlreadyHaveStoreError extends BaseError {
+  /**
+   * Creating an AlreadyHaveStoreError
+   */
+  constructor() {
+    super(`You Already Own a Store`);
+    this.statusCode = 403;
+    this.status = 'Fail';
+  }
+}
+module.exports = { NoStoreFoundError, AlreadyHaveStoreError };

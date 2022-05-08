@@ -25,12 +25,12 @@ const server = app.listen(port, console.log(`Server running at ${port}`));
 process.on('uncaughtException', err => {
   console.log('UUncaught Exeptions, Server Shutting Down');
   console.log(err);
-  process.exit(1); //Safe Exit
+  //process.exit(1); //Safe Exit
 });
 
 //Gloable Handling unhandled Promise Rejections
 process.on('unhandledRejection', err => {
   console.log('Unhandled Promise Rejection, Server Shutting Down');
   console.log(err);
-  server.close(() => process.exit(1)); //Safe Exit
+  //server.close(() => process.exit(1)); //Safe Exit
 });
