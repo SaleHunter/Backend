@@ -66,16 +66,16 @@ class Validation {
         'string.base': 'language must be string',
         'any.valid': 'language must be any of these values [en,ar]',
       }),
-      lan: Joi.number().precision(6).messages({
-        'number.base': 'lan must be number',
+      lon: Joi.number().precision(6).messages({
+        'number.base': 'lon must be number',
       }),
       lat: Joi.number().precision(6).messages({
         'number.base': 'lat must be number',
       }),
-    }).with('lat', 'lan');
+    }).with('lat', 'lon');
 
     const sourceObject = {
-      lan: req.headers.lon,
+      lon: req.headers.lon,
       lat: req.headers.lat,
       language: req.headers.language,
       ...req.query,
