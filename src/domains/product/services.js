@@ -52,11 +52,6 @@ class Service {
 
   async getTopProducts() {
     try {
-      /* TODO: First: Try to find Top Products in cache
-       * if Hit: return back list of products
-       * if Miss: retrive it from database then cache it and finally return it back
-       */
-
       let products = [];
       products = await cache.getTopProducts();
       // console.log(products.length);
@@ -74,10 +69,6 @@ class Service {
 
   async getRecommendedProductsByUserId(userId) {
     try {
-      /* TODO: First: Try to find Recommended Products for that user in cache
-       * if Hit: return back list of products
-       * if Miss: retrive it from ML Recommendation System then cache it and finally return it back
-       */
       let products = [];
 
       products = await cache.getRecommendedProductsByUserId(userId);
@@ -111,7 +102,6 @@ class Service {
 
     console.log('data', response.data);
     if (!Array.isArray(response.data)) return products;
-
 
     const recommendedProducts = response.data;
 
