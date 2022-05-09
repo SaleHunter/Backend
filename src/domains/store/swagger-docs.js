@@ -274,4 +274,87 @@ module.exports = {
       },
     },
   },
+  updateStoreById: {
+    tags: ['Stores'],
+    description: 'Update a store by id',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/components/schemas/UpdateStore',
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: 'Store Updated Successfully',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'Store Updated Successfully',
+                },
+              },
+            },
+          },
+        },
+      },
+      401: {
+        description: 'User not signed in, Please sign in and try again later',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'fail',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example:
+                    'User not signed in, Please sign in and try again later',
+                },
+              },
+            },
+          },
+        },
+      },
+      404: {
+        description: 'There is no store with this id',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'fail',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'There is no store with this id',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };
