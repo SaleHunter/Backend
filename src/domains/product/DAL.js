@@ -32,7 +32,7 @@ class DataAccessLayer {
         rating = product[0][4][0],
         views = product[0][5][0];
 
-      if (!basic || prices.length === 0) throw new NoProductFoundError();
+      if (!basic || basic.length === 0) throw new NoProductFoundError();
       return {
         basic,
         prices,
