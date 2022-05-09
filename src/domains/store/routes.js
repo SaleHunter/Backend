@@ -25,6 +25,11 @@ router
     asyncHandler(isAuthenticated),
     asyncHandler(validation.deleteStoreById),
     asyncHandler(controller.deleteStoreById)
+  )
+  .patch(
+    asyncHandler(isAuthenticated),
+    asyncHandler(validation.updateStoreById),
+    asyncHandler(controller.updateStoreById)
   );
 
 module.exports = router;

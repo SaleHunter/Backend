@@ -149,6 +149,44 @@ class DataAccessLayer {
       throw error;
     }
   }
+
+  async updateStoreById(userId, storeId, newValues) {
+    try {
+      userId = userId * 1;
+      storeId = storeId * 1;
+
+      console.log(storeId, userId);
+
+      const store = await knex.raw(
+        `SELECT s.id FROM stores AS s WHERE s.id = ? AND s.user_id = ?`,
+        [storeId, userId]
+      );
+
+      // console.log(store[0]);
+      if (!store[0].length) {
+        throw new NoStoreFoundError();
+      }
+
+      console.log(newValues);
+      let updateQueryString = `UPDATE stores SET `;
+      for (let [key, value] of Object.entries(newValues)) {
+        // console.log([key, value]);
+        updateQueryString += `${key} = "${value}", `;
+      }
+
+      updateQueryString = updateQueryString.slice(0, -2);
+      updateQueryString += ` WHERE id = ? AND user_id = ?`;
+
+      console.log(updateQueryString);
+
+      const result = await knex.raw(updateQueryString, [storeId, userId]);
+      console.log(result);
+      return [];
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new DataAccessLayer();

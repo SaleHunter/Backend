@@ -59,6 +59,17 @@ class Service {
       throw error;
     }
   }
+
+  async updateStoreById(userId, storeId, newValues) {
+    try {
+      const store = await DAL.updateStoreById(userId, storeId, newValues);
+
+      return store;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new Service();

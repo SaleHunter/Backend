@@ -41,19 +41,13 @@ class Validation {
       logo: Joi.string().messages({
         'string.base': 'Invalid Image.',
       }),
-      phone: Joi.number().min(11).max(11).optional().positive().messages({
-        'number.base': 'phone must be a number',
-        'number.positive': 'phone must be a positive number',
-        'number.min': 'The minimum phone length is 11',
-        'number.max': 'The maximum phone length is 11',
+      phone: Joi.string().messages({
+        'string.base': 'phone must be a string',
       }),
-      whatsapp: Joi.number().min(11).max(11).optional().positive().messages({
-        'number.base': 'whatsapp must be a number',
-        'number.positive': 'whatsapp must be a positive number',
-        'number.min': 'The minimum whatsapp length is 11',
-        'number.max': 'The maximum whatsapp length is 11',
+      whatsapp: Joi.string().messages({
+        'string.base': 'whatsapp must be a string',
       }),
-      description: Joi.string().max(200).optional().messages({
+      description: Joi.string().max(200).messages({
         'string.base': 'description must be string',
         'string.max': 'The maximum description length is 200',
       }),
@@ -63,32 +57,25 @@ class Validation {
         'any.required': 'address is required',
       }),
       longitude: Joi.number().precision(8).messages({
-        'number.base': 'lon must be number',
+        'number.base': 'longitude must be number',
       }),
       latitude: Joi.number().precision(8).messages({
-        'number.base': 'lat must be number',
+        'number.base': 'latitude must be number',
       }),
       niche_market: Joi.string().max(45).required().messages({
         'string.base': 'niche_market must be string',
         'string.max': 'The maximum niche_market length is 45',
         'any.required': 'niche_market is required',
       }),
-      facebook: Joi.string().max(300).optional().messages({
+      facebook: Joi.string().max(300).messages({
         'string.base': 'facebook must be string',
         'string.max': 'The maximum facebook length is 300',
       }),
-      instagram: Joi.string().max(300).optional().messages({
+      instagram: Joi.string().max(300).messages({
         'string.base': 'instagram must be string',
         'string.max': 'The maximum instagram length is 300',
       }),
     });
-
-    // const sourceObject = {
-    //   name: req.body.name,
-    //   logo: req.body.logo,
-    //   phone: req.body.phone,
-    //   branches: req.body.branches,
-    // };
 
     await schema.validateAsync(req.body);
     next();
@@ -108,6 +95,58 @@ class Validation {
     };
 
     await schema.validateAsync(sourceObject);
+    next();
+  }
+
+  async updateStoreById(req, res, next) {
+    const schema = Joi.object({
+      name: Joi.string().min(5).max(45).messages({
+        'string.base': 'name must be string',
+        'string.min': 'The minimum name length is 5',
+        'string.max': 'The maximum name length is 45',
+      }),
+      logo: Joi.string().messages({
+        'string.base': 'Invalid Image.',
+      }),
+      phone: Joi.string().messages({
+        'string.base': 'phone must be a string',
+      }),
+      whatsapp: Joi.string().messages({
+        'string.base': 'whatsapp must be a string',
+      }),
+      description: Joi.string().max(200).messages({
+        'string.base': 'description must be string',
+        'string.max': 'The maximum description length is 200',
+      }),
+      address: Joi.string().max(300).messages({
+        'string.base': 'address must be string',
+        'string.max': 'The maximum address length is 300',
+      }),
+      longitude: Joi.number().precision(8).messages({
+        'number.base': 'longitude must be number',
+      }),
+      latitude: Joi.number().precision(8).messages({
+        'number.base': 'latitude must be number',
+      }),
+      niche_market: Joi.string().max(45).messages({
+        'string.base': 'niche_market must be string',
+        'string.max': 'The maximum niche_market length is 45',
+      }),
+      facebook: Joi.string().max(300).messages({
+        'string.base': 'facebook must be string',
+        'string.max': 'The maximum facebook length is 300',
+      }),
+      instagram: Joi.string().max(300).messages({
+        'string.base': 'instagram must be string',
+        'string.max': 'The maximum instagram length is 300',
+      }),
+    })
+      .min(1)
+      .messages({
+        'object.min': 'At Least one key must be specified',
+      });
+
+    await schema.validateAsync(req.body);
     next();
   }
 }

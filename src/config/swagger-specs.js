@@ -96,6 +96,9 @@ module.exports = {
     '/stores/{storeid}': {
       delete: storePaths.deleteStoreById,
     },
+    '/stores/{storeID}': {
+      patch: storePaths.updateStoreById,
+    },
   },
   components: {
     schemas: {
@@ -756,11 +759,11 @@ module.exports = {
           },
           phone: {
             description: 'The Store phone number',
-            type: 'number',
+            type: 'string',
           },
           whatsapp: {
             description: 'The Store whatsapp number',
-            type: 'number',
+            type: 'string',
           },
           facebook: {
             description: 'The Store facebook page',
@@ -777,8 +780,8 @@ module.exports = {
         },
         example: {
           name: 'Amuse',
-          phone: 01005744350,
-          whatsapp: 01005744350,
+          phone: '01005744350',
+          whatsapp: '01005744350',
           logo: 'BASE64',
           address: '15 Ismail Mohamed St, Borj Jeddah on the ground floor',
           latitude: 30.064329,
@@ -795,8 +798,76 @@ module.exports = {
         example: {
           id: 3,
           name: 'Amuse',
-          phone: 01005744350,
-          whatsapp: 01005744350,
+          phone: '01005744350',
+          whatsapp: '01005744350',
+          logo: 'BASE64',
+          address: '15 Ismail Mohamed St, Borj Jeddah on the ground floor',
+          latitude: 30.064329,
+          longitude: 31.2193658,
+          facebook:
+            'https://www.facebook.com/Amuse-Lifestyle-concept-store-163180847037985/',
+          instagram: 'https://www.instagram.com/amusecairo/?hl=en',
+          description:
+            'Most of the clothes are contemporary designer pieces, along with fashion accessories, art pieces, and home accessories.',
+          niche_market: 'Fashion',
+        },
+      },
+
+      UpdateStore: {
+        name: 'Update Store ',
+        in: 'body',
+        description: 'Values To Update',
+        type: 'object',
+        properties: {
+          name: {
+            description: 'The New store name',
+            type: 'string',
+          },
+          niche_market: {
+            description: 'The New store niche market',
+            type: 'string',
+          },
+          address: {
+            description: 'The New store address',
+            type: 'string',
+          },
+          latitude: {
+            description: 'The New store latitude',
+            type: 'number',
+          },
+          longitude: {
+            description: 'The New store longitude',
+            type: 'number',
+          },
+          logo: {
+            description: 'The New store logo',
+            type: 'string',
+          },
+          phone: {
+            description: 'The New store phone number',
+            type: 'string',
+          },
+          whatsapp: {
+            description: 'The New store whatsapp number',
+            type: 'string',
+          },
+          facebook: {
+            description: 'The New store facebook page',
+            type: 'string',
+          },
+          instagram: {
+            description: 'The New store instagram page',
+            type: 'string',
+          },
+          description: {
+            description: 'The New store description',
+            type: 'string',
+          },
+        },
+        example: {
+          name: 'Amuse',
+          phone: '01005744350',
+          whatsapp: '01005744350',
           logo: 'BASE64',
           address: '15 Ismail Mohamed St, Borj Jeddah on the ground floor',
           latitude: 30.064329,

@@ -41,6 +41,19 @@ class Controller {
 
     res.status(204).json();
   }
+
+  async updateStoreById(req, res, next) {
+    const userId = req.user.id,
+      storeId = req.params.id,
+      newValues = req.body;
+
+    await service.updateStoreById(userId, storeId, newValues);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Store Updated Successfully',
+    });
+  }
 }
 
 module.exports = new Controller();
