@@ -73,7 +73,7 @@ router.get(
 );
 
 router.patch(
-  '/:productId/changeRating',
+  '/:productId/rating',
   asyncHandler(isAuthenticated),
   asyncHandler(validation.changeProductRating),
   asyncHandler(controller.changeProductRating)
