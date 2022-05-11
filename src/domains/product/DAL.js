@@ -32,8 +32,10 @@ class DataAccessLayer {
           [userId, productId, userId, productId]
         );
         console.log(forAuthenticatedUser, forAuthenticatedUser[0]);
-        is_favourite = forAuthenticatedUser[0][0].is_favourite;
-        user_rating = forAuthenticatedUser[0][0].user_rating;
+        if (forAuthenticatedUser[0].length) {
+          is_favourite = forAuthenticatedUser[0][0].is_favourite;
+          user_rating = forAuthenticatedUser[0][0].user_rating;
+        }
       }
       console.log(is_favourite, user_rating);
 
