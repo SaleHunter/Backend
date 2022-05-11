@@ -31,10 +31,11 @@ class DataAccessLayer {
             r.user_id = ? and r.product_id = ?`,
           [userId, productId, userId, productId]
         );
-
+        console.log(forAuthenticatedUser, forAuthenticatedUser[0]);
         is_favourite = forAuthenticatedUser[0][0].is_favourite;
         user_rating = forAuthenticatedUser[0][0].user_rating;
       }
+      console.log(is_favourite, user_rating);
 
       const basic = product[0][0][0],
         prices = product[0][1],
