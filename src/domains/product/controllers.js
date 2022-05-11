@@ -91,5 +91,18 @@ class Controller {
       products,
     });
   }
+
+  async changeProductRating(req, res, next) {
+    const userId = req.user.id,
+      productId = req.params.productId,
+      rating = req.body.rating;
+
+    await service.changeProductRating(userId, productId, rating);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Rating successfully changed for this product',
+    });
+  }
 }
 module.exports = new Controller();

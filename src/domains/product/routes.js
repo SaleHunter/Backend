@@ -72,4 +72,11 @@ router.get(
   asyncHandler(controller.getProductById)
 );
 
+router.patch(
+  '/:productId/changeRating',
+  asyncHandler(isAuthenticated),
+  asyncHandler(validation.changeProductRating),
+  asyncHandler(controller.changeProductRating)
+);
+
 module.exports = router;

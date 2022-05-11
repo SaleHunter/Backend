@@ -103,6 +103,7 @@ class Validation {
 
     next();
   }
+
   async operationsOnFavourites(req, res, next) {
     const schema = Joi.object({
       productId: Joi.number().required().positive().messages({
@@ -117,6 +118,41 @@ class Validation {
     const sourceObject = {
       productId: req.params.productId,
     };
+
+    await schema.validateAsync(sourceObject);
+
+    next();
+  }
+
+  async changeProductRating(req, res, next) {
+    const schema = Joi.object({
+      productId: Joi.number().required().positive().messages({
+        'number.base': 'productId must be a number',
+        'number.required': 'productId is required',
+        'number.positive': 'productId must be a positive number',
+      }),
+      rating: Joi.number()
+        .integer()
+        .positive()
+        .required()
+        .min(1)
+        .max(5)
+        .messages({
+          'number.base': 'rating must be a number',
+          'number.integer': 'rating must be an integer, can not be float',
+          'number.positive': 'rating must be a positive number',
+          'number.required': 'rating is required',
+          'number.min': 'rating must be at least 1',
+          'number.max': 'rating must be at most 5',
+        }),
+    });
+
+    const sourceObject = {
+      productId: req.params.productId,
+      rating: req.body.rating,
+    };
+
+    console.log(sourceObject);
 
     await schema.validateAsync(sourceObject);
 

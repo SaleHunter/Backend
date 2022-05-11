@@ -32,20 +32,24 @@ class Validation {
 
   async createStore(req, res, next) {
     const schema = Joi.object({
-      name: Joi.string().min(5).max(45).required().messages({
+      name: Joi.string().min(3).max(45).required().messages({
         'string.base': 'name must be string',
-        'string.min': 'The minimum name length is 5',
+        'string.min': 'The minimum name length is 3',
         'string.max': 'The maximum name length is 45',
         'any.required': 'name is required',
       }),
       logo: Joi.string().messages({
         'string.base': 'Invalid Image.',
       }),
-      phone: Joi.string().messages({
+      phone: Joi.string().min(11).max(11).messages({
         'string.base': 'phone must be a string',
+        'string.min': 'phone must be at least 11 numbers',
+        'string.max': 'phone must be at most 11 numbers',
       }),
-      whatsapp: Joi.string().messages({
+      whatsapp: Joi.string().min(11).max(11).messages({
         'string.base': 'whatsapp must be a string',
+        'string.min': 'whatsapp must be at least 11 numbers',
+        'string.max': 'whatsapp must be at most 11 numbers',
       }),
       description: Joi.string().max(200).messages({
         'string.base': 'description must be string',
@@ -100,19 +104,23 @@ class Validation {
 
   async updateStoreById(req, res, next) {
     const schema = Joi.object({
-      name: Joi.string().min(5).max(45).messages({
+      name: Joi.string().min(3).max(45).messages({
         'string.base': 'name must be string',
-        'string.min': 'The minimum name length is 5',
+        'string.min': 'The minimum name length is 3',
         'string.max': 'The maximum name length is 45',
       }),
       logo: Joi.string().messages({
         'string.base': 'Invalid Image.',
       }),
-      phone: Joi.string().messages({
+      phone: Joi.string().min(11).max(11).messages({
         'string.base': 'phone must be a string',
+        'string.min': 'phone must be at least 11 numbers',
+        'string.max': 'phone must be at most 11 numbers',
       }),
-      whatsapp: Joi.string().messages({
+      whatsapp: Joi.string().min(11).max(11).messages({
         'string.base': 'whatsapp must be a string',
+        'string.min': 'whatsapp must be at least 11 numbers',
+        'string.max': 'whatsapp must be at most 11 numbers',
       }),
       description: Joi.string().max(200).messages({
         'string.base': 'description must be string',

@@ -11,18 +11,29 @@ class DataAccessLayer {
       );
 
       console.log(userId, productId);
-      let is_favourite = 0;
+      let is_favourite = 0,
+        user_rating = 0;
       if (userId !== 0) {
-        is_favourite = await knex.raw(
+        const forAuthenticatedUser = await knex.raw(
           `SELECT 
-        CASE WHEN EXISTS 
+            CASE WHEN EXISTS 
             (SELECT 1 FROM favourite_product AS f WHERE f.user_id = ? and f.product_id = ?) 
             THEN 1 ELSE 0
-            END AS is_favourite;`,
-          [userId, productId]
+            END AS is_favourite,
+            CASE 
+            WHEN r.rating IS NOT NULL 
+            THEN r.rating
+            ELSE 0
+            END AS user_rating
+            FROM 
+            reviews AS r
+            WHERE
+            r.user_id = ? and r.product_id = ?`,
+          [userId, productId, userId, productId]
         );
 
-        is_favourite = is_favourite[0][0].is_favourite;
+        is_favourite = forAuthenticatedUser[0][0].is_favourite;
+        user_rating = forAuthenticatedUser[0][0].user_rating;
       }
 
       const basic = product[0][0][0],
@@ -41,6 +52,7 @@ class DataAccessLayer {
         rating,
         views,
         is_favourite,
+        user_rating,
       };
     } catch (error) {
       throw error;
@@ -367,6 +379,24 @@ LIMIT 10;`;
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+
+  async changeProductRating(userId, productId, rating) {
+    try {
+      const queryString = `INSERT INTO reviews(product_id, user_id, rating, date)
+      VALUES(?, ?, ?, NOW())
+      ON DUPLICATE KEY UPDATE 
+      rating = ?, date = NOW();
+      `;
+
+      await knex.raw(queryString, [productId, userId, rating, rating]);
+
+      return;
+    } catch (error) {
+      console.log(error);
+      if (error.errno === 1452) throw new NoProductFoundError();
+      else throw error;
     }
   }
 }

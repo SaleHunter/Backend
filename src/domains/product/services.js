@@ -146,6 +146,16 @@ class Service {
       throw error;
     }
   }
+
+  async changeProductRating(userId, productId, rating) {
+    try {
+      await DAL.changeProductRating(userId, productId, rating);
+
+      return;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = new Service();
