@@ -69,7 +69,7 @@ module.exports = {
     '/products': {
       get: productPaths.searchForProducts,
     },
-    '/products/{productId}': {
+    '/products/{id}': {
       get: productPaths.getProductById,
     },
     '/products/{productId}/rating': {
