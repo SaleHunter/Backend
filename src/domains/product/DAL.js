@@ -5,6 +5,7 @@ const { NoProductFoundError, ProductAlreadyInFavourites } = require('./errors');
 class DataAccessLayer {
   async getProductById(productId, userId) {
     try {
+      productId = productId * 1;
       const product = await knex.raw(
         'CALL sale_hunter.products_get_one_by_id(?)',
         [productId]
@@ -14,27 +15,39 @@ class DataAccessLayer {
       let is_favourite = 0,
         user_rating = 0;
       if (userId !== 0) {
-        const forAuthenticatedUser = await knex.raw(
+        const isFavouriteQuery = knex.raw(
           `SELECT 
             CASE WHEN EXISTS 
             (SELECT 1 FROM favourite_product AS f WHERE f.user_id = ? and f.product_id = ?) 
             THEN 1 ELSE 0
-            END AS is_favourite,
-            CASE 
-            WHEN r.rating IS NOT NULL 
-            THEN r.rating
-            ELSE 0
-            END AS user_rating
-            FROM 
-            reviews AS r
-            WHERE
-            r.user_id = ? and r.product_id = ?`,
-          [userId, productId, userId, productId]
+            END AS is_favourite
+            `,
+          [userId, productId]
         );
-        console.log(forAuthenticatedUser, forAuthenticatedUser[0]);
-        if (forAuthenticatedUser[0].length) {
-          is_favourite = forAuthenticatedUser[0][0].is_favourite;
-          user_rating = forAuthenticatedUser[0][0].user_rating;
+
+        const userRatingQuery = knex.raw(
+          `SELECT 
+          r.rating
+          FROM 
+            sale_hunter.reviews AS r
+          WHERE
+            r.user_id = ? and r.product_id = ?;          
+            `,
+          [userId, productId]
+        );
+
+        let [isFavoriteResult, userRatingResult] = await Promise.all([
+          isFavouriteQuery,
+          userRatingQuery,
+        ]);
+
+        console.log(isFavoriteResult[0], userRatingResult[0]);
+
+        if (isFavoriteResult[0].length !== 0) {
+          is_favourite = isFavoriteResult[0][0].is_favourite;
+        }
+        if (userRatingResult[0].length !== 0) {
+          user_rating = userRatingResult[0][0].rating;
         }
       }
       console.log(is_favourite, user_rating);
