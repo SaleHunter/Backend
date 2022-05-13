@@ -1,4 +1,16 @@
 const Joi = require('joi');
+const isBase64 = require('is-base64');
+
+function isValidBase64Image(base64Image, helpers) {
+  const isValid = isBase64(base64Image, { allowMime: true });
+
+  if (!isValid) {
+    console.log('Not Valid');
+    throw new Error('Not a valid base64 image');
+  }
+
+  return base64Image;
+}
 
 class Validation {
   async getStoreById(req, res, next) {
@@ -8,11 +20,11 @@ class Validation {
         'number.required': 'id is required',
         'number.positive': 'id must be a positive number',
       }),
-      limit: Joi.number().max(60).optional().messages({
+      limit: Joi.number().max(60).optional().default(20).messages({
         'number.base': 'limit must be number',
         'number.max': 'The maximum limit is 60',
       }),
-      page: Joi.number().min(1).optional().messages({
+      page: Joi.number().min(1).optional().default(1).messages({
         'number.base': 'page must be number',
         'number.min': 'The minimum page is 1',
       }),
@@ -38,8 +50,9 @@ class Validation {
         'string.max': 'The maximum name length is 45',
         'any.required': 'name is required',
       }),
-      logo: Joi.string().messages({
-        'string.base': 'Invalid Image.',
+      logo: Joi.string().custom(isValidBase64Image).messages({
+        'string.base': 'logo must be a valid base64 image',
+        'any.custom': 'logo must be a valid base64 image',
       }),
       phone: Joi.string().min(11).max(11).messages({
         'string.base': 'phone must be a string',
@@ -79,6 +92,12 @@ class Validation {
         'string.base': 'instagram must be string',
         'string.max': 'The maximum instagram length is 300',
       }),
+      website: Joi.string().uri().min(10).max(100).messages({
+        'string.base': 'website must be string',
+        'string.uri': 'website must be a valid url',
+        'string.max': 'The maximum website length is 100',
+        'string.min': 'The minimum website length is 10',
+      }),
     });
 
     await schema.validateAsync(req.body);
@@ -109,8 +128,9 @@ class Validation {
         'string.min': 'The minimum name length is 3',
         'string.max': 'The maximum name length is 45',
       }),
-      logo: Joi.string().messages({
-        'string.base': 'Invalid Image.',
+      logo: Joi.string().custom(isValidBase64Image).messages({
+        'string.base': 'logo must be a valid base64 image',
+        'any.custom': 'logo must be a valid base64 image',
       }),
       phone: Joi.string().min(11).max(11).messages({
         'string.base': 'phone must be a string',
@@ -147,6 +167,12 @@ class Validation {
       instagram: Joi.string().max(300).messages({
         'string.base': 'instagram must be string',
         'string.max': 'The maximum instagram length is 300',
+      }),
+      website: Joi.string().uri().min(10).max(100).messages({
+        'string.base': 'website must be string',
+        'string.uri': 'website must be a valid url',
+        'string.max': 'The maximum website length is 100',
+        'string.min': 'The minimum website length is 10',
       }),
     })
       .min(1)

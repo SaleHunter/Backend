@@ -5,7 +5,7 @@ class DataAccessLayer {
   async getStoreById(storeId, pagination) {
     try {
       const queryString = `SELECT id, name, store_type as type, logo, phone, address, niche_market,
-      description, latitude, longitude, whatsapp, facebook, instagram FROM stores WHERE id = ?`;
+      description, latitude, longitude, whatsapp, facebook, instagram, website FROM stores WHERE id = ?`;
 
       const storeData = await knex.raw(queryString, [storeId]);
 
@@ -21,8 +21,10 @@ class DataAccessLayer {
   }
 
   async getProductsByStoreId(storeId, pagination) {
-    console.log('IN DAL ', pagination);
+    pagination.limit = pagination.limit ?? 20;
+    pagination.page = pagination.page ?? 1;
     storeId = storeId * 1;
+    console.log('IN DAL ', pagination);
     const queryString = `
     SELECT 
         p.id,
@@ -86,6 +88,7 @@ class DataAccessLayer {
         description = storeInfo.description ?? null,
         facebook = storeInfo.facebook ?? null,
         instagram = storeInfo.instagram ?? null,
+        website = storeInfo.website ?? null,
         logo = storeInfo.logo ?? null,
         store_type = 'offline';
 
@@ -93,8 +96,8 @@ class DataAccessLayer {
 
       const queryString = `
       INSERT INTO stores(name, user_id, store_type, phone, address, niche_market,
-         description, latitude, longitude, whatsapp, facebook, instagram, logo)
-       VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+         description, latitude, longitude, whatsapp, facebook, instagram, logo, website)
+       VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
       await knex.raw(queryString, [
         name,
@@ -110,10 +113,11 @@ class DataAccessLayer {
         facebook,
         instagram,
         logo,
+        website,
       ]);
 
       const getStoreQueryString = `SELECT id, name, store_type as type, logo, phone, address, niche_market,
-      description, latitude, longitude, whatsapp, facebook, instagram FROM stores WHERE user_id = ?`;
+      description, latitude, longitude, whatsapp, facebook, instagram, website FROM stores WHERE user_id = ?`;
 
       const store = await knex.raw(getStoreQueryString, [userId]);
       return store[0][0];
