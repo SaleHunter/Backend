@@ -278,6 +278,7 @@ LIMIT 10;`;
       const queryString = `SELECT 
       p.id,
       p.title,
+      p.title_ar,
       (SELECT 
               pp.price
           FROM
@@ -360,6 +361,7 @@ LIMIT 10;`;
       SELECT DISTINCT
       v.product_id AS id,
       p.title,
+      p.title_ar,
       (SELECT 
               pp.price
           FROM
