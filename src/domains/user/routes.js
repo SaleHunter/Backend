@@ -10,7 +10,6 @@ const router = Router();
 router.get(
   '/',
   asyncHandler(isAuthenticated),
-  asyncHandler(validation.getUser),
   asyncHandler(controller.getUser)
 );
 router.patch(

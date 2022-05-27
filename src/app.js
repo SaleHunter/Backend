@@ -41,7 +41,7 @@ app.use(function (req, res, next) {
   res.set('Access-Control-Expose-Headers', '*, Authorization');
   res.set(
     'Access-Control-Allow-Headers',
-    '*, Origin, X-Requested-With, Content-Type, Accept, Authorization, language, lan, lat'
+    '*, Origin, X-Requested-With, Content-Type, Accept, Authorization, language, longitude, latitude'
   );
   res.set('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS,PATCH');
 

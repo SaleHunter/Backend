@@ -41,10 +41,10 @@ class AttributeExtractor {
   }
 
   extractUserLocationObject(headers) {
-    const lon = headers.lon;
-    const lat = headers.lat;
-    if (lon && lat) {
-      return { lon, lat };
+    const longitude = headers.longitude;
+    const latitude = headers.latitude;
+    if (longitude && latitude) {
+      return { longitude, latitude };
     }
 
     return null;
