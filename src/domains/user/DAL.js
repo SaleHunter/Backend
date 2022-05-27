@@ -259,7 +259,8 @@ class DataAccessLayer {
 
       if (user[0].length) {
         console.log('herererer', user[0][0]);
-        return user[0][0];
+        user = user[0][0];
+        return { ...user, thirdParty_provider: 'google' };
       }
 
       await knex.raw(insertQueryString, [
@@ -270,7 +271,9 @@ class DataAccessLayer {
       ]);
 
       user = await knex.raw(selectQueryString, [email, thirdPartyId]);
-      return user[0][0];
+      user = user[0][0];
+
+      return { ...user, thirdParty_provider: 'google' };
     } catch (error) {
       console.log(error);
     }
@@ -290,13 +293,15 @@ class DataAccessLayer {
 
       if (user[0].length) {
         console.log('herererer', user[0][0]);
-        return user[0][0];
+        user = user[0][0];
+        return { ...user, thirdParty_provider: 'facebook' };
       }
 
       await knex.raw(insertQueryString, [fullname, profileImg, thirdPartyId]);
 
       user = await knex.raw(selectQueryString, [thirdPartyId]);
-      return user[0][0];
+      user = user[0][0];
+      return { ...user, thirdParty_provider: 'facebook' };
     } catch (error) {
       console.log(error);
     }

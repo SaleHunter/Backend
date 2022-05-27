@@ -328,7 +328,7 @@ module.exports = {
               product_category: 'Electronics',
               product_category_ar: 'إلكترونيات',
               product_url: 'https://www.amazon.eg/dp/B09G9CD8PS?language=en_AE',
-              product_sale: 25000,
+              product_sale: 30,
             },
           },
           prices: {
@@ -367,8 +367,11 @@ module.exports = {
             example: {
               store_id: 1,
               store_name: 'Amazon',
-              store_logo: null,
+              store_logo:
+                'https://res.cloudinary.com/salehunter101/image/upload/v1652469194/stores-logo/images/amazon_logo_svg_wueyvr.webp',
               store_type: 'online',
+              store_longitude: null,
+              store_latitude: null,
             },
           },
           rating: {
@@ -379,12 +382,18 @@ module.exports = {
               number_of_ratings: 1,
             },
           },
-          rating: {
+          views: {
             description: 'The Total Number of Views of the Product',
             type: 'object',
             example: {
               number_of_views: 387,
             },
+          },
+          is_favourite: {
+            description:
+              "If The product in user's favorites list value is 1, otherwise 0",
+            type: 'number',
+            example: 0,
           },
         },
       },

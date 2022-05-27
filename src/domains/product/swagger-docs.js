@@ -112,7 +112,7 @@ module.exports = {
         default: 'en',
       },
       {
-        name: 'lon',
+        name: 'longitude',
         in: 'header',
         description: 'The longitude of The User',
         required: false,
@@ -121,7 +121,7 @@ module.exports = {
         },
       },
       {
-        name: 'lat',
+        name: 'latitude',
         in: 'header',
         description: 'The latitude of The User',
         required: false,
@@ -165,15 +165,21 @@ module.exports = {
                       product_brand: 'apple',
                       product_category: 'Electronics',
                       product_category_ar: 'إلكترونيات',
-                      product_sale: 25000,
+                      product_sale: 10,
+                      product_rating: 5,
+                      product_rating_count: 22,
+                      is_favourite: 1,
                       product_url:
                         'https://www.amazon.eg/dp/B09G9CD8PS?language=en_AE',
                       image_url:
                         'https://images-na.ssl-images-amazon.com/images/I/61i8Vjb17SL.__AC_SX300_SY300_QL70_ML2_.jpg',
                       store_id: 1,
                       store_name: 'Amazon',
-                      store_logo: null,
+                      store_logo:
+                        'https://res.cloudinary.com/salehunter101/image/upload/v1652469194/stores-logo/images/amazon_logo_svg_wueyvr.webp',
                       store_type: 'online',
+                      store_longitude: null,
+                      store_latitude: null,
                     },
                     {
                       product_id: 7,
@@ -185,15 +191,21 @@ module.exports = {
                       product_brand: 'apple',
                       product_category: 'Electronics',
                       product_category_ar: 'إلكترونيات',
-                      product_sale: 35000,
+                      product_sale: 20,
+                      product_rating: 3.5,
+                      product_rating_count: 2,
+                      is_favourite: 0,
                       product_url:
                         'https://www.amazon.eg/dp/B08N5WRTN2?language=en_AE',
                       image_url:
                         'https://images-na.ssl-images-amazon.com/images/I/71an9eiBxpL.__AC_SX300_SY300_QL70_ML2_.jpg',
                       store_id: 1,
                       store_name: 'Amazon',
-                      store_logo: null,
+                      store_logo:
+                        'https://res.cloudinary.com/salehunter101/image/upload/v1652469194/stores-logo/images/amazon_logo_svg_wueyvr.webp',
                       store_type: 'online',
+                      store_longitude: null,
+                      store_latitude: null,
                     },
                   ],
                 },

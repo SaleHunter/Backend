@@ -105,7 +105,9 @@ class DataAccessLayer {
           'products.store_id as store_id',
           'stores.name as store_name',
           'stores.logo as store_logo',
-          'stores.store_type as store_type'
+          'stores.store_type as store_type',
+          'stores.longitude as store_longitude',
+          'stores.latitude as store_latitude'
         )
         .select(
           knex.raw(
