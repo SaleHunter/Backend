@@ -54,6 +54,12 @@ router.get(
 );
 
 router.get(
+  '/sales',
+  asyncHandler(isAuthenticatedWithOutException),
+  asyncHandler(controller.getProductsOnSale)
+);
+
+router.get(
   '/:id',
   (req, res, next) => {
     console.log('HERE in get product');
