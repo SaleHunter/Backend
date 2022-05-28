@@ -105,7 +105,8 @@ class Controller {
     });
   }
   async getProductsOnSale(req, res, next) {
-    const userId = req.user.id;
+    let userId = 0;
+    if (req.user) userId = req.user.id;
     const products = await service.getProductsOnSale(userId);
 
     res.status(200).json({
