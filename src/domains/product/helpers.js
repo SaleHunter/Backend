@@ -56,10 +56,10 @@ class CustomQueryBuilder {
       ascOrDesc = 'asc';
     switch (sortBy) {
       case 'priceAsc':
-        columnName = 'product_price.price';
+        columnName = 'pp.price';
         break;
       case 'priceDsc':
-        columnName = 'product_price.price';
+        columnName = 'pp.price';
         ascOrDesc = 'desc';
         break;
       case 'rating':
@@ -130,7 +130,7 @@ class CustomQueryBuilder {
     if (filters.brand) queryString.where('products.brand', filters.brand);
 
     // Price Filteration
-    queryString.whereBetween('product_price.price', [
+    queryString.whereBetween('pp.price', [
       filters.price_min,
       filters.price_max,
     ]);

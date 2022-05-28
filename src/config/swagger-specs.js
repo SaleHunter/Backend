@@ -78,6 +78,9 @@ module.exports = {
     '/products/viewed': {
       get: productPaths.getViewedProducts,
     },
+    '/products/sales': {
+      get: productPaths.getProductsOnSale,
+    },
     '/products/favourites': {
       get: productPaths.getFavouriteProducts,
     },
@@ -888,6 +891,104 @@ module.exports = {
             'Most of the clothes are contemporary designer pieces, along with fashion accessories, art pieces, and home accessories.',
           niche_market: 'Fashion',
         },
+      },
+      Sales: {
+        name: 'Best Products On Sale',
+        in: 'body',
+        description: 'The Array of Best Products On Sale',
+        type: 'array',
+        example: [
+          {
+            id: 580,
+            title:
+              'Genuine Leather Loop Strap For Apple Watch Band Series 4/3/2/1 Iwatch 44mm 40mm42mm 38mm Correa Watchband Bracelet(#Midnight-blue)(44mm) SHA',
+            title_ar:
+              'Genuine Leather Loop Strap For Apple Watch Band Series 4/3/2/1 Iwatch 44mm 40mm42mm 38mm Correa Watchband Bracelet(#Midnight-blue)(44mm) SHA',
+            sale: 43,
+            price: 745,
+            image:
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/59/454481/1.jpg?1428',
+            rating: '1.0000',
+            rating_count: 1,
+            store_id: 2,
+            store_name: 'Jumia',
+            store_type: 'online',
+            logo: 'https://res.cloudinary.com/salehunter101/image/upload/v1652469323/stores-logo/images/jumia_seeklogo_com__iyr27d.png',
+            is_favourite: 0,
+          },
+          {
+            id: 146,
+            title:
+              'G15 - 5511 - Gaming Laptop - Intel Core I7-11800H - 16GB RAM - 512GB SSD - 15.6 Inch FHD - Nvidia RTX 3050 4G - Win11 Home - Grey',
+            title_ar:
+              'G15 - 5511 - Gaming Laptop - Intel Core I7-11800H - 16GB RAM - 512GB SSD - 15.6 Inch FHD - Nvidia RTX 3050 4G - Win11 Home - Grey',
+            sale: 22,
+            price: 23000,
+            image:
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/21/521952/1.jpg?6188',
+            rating: '1.0000',
+            rating_count: 1,
+            store_id: 2,
+            store_name: 'Jumia',
+            store_type: 'online',
+            logo: 'https://res.cloudinary.com/salehunter101/image/upload/v1652469323/stores-logo/images/jumia_seeklogo_com__iyr27d.png',
+            is_favourite: 1,
+          },
+          {
+            id: 599,
+            title:
+              'For Xiaomi Mi Band 3 Bracelet Strap Watch Strap Replacement Wristband',
+            title_ar:
+              'For Xiaomi Mi Band 3 Bracelet Strap Watch Strap Replacement Wristband',
+            sale: 15,
+            price: 222,
+            image:
+              'https://eg.jumia.is/unsafe/fit-in/500x500/filters:fill(white)/product/25/387791/1.jpg?5621',
+            rating: '5.0000',
+            rating_count: 1,
+            store_id: 2,
+            store_name: 'Jumia',
+            store_type: 'online',
+            logo: 'https://res.cloudinary.com/salehunter101/image/upload/v1652469323/stores-logo/images/jumia_seeklogo_com__iyr27d.png',
+            is_favourite: 1,
+          },
+          {
+            id: 615,
+            title:
+              'LG 65 inches UHD 4K Smart TV, Active HDR, WebOS Operating System, ThinQ AI - 65UP7550PVG',
+            title_ar:
+              'تليفزيون سمارت 65 بوصة 4K الترا اتش دي بتقنية المدى الديناميكي العالي وتقنية ThinQ AI ونظام تشغيل WebOS من ال جي - 65UP7550PVG',
+            sale: 4,
+            price: 13493,
+            image:
+              'https://images-na.ssl-images-amazon.com/images/I/71mPr6LMaXS.__AC_SY300_SX300_QL70_ML2_.jpg',
+            rating: '5.0000',
+            rating_count: 0,
+            store_id: 1,
+            store_name: 'Amazon',
+            store_type: 'online',
+            logo: 'https://res.cloudinary.com/salehunter101/image/upload/v1652469194/stores-logo/images/amazon_logo_svg_wueyvr.webp',
+            is_favourite: 1,
+          },
+          {
+            id: 222,
+            title:
+              'CYY Computer Desk,Home Office Desk Writing Desk Work Table With Storage Drawers Executive Large Storage Space,120 * 45 * 71CM Study Writing Desk Easy Assembly PC Laptop Notebook Workstations',
+            title_ar:
+              'مكتب وطاولة للكمبيوتر وللكتابة وللعمل مع دروج تخزين بسعة كبيرة من سي واي واي، مكتب للدراسة والعمل وللاب توب والنوت بوك والكمبيوتر، سهل التركيب والتجميع بمقاس 120×45×71',
+            sale: 3,
+            price: 3130,
+            image:
+              'https://images-na.ssl-images-amazon.com/images/I/611QZOIITxL.__AC_SY300_SX300_QL70_ML2_.jpg',
+            rating: '3.0000',
+            rating_count: 1,
+            store_id: 1,
+            store_name: 'Amazon',
+            store_type: 'online',
+            logo: 'https://res.cloudinary.com/salehunter101/image/upload/v1652469194/stores-logo/images/amazon_logo_svg_wueyvr.webp',
+            is_favourite: 0,
+          },
+        ],
       },
     },
     securitySchemes: {
