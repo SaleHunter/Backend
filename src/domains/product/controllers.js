@@ -104,5 +104,15 @@ class Controller {
       message: 'Rating successfully changed for this product',
     });
   }
+  async getProductsOnSale(req, res, next) {
+    const userId = req.user.id;
+    const products = await service.getProductsOnSale(userId);
+
+    res.status(200).json({
+      status: 'success',
+      results: products.length,
+      products,
+    });
+  }
 }
 module.exports = new Controller();

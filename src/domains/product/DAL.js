@@ -93,7 +93,7 @@ class DataAccessLayer {
           'products.id as product_id',
           'products.title as product_title',
           'products.title_ar as product_title_ar',
-          'product_price.price as product_price',
+          'pp.price as product_price',
           'products.sale as product_sale',
           'products.created_at as created_at',
           'products.updated_at as updated_at',
@@ -101,13 +101,17 @@ class DataAccessLayer {
           'products.category as product_category',
           'products.sale as product_sale',
           'products.url as product_url',
-          'product_images.link AS image_url',
           'products.store_id as store_id',
           'stores.name as store_name',
           'stores.logo as store_logo',
           'stores.store_type as store_type',
           'stores.longitude as store_longitude',
           'stores.latitude as store_latitude'
+        )
+        .select(
+          knex.raw(
+            '(SELECT product_images.link FROM product_images WHERE products.id = product_images.product_id ORDER BY product_images.id ASC LIMIT 1) AS image_url'
+          )
         )
         .select(
           knex.raw(
@@ -121,8 +125,10 @@ class DataAccessLayer {
           )
         )
         .from('products')
-        .join('product_price ', 'products.id', 'product_price.product_id')
-        .join('product_images  ', 'products.id', 'product_images.product_id');
+        .joinRaw('join product_price AS pp ON pp.product_id = products.id')
+        .joinRaw(
+          'JOIN (SELECT product_id, MAX(created_at) AS maxDate FROM product_price group by product_id) as pp2 ON pp2.product_id = pp.product_id AND pp.created_at = pp2.maxDate'
+        );
       CustomQueryBuilder.addStoreTypeToQuery(storeType, searchQueryString);
       if (store_name && store_name !== 'all')
         CustomQueryBuilder.addStoreNameToQuery(store_name, searchQueryString);
@@ -137,7 +143,7 @@ class DataAccessLayer {
 
       const totalProductsQueryString = knex.select(
         knex.raw(
-          'COUNT(products.id) AS totalProductsNumber FROM products JOIN product_price ON products.id = product_price.product_id'
+          'COUNT(products.id) AS totalProductsNumber FROM products JOIN product_price AS pp ON products.id = pp.product_id'
         )
       );
       CustomQueryBuilder.addStoreTypeToQuery(
@@ -417,6 +423,63 @@ LIMIT 10;`;
       console.log(error);
       if (error.errno === 1452) throw new NoProductFoundError();
       else throw error;
+    }
+  }
+
+  async getProductsOnSale(userId) {
+    try {
+      const queryString = `SELECT 
+      p.id,
+      p.title,
+      p.title_ar,
+      p.sale,
+      (SELECT 
+              pp.price
+          FROM
+              product_price AS pp
+          WHERE
+              p.id = pp.product_id
+          ORDER BY pp.created_at DESC
+          LIMIT 1) AS price,
+      (SELECT 
+              pimgs.link
+          FROM
+              product_images AS pimgs
+          WHERE
+              p.id = pimgs.product_id
+          LIMIT 1) AS image,
+      (SELECT 
+              AVG(rating)
+          FROM
+              reviews AS r
+          WHERE
+              r.product_id = p.id) AS rating,
+      (SELECT 
+              COUNT(product_id)
+          FROM
+              reviews AS r
+          WHERE
+              r.product_id = p.id) AS rating_count,
+      s.id AS store_id,
+      s.name AS store_name,
+      s.store_type,
+      s.logo,
+      (SELECT CASE WHEN EXISTS 
+        (SELECT 1 FROM favourite_product AS f WHERE f.user_id = ? and f.product_id = p.id) 
+        THEN 1 ELSE 0
+      END AS is_favourite) AS is_favourite 
+  FROM
+      products AS p JOIN stores AS s ON s.id = p.store_id
+  WHERE p.sale IS NOT NULL      
+  ORDER BY p.sale DESC
+  LIMIT 30;`;
+
+      const products = await knex.raw(queryString, [userId]);
+
+      return products[0];
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   }
 }

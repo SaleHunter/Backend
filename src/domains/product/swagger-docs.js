@@ -609,4 +609,37 @@ module.exports = {
       },
     },
   },
+  getProductsOnSale: {
+    tags: ['Products'],
+    description: 'Get Best Products On Sale',
+    responses: {
+      200: {
+        description: 'Best Products On Sale',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                results: {
+                  description: 'The number of products returned',
+                  type: 'number',
+                  example: 5,
+                },
+                products: {
+                  description: 'The Array of Products',
+                  type: 'array',
+                  $ref: '#/components/schemas/Sales',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 };
