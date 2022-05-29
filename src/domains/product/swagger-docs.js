@@ -474,6 +474,108 @@ module.exports = {
       },
     },
   },
+  changeProductRating: {
+    tags: ['Products'],
+    description: "Change User's Rating For Product By Id",
+    parameters: [
+      {
+        name: 'product Id',
+        in: 'path',
+        description: 'The product Id',
+        required: true,
+      },
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              rating: {
+                description: 'The New product rating',
+                type: 'integer',
+                minimum: 1,
+                maximum: 5,
+              },
+            },
+            example: {
+              rating: 4,
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: 'Rating successfully changed for this product',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'success',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'Rating successfully changed for this product',
+                },
+              },
+            },
+          },
+        },
+      },
+      404: {
+        description: 'There is no product Found',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'fail',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example: 'There is no product Found',
+                },
+              },
+            },
+          },
+        },
+      },
+      401: {
+        description: 'User not signed in, Please sign in and try again later',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                status: {
+                  description: 'The response status message',
+                  type: 'string',
+                  example: 'fail',
+                },
+                message: {
+                  description: 'The response message',
+                  type: 'string',
+                  example:
+                    'User not signed in, Please sign in and try again later',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   getViewedProducts: {
     tags: ['Products'],
     description: 'Get All Viewed Products For Authenticated User',

@@ -63,7 +63,7 @@ class CustomQueryBuilder {
         ascOrDesc = 'desc';
         break;
       case 'rating':
-        columnName = 'reviews.rating';
+        columnName = 'product_rating';
         ascOrDesc = 'desc';
         break;
       case 'best_deal':

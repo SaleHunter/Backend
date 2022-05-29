@@ -38,10 +38,10 @@ module.exports = {
   ],
   paths: {
     '/users/auth/google/': {
-      get: userPaths.google_signin,
+      post: userPaths.google_signin,
     },
     '/users/auth/facebook/': {
-      get: userPaths.facebook_signin,
+      post: userPaths.facebook_signin,
     },
     '/users': {
       get: userPaths.getAuthenticatedUser,
@@ -71,6 +71,9 @@ module.exports = {
     },
     '/products/{id}': {
       get: productPaths.getProductById,
+    },
+    '/products/{productId}/rating': {
+      patch: productPaths.changeProductRating,
     },
     '/products/recommended': {
       get: productPaths.getRecommendedProducts,
@@ -766,8 +769,9 @@ module.exports = {
             required: true,
           },
           logo: {
-            description: 'The Store logo',
+            description: 'The Store logo (Base64 encoded image)',
             type: 'string',
+            format: 'byte',
           },
           phone: {
             description: 'The Store phone number',
@@ -780,10 +784,17 @@ module.exports = {
           facebook: {
             description: 'The Store facebook page',
             type: 'string',
+            format: 'uri',
           },
           instagram: {
             description: 'The Store instagram page',
             type: 'string',
+            format: 'uri',
+          },
+          website: {
+            description: 'The New store website page',
+            type: 'string',
+            format: 'uri',
           },
           description: {
             description: 'The Store description',
@@ -800,10 +811,11 @@ module.exports = {
           longitude: 31.2193658,
           facebook:
             'https://www.facebook.com/Amuse-Lifestyle-concept-store-163180847037985/',
-          instagram: 'https://www.instagram.com/amusecairo/?hl=en',
+          instagram: 'https://www.instagram.com/amusecairo/',
           description:
             'Most of the clothes are contemporary designer pieces, along with fashion accessories, art pieces, and home accessories.',
           niche_market: 'Fashion',
+          website: 'https://example.com/',
         },
       },
       Store: {
@@ -818,10 +830,11 @@ module.exports = {
           longitude: 31.2193658,
           facebook:
             'https://www.facebook.com/Amuse-Lifestyle-concept-store-163180847037985/',
-          instagram: 'https://www.instagram.com/amusecairo/?hl=en',
+          instagram: 'https://www.instagram.com/amusecairo/',
           description:
             'Most of the clothes are contemporary designer pieces, along with fashion accessories, art pieces, and home accessories.',
           niche_market: 'Fashion',
+          website: 'https://example.com/',
         },
       },
 
@@ -854,6 +867,7 @@ module.exports = {
           logo: {
             description: 'The New store logo',
             type: 'string',
+            format: 'byte',
           },
           phone: {
             description: 'The New store phone number',
@@ -866,10 +880,17 @@ module.exports = {
           facebook: {
             description: 'The New store facebook page',
             type: 'string',
+            format: 'uri',
           },
           instagram: {
             description: 'The New store instagram page',
             type: 'string',
+            format: 'uri',
+          },
+          website: {
+            description: 'The New store website page',
+            type: 'string',
+            format: 'uri',
           },
           description: {
             description: 'The New store description',
@@ -886,10 +907,11 @@ module.exports = {
           longitude: 31.2193658,
           facebook:
             'https://www.facebook.com/Amuse-Lifestyle-concept-store-163180847037985/',
-          instagram: 'https://www.instagram.com/amusecairo/?hl=en',
+          instagram: 'https://www.instagram.com/amusecairo/',
           description:
             'Most of the clothes are contemporary designer pieces, along with fashion accessories, art pieces, and home accessories.',
           niche_market: 'Fashion',
+          website: 'https://example.com/',
         },
       },
       Sales: {

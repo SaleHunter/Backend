@@ -5,25 +5,52 @@ const { NoProductFoundError, ProductAlreadyInFavourites } = require('./errors');
 class DataAccessLayer {
   async getProductById(productId, userId) {
     try {
+      productId = productId * 1;
       const product = await knex.raw(
         'CALL sale_hunter.products_get_one_by_id(?)',
         [productId]
       );
 
       console.log(userId, productId);
-      let is_favourite = 0;
+      let is_favourite = 0,
+        user_rating = 0;
       if (userId !== 0) {
-        is_favourite = await knex.raw(
+        const isFavouriteQuery = knex.raw(
           `SELECT 
-        CASE WHEN EXISTS 
+            CASE WHEN EXISTS 
             (SELECT 1 FROM favourite_product AS f WHERE f.user_id = ? and f.product_id = ?) 
             THEN 1 ELSE 0
-            END AS is_favourite;`,
+            END AS is_favourite
+            `,
           [userId, productId]
         );
 
-        is_favourite = is_favourite[0][0].is_favourite;
+        const userRatingQuery = knex.raw(
+          `SELECT 
+          r.rating
+          FROM 
+            sale_hunter.reviews AS r
+          WHERE
+            r.user_id = ? and r.product_id = ?;          
+            `,
+          [userId, productId]
+        );
+
+        let [isFavoriteResult, userRatingResult] = await Promise.all([
+          isFavouriteQuery,
+          userRatingQuery,
+        ]);
+
+        console.log(isFavoriteResult[0], userRatingResult[0]);
+
+        if (isFavoriteResult[0].length !== 0) {
+          is_favourite = isFavoriteResult[0][0].is_favourite;
+        }
+        if (userRatingResult[0].length !== 0) {
+          user_rating = userRatingResult[0][0].rating;
+        }
       }
+      console.log(is_favourite, user_rating);
 
       const basic = product[0][0][0],
         prices = product[0][1],
@@ -32,7 +59,7 @@ class DataAccessLayer {
         rating = product[0][4][0],
         views = product[0][5][0];
 
-      if (!basic || prices.length === 0) throw new NoProductFoundError();
+      if (!basic || basic.length === 0) throw new NoProductFoundError();
       return {
         basic,
         prices,
@@ -41,6 +68,7 @@ class DataAccessLayer {
         rating,
         views,
         is_favourite,
+        user_rating,
       };
     } catch (error) {
       throw error;
@@ -432,6 +460,24 @@ LIMIT 10;`;
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+
+  async changeProductRating(userId, productId, rating) {
+    try {
+      const queryString = `INSERT INTO reviews(product_id, user_id, rating, date)
+      VALUES(?, ?, ?, NOW())
+      ON DUPLICATE KEY UPDATE 
+      rating = ?, date = NOW();
+      `;
+
+      await knex.raw(queryString, [productId, userId, rating, rating]);
+
+      return;
+    } catch (error) {
+      console.log(error);
+      if (error.errno === 1452) throw new NoProductFoundError();
+      else throw error;
     }
   }
 }

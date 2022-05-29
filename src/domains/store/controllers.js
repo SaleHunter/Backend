@@ -4,9 +4,11 @@ class Controller {
   async getStoreById(req, res, next) {
     const storeId = req.params.id;
 
+    req.query.page = req.query.page ?? '1';
+    req.query.limit = req.query.limit ?? '20';
     const pagination = {
-      page: req.query.page * 1 ?? 1,
-      limit: req.query.limit * 1 ?? 20,
+      page: +req.query.page,
+      limit: +req.query.limit,
     };
 
     console.log('In CNT ', pagination);

@@ -26,7 +26,7 @@ class DataAccessLayer {
   async getUserby(searchAttribute, value) {
     try {
       const queryString = `
-        SELECT users.id, email, full_name as fullname, profile_img, last_seen, password
+        SELECT users.id, email, full_name as fullname, profile_img, last_seen, thirdParty_id, password
         password, profile_img, stores.id as store_id FROM users LEFT JOIN stores ON users.id = stores.user_id where users.${searchAttribute} = ?;
       `;
 
