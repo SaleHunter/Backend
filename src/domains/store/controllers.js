@@ -11,9 +11,16 @@ class Controller {
       limit: +req.query.limit,
     };
 
+    let userId = 0;
+    if (req.user) userId = req.user.id;
+
     console.log('In CNT ', pagination);
 
-    const { store, products } = await service.getStoreById(storeId, pagination);
+    const { store, products } = await service.getStoreById(
+      storeId,
+      pagination,
+      userId
+    );
 
     res.status(200).json({
       status: 'success',

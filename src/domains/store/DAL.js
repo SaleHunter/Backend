@@ -2,7 +2,7 @@ const knex = require('../../dataStores/knex');
 const { NoStoreFoundError, AlreadyHaveStoreError } = require('./errors');
 
 class DataAccessLayer {
-  async getStoreById(storeId, pagination) {
+  async getStoreById(storeId, pagination, userId) {
     try {
       const queryString = `SELECT id, name, store_type as type, logo, phone, address, niche_market,
       description, latitude, longitude, whatsapp, facebook, instagram, website FROM stores WHERE id = ?`;
@@ -11,7 +11,11 @@ class DataAccessLayer {
 
       if (!storeData[0].length) throw new NoStoreFoundError();
 
-      const products = await this.getProductsByStoreId(storeId, pagination);
+      const products = await this.getProductsByStoreId(
+        storeId,
+        pagination,
+        userId
+      );
 
       return { store: storeData[0][0], products };
     } catch (error) {
@@ -20,7 +24,7 @@ class DataAccessLayer {
     }
   }
 
-  async getProductsByStoreId(storeId, pagination) {
+  async getProductsByStoreId(storeId, pagination, userId) {
     pagination.limit = pagination.limit ?? 20;
     pagination.page = pagination.page ?? 1;
     storeId = storeId * 1;
@@ -60,7 +64,11 @@ class DataAccessLayer {
             FROM
                 reviews AS r
             WHERE
-                r.product_id = p.id) AS rating_count
+                r.product_id = p.id) AS rating_count,
+        (SELECT CASE WHEN EXISTS 
+          (SELECT 1 FROM favourite_product AS f WHERE f.user_id = ? and f.product_id = p.id) 
+          THEN 1 ELSE 0
+        END AS is_favourite) AS is_favourite 
     FROM
         products AS p
     WHERE p.store_id = ?
@@ -68,6 +76,7 @@ class DataAccessLayer {
     LIMIT ? OFFSET ?;`;
 
     const products = await knex.raw(queryString, [
+      userId,
       storeId,
       pagination.limit,
       (pagination.page - 1) * 10,

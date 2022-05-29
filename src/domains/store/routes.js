@@ -18,6 +18,7 @@ router.post(
 router
   .route('/:id')
   .get(
+    asyncHandler(isAuthenticatedWithOutException),
     asyncHandler(validation.getStoreById),
     asyncHandler(controller.getStoreById)
   )

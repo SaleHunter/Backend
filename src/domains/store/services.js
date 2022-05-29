@@ -14,7 +14,7 @@ class Service {
   }
   async getStoreById(storeId, pagination) {
     try {
-      return await DAL.getStoreById(storeId, pagination);
+      return await DAL.getStoreById(storeId, pagination, userId);
     } catch (error) {
       console.log(error);
       throw error;
