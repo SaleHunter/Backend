@@ -62,9 +62,10 @@ class Service {
 
   async updateStoreById(userId, storeId, newValues) {
     try {
+      console.log(newValues);
       if (newValues.logo) {
         const uploadedResponse = await this.uploadStoreLogo(newValues.logo);
-        newValues.logo = uploadedResponse.url;
+        newValues.logo = uploadedResponse;
       }
 
       const store = await DAL.updateStoreById(userId, storeId, newValues);
