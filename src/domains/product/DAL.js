@@ -415,6 +415,106 @@ LIMIT 10;`;
       else throw error;
     }
   }
+
+  async createProduct(store_id, product) {
+    try {
+      // insert product into mysql
+      const inserted_product = await knex.raw(
+        'CALL sale_hunter.create_product(?,?,?,?,?,?,?,?,?,?,?)',
+        [
+          store_id,
+          product.title,
+          product.title_ar,
+          product.sale,
+          product.description,
+          product.description_ar,
+          product.brand,
+          product.category,
+          product.category_ar,
+          product.price,
+        ]
+      );
+
+      // inser images into product_images table
+      const product_id = inserted_product[0][0][0].id;
+
+      const productImages = product.product_images.map(image_link => {
+        return {
+          product_id: product_id,
+          link: image_link,
+        };
+      });
+
+      await knex('product_images').insert(productImages);
+
+      return product;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // delete product from store by id
+  async deleteProductById(store_id, product_id) {
+    try {
+      const queryString = `DELETE FROM products WHERE id = ? and store_id = ?`;
+
+      await knex.raw(queryString, [product_id, store_id]);
+
+      return;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // update product info
+  async updateProductById(store_id, product_id, new_values) {
+    try {
+      // get old product basic info
+      let queryString = `SELECT * FROM products WHERE id = ? and store_id = ?`;
+      const old_values = await knex.raw(queryString, [product_id, store_id]);
+
+      // update product basic info
+      queryString = `
+      UPDATE products SET title = ?, title_ar = ?, sale = ?, description = ?, description_ar = ? WHERE id = ? AND store_id = ?
+      `;
+
+      await knex.raw(queryString, [
+        new_values.title || old_values[0][0].title,
+        new_values.title_ar || old_values[0][0].title_ar,
+        new_values.sale || old_values[0][0].sale,
+        new_values.description || old_values[0][0].description,
+        new_values.description_ar || old_values[0][0].description_ar,
+        product_id,
+        store_id,
+      ]);
+
+      // add the new price to product_price table
+      if (new_values.price > 0) {
+        // get old product price
+        queryString = `SELECT price FROM product_price WHERE product_id = ? ORDER BY created_at DESC LIMIT 1`;
+        const old_price = await knex.raw(queryString, [product_id]);
+
+        // update the price by adding new price value (to keep tracking price history)
+        queryString = `
+        INSERT INTO product_price(product_id, price, created_at)
+        VALUES(?, ?, ?)
+        `;
+
+        console.log(Date.now());
+        await knex.raw(queryString, [
+          product_id,
+          new_values.price * 1 || old_price[0][0].price * 1,
+          Date.now() || old_price[0][0].created_at,
+        ]);
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new DataAccessLayer();

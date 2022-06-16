@@ -8,4 +8,12 @@ class UnAuthorizedError extends BaseError {
   }
 }
 
-module.exports = { UnAuthorizedError };
+class ForbiddenError extends BaseError {
+  constructor() {
+    super(`Access Forbidden`);
+    this.statusCode = 403;
+    this.status = 'Fail';
+  }
+}
+
+module.exports = { UnAuthorizedError, ForbiddenError };

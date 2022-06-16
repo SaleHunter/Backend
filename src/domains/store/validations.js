@@ -183,6 +183,23 @@ class Validation {
     await schema.validateAsync(req.body);
     next();
   }
+
+  async validateStoreProducts(req, res, next) {
+    const schema = Joi.object({
+      store_id: Joi.number().required().positive().messages({
+        'number.base': 'store_id must be a number',
+        'number.required': 'store_id is required',
+        'number.positive': 'store_id must be a positive number',
+      }),
+    });
+    console.log(req.params);
+    const sourceObject = {
+      store_id: req.params.storeId,
+    };
+
+    await schema.validateAsync(sourceObject);
+    next();
+  }
 }
 
 module.exports = new Validation();

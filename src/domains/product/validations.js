@@ -158,6 +158,114 @@ class Validation {
 
     next();
   }
+
+  async createProduct(req, res, next) {
+    const schema = Joi.object({
+      title: Joi.string().required().messages({
+        'string.base': 'name must be a string',
+        'string.required': 'name is required',
+      }),
+      title_ar: Joi.string().required().messages({
+        'string.base': 'name_ar must be a string',
+        'string.required': 'name_ar is required',
+      }),
+      sale: Joi.number().required().messages({
+        'number.base': 'sale must be a number',
+        'number.required': 'sale is required',
+      }),
+      description: Joi.string().required().messages({
+        'string.base': 'description must be a string',
+        'string.required': 'description is required',
+      }),
+      description_ar: Joi.string().required().messages({
+        'string.base': 'description must be a string',
+        'string.required': 'description_ar is required',
+      }),
+      price: Joi.number().required().positive().messages({
+        'number.base': 'price must be a number',
+        'number.required': 'price is required',
+        'number.positive': 'price must be a positive number',
+      }),
+      brand: Joi.string().required().messages({
+        'string.base': 'brand must be a string',
+        'string.required': 'brand is required',
+      }),
+      category: Joi.string().required().messages({
+        'string.base': 'category must be a string',
+        'string.required': 'category is required',
+      }),
+      category_ar: Joi.string().required().messages({
+        'string.base': 'category must be a string',
+        'string.required': 'category_ar is required',
+      }),
+      product_images: Joi.array().required().messages({
+        'array.base': 'product_images must be an array',
+        'array.required': 'product_images is required',
+      }),
+    });
+    const sourceObject = {
+      ...req.body,
+    };
+
+    await schema.validateAsync(sourceObject);
+    next();
+  }
+
+  async updateProduct(req, res, next) {
+    const schema = Joi.object({
+      product_id: Joi.number().required().positive().messages({
+        'number.base': 'productId must be a number',
+        'number.required': 'productId is required',
+        'number.positive': 'productId must be a positive number',
+      }),
+      title: Joi.string().required().messages({
+        'string.base': 'name must be a string',
+        'string.required': 'name is required',
+      }),
+      title_ar: Joi.string().required().messages({
+        'string.base': 'name must be a string',
+        'string.required': 'name_ar is required',
+      }),
+      sale: Joi.number().required().messages({
+        'number.base': 'sale must be a number',
+        'number.required': 'sale is required',
+      }),
+      description: Joi.string().required().messages({
+        'string.base': 'description must be a string',
+        'string.required': 'description is required',
+      }),
+      description_ar: Joi.string().required().messages({
+        'string.base': 'description must be a string',
+        'string.required': 'description_ar is required',
+      }),
+      price: Joi.number().required().positive().messages({
+        'number.base': 'price must be a number',
+        'number.required': 'price is required',
+        'number.positive': 'price must be a positive number',
+      }),
+    });
+    const sourceObject = {
+      product_id: req.params.productId,
+      ...req.body,
+    };
+    await schema.validateAsync(sourceObject);
+    next();
+  }
+
+  async deleteProductById(req, res, next) {
+    const schema = Joi.object({
+      product_id: Joi.number().required().positive().messages({
+        'number.base': 'productId must be a number',
+        'number.required': 'productId is required',
+        'number.positive': 'productId must be a positive number',
+      }),
+    });
+    const sourceObject = {
+      product_id: req.params.productId,
+    };
+    await schema.validateAsync(sourceObject);
+    next();
+  }
 }
 
 module.exports = new Validation();

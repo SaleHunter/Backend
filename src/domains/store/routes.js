@@ -5,6 +5,7 @@ const validation = require('./validations');
 const {
   isAuthenticatedWithOutException,
   isAuthenticated,
+  isOwningTheStore,
 } = require('../shared/middlewares/Authentication');
 const router = Router();
 
@@ -30,6 +31,36 @@ router
     asyncHandler(isAuthenticated),
     asyncHandler(validation.updateStoreById),
     asyncHandler(controller.updateStoreById)
+  );
+
+// add products to the store
+router
+  .route('/:storeId/products')
+  .post(
+    asyncHandler(isAuthenticated),
+    asyncHandler(isOwningTheStore),
+    asyncHandler(validation.validateStoreProducts),
+    asyncHandler(controller.addProductToStore)
+  );
+
+// delete products from the store
+router
+  .route('/:storeId/products/:productId')
+  .delete(
+    asyncHandler(isAuthenticated),
+    asyncHandler(isOwningTheStore),
+    asyncHandler(validation.validateStoreProducts),
+    asyncHandler(controller.deleteProductFromStore)
+  );
+
+// update products in the store
+router
+  .route('/:storeId/products/:productId')
+  .patch(
+    asyncHandler(isAuthenticated),
+    asyncHandler(isOwningTheStore),
+    asyncHandler(validation.validateStoreProducts),
+    asyncHandler(controller.updateProductInStore)
   );
 
 module.exports = router;
