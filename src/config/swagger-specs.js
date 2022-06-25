@@ -102,6 +102,15 @@ module.exports = {
     '/stores/{storeID}': {
       patch: storePaths.updateStoreById,
     },
+    '/stores/{storeId}/products': {
+      post: storePaths.addProductToStore,
+    },
+    '/stores/{storeID}/products/{productId}': {
+      delete: storePaths.deleteProductFromStore,
+    },
+    '/stores/{storeId}/products/{productId}': {
+      patch: storePaths.updateProductInStore,
+    },
   },
   components: {
     schemas: {
@@ -900,6 +909,66 @@ module.exports = {
             'Most of the clothes are contemporary designer pieces, along with fashion accessories, art pieces, and home accessories.',
           niche_market: 'Fashion',
           website: 'https://example.com/',
+        },
+      },
+      Product: {
+        name: 'Product',
+        in: 'body',
+        description: 'Product Schema',
+        type: 'object',
+        properties: {
+          title: {
+            description: 'The title of the product',
+            type: 'string',
+          },
+          title_ar: {
+            description: 'The arabic title of the product',
+            type: 'string',
+          },
+          sale: {
+            description: 'The sale of the product',
+            type: 'number',
+          },
+          description: {
+            description: 'The description of the product',
+            type: 'text',
+          },
+          description_ar: {
+            description: 'The arabic description of the product',
+            type: 'text',
+          },
+          price: {
+            description: 'The price of the product',
+            type: 'number',
+          },
+          brand: {
+            description: 'The brand of the product',
+            type: 'string',
+          },
+          category: {
+            description: 'The category of the product',
+            type: 'string',
+          },
+          category_ar: {
+            description: 'The arabic category of the product',
+            type: 'string',
+          },
+          product_images: {
+            description: 'The images of the product',
+            type: 'array',
+          },
+        },
+        example: {
+          title: 'Dell Laptop',
+          title_ar: 'لابتوب ديل',
+          sale: 0,
+          description: 'New Dell Laptop',
+          description_ar: 'لابتوب موديل ديل جديد',
+          price: 9899,
+          brand: 'dell',
+          category: 'laptop',
+          category_ar: 'لابتوب',
+          product_images: ['Base64', 'Base64', 'Base64'],
         },
       },
     },

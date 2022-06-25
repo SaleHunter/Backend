@@ -199,7 +199,9 @@ class Service {
     try {
       const cloudinary_images = [];
       for (const image of images) {
-        const result = await cloudinary.uploader.upload(image);
+        const result = await cloudinary.uploader.upload(image, {
+          upload_preset: 'products',
+        });
         cloudinary_images.push(result.url);
       }
       return cloudinary_images;
