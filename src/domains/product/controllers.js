@@ -104,6 +104,7 @@ class Controller {
       message: 'Rating successfully changed for this product',
     });
   }
+
   async getProductsOnSale(req, res, next) {
     let userId = 0;
     if (req.user) userId = req.user.id;
@@ -113,6 +114,43 @@ class Controller {
       status: 'success',
       results: products.length,
       products,
+    });
+  }
+
+  async createProduct(req, res, next) {
+    const product = await service.createProduct(
+      req.query.storeId * 1,
+      req.body
+    );
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Product successfully created',
+      product,
+    });
+  }
+
+  async deleteProductById(req, res, next) {
+    const product_id = req.params.productId * 1;
+    const store_id = req.query.storeId * 1;
+    await service.deleteProductById(store_id, product_id);
+
+    res.status(204).json({
+      status: 'success',
+      message: 'Product successfully deleted',
+    });
+  }
+
+  async updateProductById(req, res, next) {
+    const product_id = req.params.productId * 1,
+      store_id = req.query.storeId * 1,
+      new_values = req.body;
+
+    await service.updateProductById(store_id, product_id, new_values);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Product successfully updated',
     });
   }
 }

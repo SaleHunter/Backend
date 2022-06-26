@@ -29,8 +29,8 @@ class Helper {
    * @param {UUID} id - the user id as jwt payload
    * @returns {string} the new jwt for the user
    */
-  signJWT(id) {
-    const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+  signJWT(id, store_id) {
+    const token = jwt.sign({ id, store_id }, process.env.JWT_SECRET, {
       expiresIn: '90d',
     });
 

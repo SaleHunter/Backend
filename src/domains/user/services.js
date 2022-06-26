@@ -31,7 +31,7 @@ class Service {
       }
 
       //Sign jwToken for the user, so he can access protected routes
-      const jwToken = Helper.signJWT(user.id);
+      const jwToken = Helper.signJWT(user.id, user.store_id);
 
       //Return the user info and jwToken
       //Exclude password from user info

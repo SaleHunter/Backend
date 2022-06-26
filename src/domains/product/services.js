@@ -2,6 +2,7 @@ const DAL = require('./DAL');
 const cache = require('./cache');
 const { AttributeExtractor } = require('./helpers');
 const axios = require('axios');
+const { cloudinary } = require('../../config/cloudinary');
 
 class Service {
   async searchForProducts(query, headers, userId) {
@@ -161,6 +162,59 @@ class Service {
       const products = await DAL.getProductsOnSale(userId);
 
       return products;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // create product for certain store
+  async createProduct(storeId, productInfo) {
+    try {
+      // upload product images to cloudinary
+      const cloudinary_images = await this.uploadImagesToCloudinary(
+        productInfo.product_images
+      );
+      productInfo.product_images = cloudinary_images;
+
+      // persist product to mysql
+      const product = await DAL.createProduct(storeId, productInfo);
+      return product;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // delete product for certain storeId
+  async deleteProductById(store_id, product_id) {
+    try {
+      await DAL.deleteProductById(store_id, product_id);
+      return;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // update product for certain storeId and productId
+  async updateProductById(store_id, product_id, new_values) {
+    try {
+      await DAL.updateProductById(store_id, product_id, new_values);
+      return;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //upload images to cloudinary
+  async uploadImagesToCloudinary(images) {
+    try {
+      const cloudinary_images = [];
+      for (const image of images) {
+        const result = await cloudinary.uploader.upload(image, {
+          upload_preset: 'products',
+        });
+        cloudinary_images.push(result.url);
+      }
+      return cloudinary_images;
     } catch (error) {
       throw error;
     }

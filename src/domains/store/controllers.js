@@ -63,6 +63,26 @@ class Controller {
       message: 'Store Updated Successfully',
     });
   }
+
+  // Store Products Management
+  async addProductToStore(req, res, next) {
+    res.redirect(307, '/api/v1/products?storeId=' + req.params.storeId);
+  }
+
+  async deleteProductFromStore(req, res, next) {
+    console.log('from store : delete product');
+    res.redirect(
+      307,
+      `/api/v1/products/${req.params.productId}?storeId=${req.params.storeId}`
+    );
+  }
+
+  async updateProductInStore(req, res, next) {
+    res.redirect(
+      307,
+      `/api/v1/products/${req.params.productId}?storeId=${req.params.storeId}`
+    );
+  }
 }
 
 module.exports = new Controller();

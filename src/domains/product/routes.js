@@ -18,12 +18,14 @@ router.get(
   asyncHandler(controller.searchForProducts)
 );
 
+// search for favorite products
 router.get(
   '/favourites',
   asyncHandler(isAuthenticated),
   asyncHandler(controller.getFavouriteProductsForUser)
 );
 
+// post/delete favorite product by id
 router
   .route('/favourites/:productId')
   .post(
@@ -37,6 +39,7 @@ router
     asyncHandler(controller.removeProductFromFavourites)
   );
 
+// get recommended products
 router.get(
   '/recommended',
   (req, res, next) => {
@@ -47,12 +50,14 @@ router.get(
   asyncHandler(controller.recommendProductsForUser)
 );
 
+// get viewed products
 router.get(
   '/viewed',
   asyncHandler(isAuthenticated),
   asyncHandler(controller.getViewedProductsForUser)
 );
 
+// get product by id
 router.get(
   '/sales',
   asyncHandler(isAuthenticatedWithOutException),
@@ -83,6 +88,38 @@ router.patch(
   asyncHandler(isAuthenticated),
   asyncHandler(validation.changeProductRating),
   asyncHandler(controller.changeProductRating)
+);
+
+/**
+ * TODO:
+ * - create product
+ * - delete product
+ * - update product
+ *
+ */
+
+// create product
+router.post(
+  '/',
+  asyncHandler(isAuthenticated),
+  asyncHandler(validation.createProduct),
+  asyncHandler(controller.createProduct)
+);
+
+// delete product
+router.delete(
+  '/:productId',
+  asyncHandler(isAuthenticated),
+  asyncHandler(validation.deleteProductById),
+  asyncHandler(controller.deleteProductById)
+);
+
+// update product
+router.patch(
+  '/:productId',
+  asyncHandler(isAuthenticated),
+  asyncHandler(validation.updateProduct),
+  asyncHandler(controller.updateProductById)
 );
 
 module.exports = router;
