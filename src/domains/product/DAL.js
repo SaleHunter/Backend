@@ -420,7 +420,7 @@ LIMIT 10;`;
     try {
       // insert product into mysql
       const inserted_product = await knex.raw(
-        'CALL sale_hunter.create_product(?,?,?,?,?,?,?,?,?,?,?)',
+        'CALL sale_hunter.create_product(?,?,?,?,?,?,?,?,?,?)',
         [
           store_id,
           product.title,
@@ -434,9 +434,10 @@ LIMIT 10;`;
           product.price,
         ]
       );
-
+      // return { product: inserted_product };
       // inser images into product_images table
-      const product_id = inserted_product[0][0][0].id;
+
+      const product_id = inserted_product[0][0][0]['@product_id'];
 
       const productImages = product.product_images.map(image_link => {
         return {
