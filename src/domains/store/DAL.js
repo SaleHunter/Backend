@@ -203,7 +203,7 @@ class DataAccessLayer {
 
   async getStoreIdByUser(userId) {
     try {
-      const queryString = `SELECT id FROM store WHERE user_id = ?`;
+      const queryString = `SELECT id FROM stores WHERE user_id = ?`;
 
       const result = await knex.raw(queryString, [userId]);
 
