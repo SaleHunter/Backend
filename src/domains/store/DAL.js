@@ -207,6 +207,8 @@ class DataAccessLayer {
 
       const result = await knex.raw(queryString, [userId]);
 
+      console.log(result);
+
       return result[0].id;
     } catch (error) {
       console.log(error);
