@@ -1,4 +1,5 @@
 const { getUserby } = require('../../user/api');
+const { getStoreIdByUser } = require('../../store/api');
 const JWTHelper = require('../helpers/JWTHelpers');
 const { UnAuthorizedError, ForbiddenError } = require('../errors/AuthError');
 
@@ -57,7 +58,11 @@ exports.isOwningTheStore = async (req, res, next) => {
   // extract jwt
   const jwt = extractJWT(req);
   // extract store_id from user
-  const { store_id } = await restoreFromJWT(jwt);
-  if (store_id != req.params.storeId) throw new ForbiddenError();
+  const { id } = await restoreFromJWT(jwt);
+
+  const userStoreId = await getStoreIdByUser(id);
+
+  console.log(userStoreId);
+  if (userStoreId != req.params.storeId) throw new ForbiddenError();
   next();
 };

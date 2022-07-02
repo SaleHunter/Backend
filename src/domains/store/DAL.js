@@ -200,6 +200,19 @@ class DataAccessLayer {
       throw error;
     }
   }
+
+  async getStoreIdByUser(userId) {
+    try {
+      const queryString = `SELECT id FROM store WHERE user_id = ?`;
+
+      const result = await knex.raw(queryString, [userId]);
+
+      return result[0];
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new DataAccessLayer();
