@@ -132,7 +132,7 @@ class DataAccessLayer {
       CustomQueryBuilder.addStoreTypeToQuery(storeType, searchQueryString);
       if (store_name && store_name !== 'all')
         CustomQueryBuilder.addStoreNameToQuery(store_name, searchQueryString);
-      CustomQueryBuilder.addSortToQuery(sort, searchQueryString);
+      CustomQueryBuilder.addSortToQuery(sort, searchQueryString, userLocation);
       CustomQueryBuilder.addFiltersToQuery(filter, searchQueryString);
 
       CustomQueryBuilder.addPaginationToQuery(pagination, searchQueryString);

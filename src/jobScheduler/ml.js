@@ -40,10 +40,10 @@ mlQueue
   .add(
     'train',
     {
-      url: `https://recommenderengine20211014165927.azurewebsites.net/api/Train`,
+      url: `https://recommenderengine20211014165927.azurewebsites.net/api/v2.0/MLModel/Train`,
     },
     {
-      repeat: { every: 432000000 },
+      repeat: { every: 86400000 },
       removeOnComplete: true,
       maxRetriesPerRequest: null,
     }
@@ -64,13 +64,16 @@ async function handleTrain(job) {
     const response = await axios({
       method: 'POST',
       url,
-      data: dataSet,
+      data: {
+        usersHistory: dataSet,
+      },
     });
 
-    console.log(`Response Data: ${response.data}`);
+    console.log('Response Data:', response.data);
 
     return response.data;
   } catch (error) {
+    throw error;
     console.log('Error', error);
   }
 }
@@ -80,7 +83,7 @@ const mlWorker = new Worker(
   async job => {
     try {
       if (job.name === 'ping') return await handlePing(job);
-      // if (job.name === 'train') return await handleTrain(job);
+      if (job.name === 'train') return await handleTrain(job);
     } catch (error) {
       console.log('Error', error);
     }

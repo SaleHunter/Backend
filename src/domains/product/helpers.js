@@ -51,7 +51,7 @@ class AttributeExtractor {
   }
 }
 class CustomQueryBuilder {
-  addSortToQuery(sortBy, queryString) {
+  addSortToQuery(sortBy, queryString, userLocation) {
     let columnName,
       ascOrDesc = 'asc';
     switch (sortBy) {
@@ -77,6 +77,11 @@ class CustomQueryBuilder {
       case 'oldest':
         columnName = 'products.created_at';
         break;
+      case 'nearest_store':
+        return queryString.orderByRaw(
+          'ABS(ABS(stores.latitude -?) + ABS(stores.longitude -?)) ASC',
+          [userLocation.latitude, userLocation.longitude]
+        );
       default:
         return queryString.orderByRaw(
           '(SELECT COUNT(*) FROM user_product_views WHERE user_product_views.product_id = products.id)'
