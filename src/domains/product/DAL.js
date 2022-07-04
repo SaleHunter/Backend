@@ -136,7 +136,8 @@ class DataAccessLayer {
       CustomQueryBuilder.addStoreTypeToQuery(storeType, searchQueryString);
       if (store_name && store_name !== 'all')
         CustomQueryBuilder.addStoreNameToQuery(store_name, searchQueryString);
-      CustomQueryBuilder.addSortToQuery(sort, searchQueryString, userLocation);
+      if (sort)
+        CustomQueryBuilder.addSortToQuery(sort, searchQueryString, userLocation);
       CustomQueryBuilder.addFiltersToQuery(filter, searchQueryString);
 
       CustomQueryBuilder.addPaginationToQuery(pagination, searchQueryString);
@@ -437,6 +438,7 @@ LIMIT 10;`;
       p.title,
       p.title_ar,
       p.sale,
+      p.brand
       (SELECT 
               pp.price
           FROM

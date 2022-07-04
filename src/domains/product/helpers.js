@@ -5,7 +5,7 @@ class AttributeExtractor {
     return headers.language || 'en';
   }
   extractSortByValue(query) {
-    return query.sort || 'popular';
+    return query.sort;
   }
   extractStoreTypeValue(query) {
     return query.storeType || 'all';
@@ -35,7 +35,7 @@ class AttributeExtractor {
   extractPaginationObject(query) {
     return {
       cursor: query.cursor || 0,
-      limit: query.limit || 20,
+      limit: query.limit || 30,
       cursorDirection: query.cursorDirection || 'next',
     };
   }
@@ -80,7 +80,7 @@ class CustomQueryBuilder {
       case 'nearest_store':
         return queryString.orderByRaw(
           'ABS(ABS(stores.latitude -?) + ABS(stores.longitude -?)) ASC',
-          [userLocation.latitude, userLocation.longitude]
+          [userLocation.latitude * 1, userLocation.longitude * 1]
         );
       default:
         return queryString.orderByRaw(
@@ -123,10 +123,9 @@ class CustomQueryBuilder {
   }
 
   addSearchTextToQuery(searchText, queryString) {
-    queryString.whereRaw(
-      '(products.title LIKE ? OR products.title_ar LIKE ? )',
-      [`%${searchText}%`, `%${searchText}%`]
-    );
+    queryString.whereRaw('Match(title, title_ar, brand) AGAINST(?)', [
+      searchText,
+    ]);
   }
   addFiltersToQuery(filters, queryString) {
     // Category, Brand Filteration
