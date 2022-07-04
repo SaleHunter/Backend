@@ -480,7 +480,7 @@ LIMIT 10;`;
       END AS is_favourite) AS is_favourite 
   FROM
       products AS p JOIN stores AS s ON s.id = p.store_id
-  WHERE p.sale IS NOT NULL      
+  WHERE p.sale IS NOT NULL AND p.sale > 0      
   ORDER BY p.sale DESC
   LIMIT 30;`;
 
