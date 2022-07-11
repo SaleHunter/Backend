@@ -18,6 +18,13 @@ router.get(
   asyncHandler(controller.searchForProducts)
 );
 
+// auto complete for search bar
+router.get(
+  '/search',
+  asyncHandler(isAuthenticatedWithOutException),
+  asyncHandler(validation.autoCompleteSearch),
+  asyncHandler(controller.autoCompleteSearch)
+);
 // search for favorite products
 router.get(
   '/favourites',
@@ -89,14 +96,6 @@ router.patch(
   asyncHandler(validation.changeProductRating),
   asyncHandler(controller.changeProductRating)
 );
-
-/**
- * TODO:
- * - create product
- * - delete product
- * - update product
- *
- */
 
 // create product
 router.post(

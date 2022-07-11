@@ -219,6 +219,13 @@ class Service {
       throw error;
     }
   }
+  async autoCompleteSearch(queryText) {
+    try {
+      return await DAL.autoCompleteSearch(queryText);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = new Service();

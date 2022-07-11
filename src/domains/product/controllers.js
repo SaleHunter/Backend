@@ -153,5 +153,16 @@ class Controller {
       message: 'Product successfully updated',
     });
   }
+  async autoCompleteSearch(req, res, next) {
+    const { queryText } = req.body;
+
+    const products = await service.autoCompleteSearch(queryText);
+    res.status(200).json({
+      status: 'success',
+      message: 'Searching successfully done',
+      result: products.length,
+      products: products,
+    });
+  }
 }
 module.exports = new Controller();

@@ -266,6 +266,20 @@ class Validation {
     await schema.validateAsync(sourceObject);
     next();
   }
+
+  async autoCompleteSearch(req, res, next) {
+    const schema = Joi.object({
+      query_text: Joi.string().required().messages({
+        'string.base': 'queryText must be a string',
+        'string.required': 'queryText is required',
+      }),
+    });
+    const sourceObject = {
+      query_text: req.body.queryText,
+    };
+    await schema.validateAsync(sourceObject);
+    next();
+  }
 }
 
 module.exports = new Validation();
