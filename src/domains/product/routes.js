@@ -26,7 +26,6 @@ router.get(
   asyncHandler(controller.searchForProducts)
 );
 
-
 // search for favorite products
 router.get(
   '/favourites',
