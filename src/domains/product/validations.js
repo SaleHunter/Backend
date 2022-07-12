@@ -275,7 +275,7 @@ class Validation {
       }),
     });
     const sourceObject = {
-      query_text: req.body.queryText,
+      query_text: req.query.queryText,
     };
     await schema.validateAsync(sourceObject);
     next();

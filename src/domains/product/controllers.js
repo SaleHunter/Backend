@@ -154,7 +154,7 @@ class Controller {
     });
   }
   async autoCompleteSearch(req, res, next) {
-    const { queryText } = req.body;
+    const { queryText } = req.query;
 
     const products = await service.autoCompleteSearch(queryText);
     res.status(200).json({

@@ -9,6 +9,14 @@ const {
 } = require('../shared/middlewares/Authentication');
 const router = Router();
 
+// auto complete for search bar
+router.get(
+  '/search',
+  asyncHandler(isAuthenticatedWithOutException),
+  asyncHandler(validation.autoCompleteSearch),
+  asyncHandler(controller.autoCompleteSearch)
+);
+
 // search for products
 router.get(
   '/',
@@ -18,13 +26,7 @@ router.get(
   asyncHandler(controller.searchForProducts)
 );
 
-// auto complete for search bar
-router.get(
-  '/search',
-  asyncHandler(isAuthenticatedWithOutException),
-  asyncHandler(validation.autoCompleteSearch),
-  asyncHandler(controller.autoCompleteSearch)
-);
+
 // search for favorite products
 router.get(
   '/favourites',

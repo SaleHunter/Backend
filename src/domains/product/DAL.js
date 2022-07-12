@@ -595,7 +595,7 @@ LIMIT 10;`;
 
   async autoCompleteSearch(queryText) {
     let queryString = knex
-      .select('products.id', 'products.title', 'products.title_ar')
+      .select('products.brand', 'products.title', 'products.title_ar')
       .from('products');
     CustomQueryBuilder.addSearchTextToQuery(queryText, queryString);
     queryString.limit(10);
