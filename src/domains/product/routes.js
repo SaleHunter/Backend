@@ -9,6 +9,14 @@ const {
 } = require('../shared/middlewares/Authentication');
 const router = Router();
 
+// auto complete for search bar
+router.get(
+  '/search',
+  asyncHandler(isAuthenticatedWithOutException),
+  asyncHandler(validation.autoCompleteSearch),
+  asyncHandler(controller.autoCompleteSearch)
+);
+
 // search for products
 router.get(
   '/',
@@ -89,14 +97,6 @@ router.patch(
   asyncHandler(validation.changeProductRating),
   asyncHandler(controller.changeProductRating)
 );
-
-/**
- * TODO:
- * - create product
- * - delete product
- * - update product
- *
- */
 
 // create product
 router.post(

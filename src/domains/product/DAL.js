@@ -592,6 +592,16 @@ LIMIT 10;`;
       throw error;
     }
   }
+
+  async autoCompleteSearch(queryText) {
+    let queryString = knex
+      .select('products.brand', 'products.title', 'products.title_ar')
+      .from('products');
+    CustomQueryBuilder.addSearchTextToQuery(queryText, queryString);
+    queryString.limit(10);
+    const product = await Promise.all([queryString]);
+    return product[0];
+  }
 }
 
 module.exports = new DataAccessLayer();
